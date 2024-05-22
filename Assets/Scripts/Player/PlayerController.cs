@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     //Adjustable parameters
     [SerializeField]
     float _speed, _jumpStrength;
+    [SerializeField]
+    LayerMask _groundLayers;
 
     //Storage parameters
     float _horizontalInput = 0f;
@@ -18,6 +20,7 @@ public class PlayerController : MonoBehaviour
     bool _jumpRequested = false;
     bool _grounded = false;
     bool _jumpInCooldown = false;
+    bool _onSlope = false;
 
     Rigidbody2D _rigidbody;
 
@@ -48,9 +51,7 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
-
-        
-        if (Mathf.Abs(_groundAngle) != 0 && _grounded)
+        if (_onSlope && _grounded)
         {
             _rigidbody.gravityScale = 0;
             _rigidbody.velocity = new Vector2(0, _rigidbody.velocity.y);
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
         float movement = _horizontalInput * _speed * Time.deltaTime;
 
         Vector2 adaptedVector = Vector2.right;
-        if (_grounded)
+        if (_grounded && _onSlope)
             adaptedVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
 
         transform.Translate(movement * adaptedVector);
@@ -72,9 +73,9 @@ public class PlayerController : MonoBehaviour
     {
         if (_jumpRequested && _grounded && !_jumpInCooldown)
         {
-            _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime, ForceMode2D.Impulse);
+            _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime * 100, ForceMode2D.Impulse);
             _jumpInCooldown = true;
-            Invoke("ResetJump", 0.01f);
+            Invoke("ResetJump", 0.05f);
         }
     }
 
@@ -86,12 +87,18 @@ public class PlayerController : MonoBehaviour
     void CheckGround()
     {
         _grounded = false;
-        RaycastHit2D raycastHit = Physics2D.Raycast(transform.position + Vector3.down * 1.2f, Vector2.up);
+        RaycastHit2D raycastHit = Physics2D.Raycast(transform.position + Vector3.down * 1.2f, Vector2.up, 1.5f, _groundLayers);
 
-        if (raycastHit.collider != null && raycastHit.transform.gameObject != gameObject)
+        if (raycastHit.collider != null 
+            && raycastHit.transform.gameObject != gameObject)
         {
             _groundAngle = raycastHit.transform.rotation.eulerAngles.z;
             _grounded = true;
+            float angle = Mathf.Abs(_groundAngle);
+            if (angle > 0 &&  angle < 45)
+                _onSlope = true;
+            else
+                _onSlope = false;
         }
     }
 }
