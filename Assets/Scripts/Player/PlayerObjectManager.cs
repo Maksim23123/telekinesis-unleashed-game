@@ -9,7 +9,22 @@ using UnityEngine.UIElements;
 
 public class PlayerObjectManager : MonoBehaviour
 {
-    public GameObject _CapturedObject { get; private set; }
+    private static PlayerObjectManager _instance;
+
+    public static PlayerObjectManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PlayerObjectManager>();
+            }
+
+            return _instance;
+        }
+    }
+
+    public GameObject CapturedObject { get; private set; }
 
     private List<GameObject> _reachableObjects = new List<GameObject>();
 
@@ -19,19 +34,14 @@ public class PlayerObjectManager : MonoBehaviour
     [SerializeField]
     private LayerMask _raycastTestLayers;
 
-    [SerializeField]
-    private KeyCode _captureObjectButton;
-
-    [SerializeField]
-    private KeyCode _quitCapturingButton;
-
     //Storage parameters
-    bool _captureRequest = false;
-    bool _quitCapturingRequest = false;
     bool _captureAllowed = true;
+
+    
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Can be replaced with circle casting
         if (_capturableObjectsLayers.Contains(collision.gameObject.layer))
             _reachableObjects.Add(collision.gameObject);
     }
@@ -44,42 +54,28 @@ public class PlayerObjectManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_captureRequest && _captureAllowed)
+        if (InputHandler.Instance.CaptureRequest && _captureAllowed)
         {
             PerformCapturing();
             _captureAllowed = false;
             Invoke("ResetCapture", 0.1f);
         }
-        if (_quitCapturingRequest)
+        if (InputHandler.Instance.QuitCapturingRequest)
         {
             PerformCaptureQuiting();
         }
     }
 
-    private void Update()
-    {
-        GetPlayerInput();
-        /*
-        if (_CapturedObject != null) 
-            Debug.Log(_CapturedObject.name);
-        */
-    }
-
-    private void GetPlayerInput()
-    {
-        _captureRequest = Input.GetKey(_captureObjectButton);
-        _quitCapturingRequest = Input.GetKey(_quitCapturingButton);
-    }
 
     private void PerformCapturing()
     {
         if (TryGetAvailableCapturableObject(out GameObject firstAvailable))
         {
             PerformCaptureQuiting();
-            _CapturedObject = firstAvailable;
+            CapturedObject = firstAvailable;
             try
             {
-                _CapturedObject.GetComponent<SpriteRenderer>().color = Color.red;
+                CapturedObject.GetComponent<SpriteRenderer>().color = Color.red;
             }
             catch
             {
@@ -93,10 +89,11 @@ public class PlayerObjectManager : MonoBehaviour
     {
         firstAvailable = null;
 
-        Vector3 mousePos = GetMousePositionInWorld();
+        Vector3 mousePos = StaticTools.GetMousePositionInWorld();
 
         List<GameObject> objectsByDistance = _reachableObjects
             .OrderBy(x => Vector3.Distance(x.transform.position, mousePos)).ToList();
+
         if (objectsByDistance.Count > 0 && PerformFinalObjectTest(objectsByDistance[0]))
         {
             firstAvailable = objectsByDistance[0];
@@ -117,28 +114,27 @@ public class PlayerObjectManager : MonoBehaviour
 
     private void PerformCaptureQuiting()
     {
-        if (_CapturedObject != null)
+        if (CapturedObject != null)
         {
             try
             {
-                _CapturedObject.GetComponent<SpriteRenderer>().color = Color.green;
+                CapturedObject.GetComponent<SpriteRenderer>().color = Color.green;
             }
             catch
             {
                 Debug.Log("Fail");
             }
         }
-        _CapturedObject = null;
-    }
-
-    private Vector3 GetMousePositionInWorld()
-    {
-        Vector3 mousePosition = Input.mousePosition;
-        return Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Camera.main.nearClipPlane));
+        CapturedObject = null;
     }
 
     private void ResetCapture()
     {
         _captureAllowed = true;
+    }
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }
