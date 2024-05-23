@@ -5,17 +5,13 @@ using UnityEngine;
 
 public class PlayerObjectManipulation : MonoBehaviour
 {
-    //[SerializeField]
-    //private PlayerObjectManager _playerObjectManager;
-
-
     //Adjustable parameters
     [SerializeField]
     private float impulsPower;
     [SerializeField]
     private KeyCode _performManipulationButton;
+
     //Storage parameters
-    bool _performManipulationRequest = false;
     bool _manipulationAllowed = true;
 
     void Start()
@@ -25,25 +21,12 @@ public class PlayerObjectManipulation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_performManipulationRequest && _manipulationAllowed)
+        if (InputHandler.Instance.PerformManipulationRequest && _manipulationAllowed)
         {
             PerformManipulation();
-            _performManipulationRequest = false;
             _manipulationAllowed = false;
             Invoke("ResetManipulation", 0.5f);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        GetPlayerInput();
-    }
-
-    // Make class that handle all player inputs
-    private void GetPlayerInput()
-    {
-        _performManipulationRequest = Input.GetKey(_performManipulationButton);
     }
 
     private void PerformManipulation()

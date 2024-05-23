@@ -13,12 +13,9 @@ public class PlayerController : MonoBehaviour
     LayerMask _groundLayers;
 
     //Storage parameters
-    float _horizontalInput = 0f;
-    float _verticalInput = 0f;
     float _groundAngle = 0;
     float _defaultGravityScale;
 
-    bool _jumpRequested = false;
     bool _grounded = false;
     bool _jumpInCooldown = false;
     bool _onSlope = false;
@@ -37,19 +34,6 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
     }
 
-    private void Update()
-    {
-        GetPlayerInput();
-    }
-
-    void GetPlayerInput()
-    {
-        _horizontalInput = Input.GetAxis("Horizontal");
-        _verticalInput = Input.GetAxis("Vertical");
-
-        _jumpRequested = Input.GetButton("Jump");
-    }
-
     void MovePlayer()
     {
         if (_onSlope && _grounded)
@@ -60,7 +44,7 @@ public class PlayerController : MonoBehaviour
         else 
             _rigidbody.gravityScale = _defaultGravityScale;
 
-        float movement = _horizontalInput * _speed * Time.deltaTime;
+        float movement = InputHandler.Instance.HorizontalInput * _speed * Time.deltaTime;
 
         Vector2 adaptedVector = Vector2.right;
         if (_grounded && _onSlope)
@@ -72,7 +56,7 @@ public class PlayerController : MonoBehaviour
 
     void ProcessJump()
     {
-        if (_jumpRequested && _grounded && !_jumpInCooldown)
+        if (InputHandler.Instance.JumpRequested && _grounded && !_jumpInCooldown)
         {
             _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime * 100, ForceMode2D.Impulse);
             _jumpInCooldown = true;

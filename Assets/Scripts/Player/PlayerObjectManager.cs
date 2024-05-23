@@ -34,15 +34,7 @@ public class PlayerObjectManager : MonoBehaviour
     [SerializeField]
     private LayerMask _raycastTestLayers;
 
-    [SerializeField]
-    private KeyCode _captureObjectButton;
-
-    [SerializeField]
-    private KeyCode _quitCapturingButton;
-
     //Storage parameters
-    bool _captureRequest = false;
-    bool _quitCapturingRequest = false;
     bool _captureAllowed = true;
 
     
@@ -62,28 +54,18 @@ public class PlayerObjectManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_captureRequest && _captureAllowed)
+        if (InputHandler.Instance.CaptureRequest && _captureAllowed)
         {
             PerformCapturing();
             _captureAllowed = false;
             Invoke("ResetCapture", 0.1f);
         }
-        if (_quitCapturingRequest)
+        if (InputHandler.Instance.QuitCapturingRequest)
         {
             PerformCaptureQuiting();
         }
     }
 
-    private void Update()
-    {
-        GetPlayerInput();
-    }
-
-    private void GetPlayerInput()
-    {
-        _captureRequest = Input.GetKey(_captureObjectButton);
-        _quitCapturingRequest = Input.GetKey(_quitCapturingButton);
-    }
 
     private void PerformCapturing()
     {
@@ -149,5 +131,10 @@ public class PlayerObjectManager : MonoBehaviour
     private void ResetCapture()
     {
         _captureAllowed = true;
+    }
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

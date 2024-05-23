@@ -9,6 +9,7 @@ public class DefaultCapturableObject : CapturableObject
     {
         if (TryGetComponent(out Rigidbody2D rigidbody))
         {
+            rigidbody.velocity = Vector3.zero;
             rigidbody.AddForce(direction * power, ForceMode2D.Impulse);
         }
     }
