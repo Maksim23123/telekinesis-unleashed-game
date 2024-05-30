@@ -52,20 +52,20 @@ public class PlayerObjectManager : MonoBehaviour
             _reachableObjects.Remove(collision.gameObject);
     }
 
-    private void FixedUpdate()
+    public void RequestCapturing()
     {
-        if (InputHandler.Instance.CaptureRequest && _captureAllowed)
+        if (_captureAllowed)
         {
             PerformCapturing();
             _captureAllowed = false;
             Invoke("ResetCapture", 0.1f);
         }
-        if (InputHandler.Instance.QuitCapturingRequest)
-        {
-            PerformCaptureQuiting();
-        }
     }
 
+    public void RequestQuitCapturing()
+    {
+        PerformCaptureQuiting();
+    }
 
     private void PerformCapturing()
     {

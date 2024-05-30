@@ -5,23 +5,31 @@ using UnityEngine;
 
 public class PlayerObjectManipulation : MonoBehaviour
 {
+    private static PlayerObjectManipulation _instance;
+
+    public static PlayerObjectManipulation Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PlayerObjectManipulation>();
+            }
+
+            return _instance;
+        }
+    }
+
     //Adjustable parameters
     [SerializeField]
     private float impulsPower;
-    [SerializeField]
-    private KeyCode _performManipulationButton;
 
     //Storage parameters
     bool _manipulationAllowed = true;
 
-    void Start()
+    public void RequestManipulation()
     {
-        
-    }
-
-    private void FixedUpdate()
-    {
-        if (InputHandler.Instance.PerformManipulationRequest && _manipulationAllowed)
+        if (_manipulationAllowed)
         {
             PerformManipulation();
             _manipulationAllowed = false;

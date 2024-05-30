@@ -3,87 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Can be singletone
 public class PlayerController : MonoBehaviour
 {
-    //Adjustable parameters
-    [SerializeField]
-    float _speed, _jumpStrength;
-    [SerializeField]
-    LayerMask _groundLayers;
+    private static PlayerController _instance;
 
-    //Storage parameters
-    float _groundAngle = 0;
-    float _defaultGravityScale;
-
-    bool _grounded = false;
-    bool _jumpInCooldown = false;
-    bool _onSlope = false;
-
-    Rigidbody2D _rigidbody;
-
-    void Start()
+    public static PlayerController Instance
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _defaultGravityScale = _rigidbody.gravityScale;
-    }
-
-    private void FixedUpdate()
-    {
-        CheckGround();
-        MovePlayer();
-    }
-
-    void MovePlayer()
-    {
-        if (_onSlope && _grounded)
+        get
         {
-            _rigidbody.gravityScale = 0;
-            _rigidbody.velocity = new Vector2(0, _rigidbody.velocity.y);
-        }
-        else 
-            _rigidbody.gravityScale = _defaultGravityScale;
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PlayerController>();
+            }
 
-        float movement = InputHandler.Instance.HorizontalInput * _speed * Time.deltaTime;
-
-        Vector2 adaptedVector = Vector2.right;
-        if (_grounded && _onSlope)
-            adaptedVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
-
-        transform.Translate(movement * adaptedVector);
-        ProcessJump();
-    }
-
-    void ProcessJump()
-    {
-        if (InputHandler.Instance.JumpRequested && _grounded && !_jumpInCooldown)
-        {
-            _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime * 100, ForceMode2D.Impulse);
-            _jumpInCooldown = true;
-            Invoke("ResetJump", 0.05f);
+            return _instance;
         }
     }
 
-    void ResetJump()
-    {
-        _jumpInCooldown = false;
-    }
+    [SerializeField]
+    private CharacterControllerScript _characterControllerScript;
 
-    void CheckGround()
-    {
-        _grounded = false;
-        RaycastHit2D raycastHit = Physics2D.Raycast(transform.position + Vector3.down * 1.2f, Vector2.up, 1.5f, _groundLayers);
-
-        if (raycastHit.collider != null 
-            && raycastHit.transform.gameObject != gameObject)
+    public CharacterControllerScript CharacterControllerScript 
+    { 
+        get
         {
-            _groundAngle = raycastHit.transform.rotation.eulerAngles.z;
-            _grounded = true;
-            float angle = Mathf.Abs(_groundAngle);
-            if (angle > 0 &&  angle < 45)
-                _onSlope = true;
-            else
-                _onSlope = false;
+            return _characterControllerScript;
         }
     }
 }

@@ -42,21 +42,22 @@ public class InputHandler : MonoBehaviour
         _instance = this;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        GetPlayerInput();
+        ProcessInput();
     }
 
-    private void GetPlayerInput()
+    private void ProcessInput()
     {
-        HorizontalInput = Input.GetAxis("Horizontal");
-        VerticalInput = Input.GetAxis("Vertical");
-
-        JumpRequested = Input.GetButton("Jump");
-
-        CaptureRequest = Input.GetKey(_captureObjectButton);
-        QuitCapturingRequest = Input.GetKey(_quitCapturingButton);
-
-        PerformManipulationRequest = Input.GetKey(_performManipulationButton);
+        PlayerController.Instance
+            .CharacterControllerScript.DirectionalFactor = Input.GetAxis("Horizontal");
+        if (Input.GetButton("Jump"))
+            PlayerController.Instance.CharacterControllerScript.RequestJump();
+        if (Input.GetKey(_captureObjectButton))
+            PlayerObjectManager.Instance.RequestCapturing();
+        if (Input.GetKey(_quitCapturingButton))
+            PlayerObjectManager.Instance.RequestQuitCapturing();
+        if (Input.GetKey(_performManipulationButton))
+            PlayerObjectManipulation.Instance.RequestManipulation();
     }
 }
