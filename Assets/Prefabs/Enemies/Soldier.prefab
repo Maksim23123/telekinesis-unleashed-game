@@ -99,7 +99,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 4260962628893031756}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 9a67bb3ce13f3924186397e1feaa0d42, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -140,7 +140,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -170,7 +170,6 @@ MonoBehaviour:
   _notTransparentLayers:
     serializedVersion: 2
     m_Bits: 513
-  _targetIsVisible: 0
 --- !u!114 &7931921316799441834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,7 +188,7 @@ MonoBehaviour:
   _groundLayers:
     serializedVersion: 2
     m_Bits: 1793
-  _maxStairSize: 0.41
+  _maxStairSize: 0.4
 --- !u!114 &8421312373836556325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,11 +201,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d615f5920494649a9a5f0246fcce35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 7
-  _jumpStrength: 6
+  _onGroundSpeed: 4
+  _inAirSpeed: 4
+  _jumpStrength: 7
   _groundLayers:
     serializedVersion: 2
     m_Bits: 1793
+  speedModificationLimit: 4
+  _groundedDrag: 8
 --- !u!114 &1837862242729897433
 MonoBehaviour:
   m_ObjectHideFlags: 0

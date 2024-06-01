@@ -18,7 +18,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
 
     bool _shootingAllowed = true;
 
-    public bool _targetIsVisible;
+    private bool _targetIsVisible;
 
     public bool TargetIsVisible 
     { 
