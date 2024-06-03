@@ -124,5 +124,10 @@ public class CharacterControllerScript : MonoBehaviour
                 _onSlope = false;
         }
     }
+
+    public void Overstep()
+    {
+
+    }
 }
 
