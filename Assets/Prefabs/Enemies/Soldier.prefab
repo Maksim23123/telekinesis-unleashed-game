@@ -188,7 +188,7 @@ MonoBehaviour:
   _groundLayers:
     serializedVersion: 2
     m_Bits: 1793
-  _maxStairSize: 0.4
+  _maxStairSize: 0.41
 --- !u!114 &8421312373836556325
 MonoBehaviour:
   m_ObjectHideFlags: 0
