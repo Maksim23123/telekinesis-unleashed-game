@@ -5,21 +5,17 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    public float HorizontalInput { get; private set; }
-    public float VerticalInput { get; private set; }
-    public bool JumpRequested { get; private set; }
-
     [SerializeField]
     private KeyCode _captureObjectButton;
-    public bool CaptureRequest { get; private set; }
 
     [SerializeField]
     private KeyCode _quitCapturingButton;
-    public bool QuitCapturingRequest { get; private set; }
 
     [SerializeField]
     private KeyCode _performManipulationButton;
-    public bool PerformManipulationRequest { get; private set; }
+
+    [SerializeField]
+    private KeyCode _fallThroughOneWayPlatform;
 
     private static InputHandler _instance;
 
@@ -59,5 +55,7 @@ public class InputHandler : MonoBehaviour
             PlayerObjectManager.Instance.RequestQuitCapturing();
         if (Input.GetKey(_performManipulationButton))
             PlayerObjectManipulation.Instance.RequestManipulation();
+        if (Input.GetKey(_fallThroughOneWayPlatform))
+            OneWayPlatformHandler.Instance.FallThroughCurrentPlatform();
     }
 }
