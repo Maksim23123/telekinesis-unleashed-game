@@ -488,6 +488,7 @@ GameObject:
   - component: {fileID: 83932929}
   - component: {fileID: 83932930}
   - component: {fileID: 83932931}
+  - component: {fileID: 83932932}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -514,10 +515,10 @@ CapsuleCollider2D:
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
-    m_Bits: 2304
+    m_Bits: 6400
   m_ForceReceiveLayers:
     serializedVersion: 2
-    m_Bits: 385
+    m_Bits: 4481
   m_ContactCaptureLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -687,7 +688,7 @@ MonoBehaviour:
   _jumpStrength: 6
   _groundLayers:
     serializedVersion: 2
-    m_Bits: 385
+    m_Bits: 4481
 --- !u!114 &83932931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,6 +705,24 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _fallThroughTime: 0.5
+--- !u!114 &83932932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83932921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b824171a7e6b1904da05a38edd0f079b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterController: {fileID: 83932930}
+  _ladderRequestLifetime: 0.5
+  _ladderMovementSpeed: 8
+  _ladderLayers:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &89449553
 GameObject:
   m_ObjectHideFlags: 0
@@ -2133,6 +2152,7 @@ MonoBehaviour:
   _quitCapturingButton: 113
   _performManipulationButton: 323
   _fallThroughOneWayPlatform: 115
+  _stepOnLadder: 0
 --- !u!4 &592676565
 Transform:
   m_ObjectHideFlags: 0
@@ -5069,7 +5089,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1625524961}
   - component: {fileID: 1625524962}
-  - component: {fileID: 1625524963}
   m_Layer: 2
   m_Name: Interaction trigger
   m_TagString: Untagged
@@ -5087,7 +5106,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5.4198294, y: 5.4198294, z: 5.4198294}
+  m_LocalScale: {x: 5.4, y: 5.4, z: 5.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 83932925}
@@ -5144,41 +5163,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &1625524963
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625524960}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 256
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!1 &1747648373
 GameObject:
   m_ObjectHideFlags: 0
@@ -6368,7 +6352,7 @@ GameObject:
   - component: {fileID: 2122004868}
   - component: {fileID: 2122004867}
   - component: {fileID: 2122004869}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Ladder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6436,8 +6420,8 @@ Transform:
   m_GameObject: {fileID: 2122004866}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.5774, y: -17.5616, z: 8.180498}
-  m_LocalScale: {x: 2.0673351, y: 14.935054, z: 1}
+  m_LocalPosition: {x: 13.5774, y: -17.3454, z: 8.180498}
+  m_LocalScale: {x: 2.0673351, y: 15.368171, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1348791664}
@@ -6457,7 +6441,7 @@ BoxCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -6471,7 +6455,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

@@ -26,8 +26,6 @@ public class PlayerObjectManager : MonoBehaviour
 
     public GameObject CapturedObject { get; private set; }
 
-    private List<GameObject> _reachableObjects = new List<GameObject>();
-
     [SerializeField]
     private LayerMask _capturableObjectsLayers;
 
@@ -36,21 +34,6 @@ public class PlayerObjectManager : MonoBehaviour
 
     //Storage parameters
     bool _captureAllowed = true;
-
-    
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Can be replaced with circle casting
-        if (_capturableObjectsLayers.Contains(collision.gameObject.layer))
-            _reachableObjects.Add(collision.gameObject);
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (_reachableObjects.Contains(collision.gameObject))
-            _reachableObjects.Remove(collision.gameObject);
-    }
 
     public void RequestCapturing()
     {
@@ -91,7 +74,11 @@ public class PlayerObjectManager : MonoBehaviour
 
         Vector3 mousePos = StaticTools.GetMousePositionInWorld();
 
-        List<GameObject> objectsByDistance = _reachableObjects
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 2.7f, Vector2.down, 0, _capturableObjectsLayers);
+
+        GameObject[] reachableObjects = hits.Select(x => x.transform.gameObject).ToArray();
+
+        List<GameObject> objectsByDistance = reachableObjects
             .OrderBy(x => Vector3.Distance(x.transform.position, mousePos)).ToList();
 
         if (objectsByDistance.Count > 0 && PerformFinalObjectTest(objectsByDistance[0]))
@@ -99,6 +86,7 @@ public class PlayerObjectManager : MonoBehaviour
             firstAvailable = objectsByDistance[0];
             return true;
         }
+
         return false;
     }
 
@@ -131,10 +119,5 @@ public class PlayerObjectManager : MonoBehaviour
     private void ResetCapture()
     {
         _captureAllowed = true;
-    }
-
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
     }
 }

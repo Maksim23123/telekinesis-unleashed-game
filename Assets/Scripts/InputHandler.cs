@@ -17,6 +17,9 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     private KeyCode _fallThroughOneWayPlatform;
 
+    [SerializeField]
+    private KeyCode _stepOnLadder;
+
     private static InputHandler _instance;
 
     public static InputHandler Instance
@@ -47,8 +50,12 @@ public class InputHandler : MonoBehaviour
     {
         PlayerController.Instance
             .CharacterControllerScript.DirectionalFactor = Input.GetAxis("Horizontal");
+        PlayerLadderHandler.Instance.VerticalFactor = Input.GetAxis("Vertical");
         if (Input.GetButton("Jump"))
+        {
             PlayerController.Instance.CharacterControllerScript.RequestJump();
+            PlayerLadderHandler.Instance.ExitLadderRequest();
+        }
         if (Input.GetKey(_captureObjectButton))
             PlayerObjectManager.Instance.RequestCapturing();
         if (Input.GetKey(_quitCapturingButton))
@@ -57,5 +64,7 @@ public class InputHandler : MonoBehaviour
             PlayerObjectManipulation.Instance.RequestManipulation();
         if (Input.GetKey(_fallThroughOneWayPlatform))
             OneWayPlatformHandler.Instance.FallThroughCurrentPlatform();
+        if (Input.GetKey(_stepOnLadder))
+            PlayerLadderHandler.Instance.PostStepOnLadderRequest();
     }
 }

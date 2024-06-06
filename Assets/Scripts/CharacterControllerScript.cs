@@ -38,6 +38,9 @@ public class CharacterControllerScript : MonoBehaviour
     bool _jumpInCooldown = false;
     bool _onSlope = false;
 
+    public bool BlockHorizontalMovement { get; set; } = false;
+    public bool UpdateGravityScale { get; set; } = true;
+
     Rigidbody2D _rigidbody;
 
     // Start is called before the first frame update
@@ -55,12 +58,16 @@ public class CharacterControllerScript : MonoBehaviour
 
     protected void MoveCharacter(float directionalFactor)
     {
-        if (_onSlope && _grounded)
+        if (UpdateGravityScale)
         {
-            _rigidbody.gravityScale = 0;
+            if (_onSlope && _grounded)
+            {
+                _rigidbody.gravityScale = 0;
+            }
+            else
+                _rigidbody.gravityScale = _defaultGravityScale;
         }
-        else
-            _rigidbody.gravityScale = _defaultGravityScale;
+
 
         float movement = directionalFactor * _speed * Time.deltaTime;
 
@@ -68,7 +75,8 @@ public class CharacterControllerScript : MonoBehaviour
         if (_grounded && _onSlope)
             adaptedVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
 
-        transform.Translate(movement * adaptedVector);
+        if (!BlockHorizontalMovement) 
+            transform.Translate(movement * adaptedVector);
 
         _rigidbody.velocity = new Vector2(0, _rigidbody.velocity.y);
     }
@@ -77,6 +85,7 @@ public class CharacterControllerScript : MonoBehaviour
     {
         if (_grounded && !_jumpInCooldown)
         {
+            _rigidbody.velocity *= 0;
             _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime * 100, ForceMode2D.Impulse);
             _jumpInCooldown = true;
             Invoke(nameof(ResetJump), 0.05f);
@@ -107,4 +116,3 @@ public class CharacterControllerScript : MonoBehaviour
         }
     }
 }
-
