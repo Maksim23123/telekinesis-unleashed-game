@@ -201,14 +201,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d615f5920494649a9a5f0246fcce35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onGroundSpeed: 4
-  _inAirSpeed: 4
-  _jumpStrength: 7
+  _speed: 4
+  _jumpStrength: 6
   _groundLayers:
     serializedVersion: 2
     m_Bits: 1793
-  speedModificationLimit: 4
-  _groundedDrag: 8
 --- !u!114 &1837862242729897433
 MonoBehaviour:
   m_ObjectHideFlags: 0
