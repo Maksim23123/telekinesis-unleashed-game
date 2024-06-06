@@ -19,7 +19,7 @@ public class ProjectileManager : MonoBehaviour
     {
         if (_projectileProperties != null)
         {
-            Invoke("PerformSelfDestroy", _projectileProperties._lifeTime);
+            Invoke(nameof(PerformSelfDestroy), _projectileProperties._lifeTime);
         }
     }
 

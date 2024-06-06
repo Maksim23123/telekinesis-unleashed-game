@@ -58,7 +58,7 @@ public class PlayerObjectManager : MonoBehaviour
         {
             PerformCapturing();
             _captureAllowed = false;
-            Invoke("ResetCapture", 0.1f);
+            Invoke(nameof(ResetCapture), 0.1f);
         }
     }
 

@@ -52,7 +52,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
             
             Shot(direction);
             _shootingAllowed = false;
-            Invoke("ResetShootingPermission", _shootingCooldownTime);
+            Invoke(nameof(ResetShootingPermission), _shootingCooldownTime);
         }
     }
 
@@ -80,8 +80,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
         if (Vector2.Distance(objectPosition, _target.transform.position) <= raySize)
         {
             float rayThickness = 0.4f;
-            RaycastHit2D[] hits = Physics2D.BoxCastAll(objectPosition, new Vector2(rayThickness, rayThickness)
-                , Vector2.Angle(Vector2.right, direction), direction, raySize, _notTransparentLayers);
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(objectPosition, rayThickness / 2, direction, raySize, _notTransparentLayers);
 
             DebugDrawBoxCast(objectPosition, new Vector2(rayThickness, rayThickness)
                 , Vector2.Angle(Vector2.right, direction), direction, raySize, Color.red);

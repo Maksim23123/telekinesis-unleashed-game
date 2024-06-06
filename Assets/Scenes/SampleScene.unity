@@ -136,11 +136,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6874467057696271652, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -684,8 +688,6 @@ MonoBehaviour:
   _groundLayers:
     serializedVersion: 2
     m_Bits: 385
-  speedModificationLimit: 12
-  _groundedDrag: 8
 --- !u!114 &83932931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -976,11 +978,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6874467057696271652, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3319,11 +3325,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6874467057696271652, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5703,11 +5713,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6874467057696271652, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6158,11 +6172,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6874467057696271652, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6650,11 +6668,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: m_AngularDrag
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5706595679982931045, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6874467057696271652, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_LocalPosition.x

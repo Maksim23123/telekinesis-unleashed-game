@@ -33,7 +33,7 @@ public class PlayerObjectManipulation : MonoBehaviour
         {
             PerformManipulation();
             _manipulationAllowed = false;
-            Invoke("ResetManipulation", 0.5f);
+            Invoke(nameof(ResetManipulation), 0.5f);
         }
     }
 

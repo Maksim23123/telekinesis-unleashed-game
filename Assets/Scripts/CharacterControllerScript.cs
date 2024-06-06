@@ -79,7 +79,7 @@ public class CharacterControllerScript : MonoBehaviour
         {
             _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime * 100, ForceMode2D.Impulse);
             _jumpInCooldown = true;
-            Invoke("ResetJump", 0.05f);
+            Invoke(nameof(ResetJump), 0.05f);
         }
     }
 
@@ -105,11 +105,6 @@ public class CharacterControllerScript : MonoBehaviour
             else
                 _onSlope = false;
         }
-    }
-
-    public void Overstep()
-    {
-
     }
 }
 

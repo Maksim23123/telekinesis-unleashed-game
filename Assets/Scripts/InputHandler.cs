@@ -25,7 +25,7 @@ public class InputHandler : MonoBehaviour
         {
             if (_instance == null)
             {
-                GameObject instance = new GameObject("Input handler");
+                GameObject instance = new GameObject("Input Handler");
                 instance.AddComponent<InputHandler>();
             }
 
