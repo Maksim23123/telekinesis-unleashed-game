@@ -43,7 +43,7 @@ public class PlayerObjectManipulation : MonoBehaviour
         if (manipulatedObject != null && manipulatedObject.TryGetComponent(out CapturableObject capturableObject))
         {
             Vector3 mousePos = StaticTools.GetMousePositionInWorld();
-            Vector3 powerVector = mousePos - gameObject.transform.position;
+            Vector3 powerVector = mousePos - manipulatedObject.transform.position;
             float finalPower = impulsPower 
                 * Vector3.Distance(powerVector, Vector3.zero) * 8 * Time.deltaTime ;
             capturableObject.ProcessManipulation(powerVector.normalized, finalPower);
