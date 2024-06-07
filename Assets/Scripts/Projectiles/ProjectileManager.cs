@@ -7,6 +7,8 @@ public class ProjectileManager : MonoBehaviour
     [SerializeField]  
     ProjectileProperties _projectileProperties;
 
+    public ProjectileProperties ProjectileProperties { get => _projectileProperties; }
+
     public void Launch(Vector2 direction)
     {
         if (TryGetComponent(out Rigidbody2D rigidbody) && _projectileProperties != null)
@@ -28,7 +30,7 @@ public class ProjectileManager : MonoBehaviour
         }
     }
 
-    private void PerformSelfDestroy()
+    public void PerformSelfDestroy()
     {
         Destroy(gameObject);
     }

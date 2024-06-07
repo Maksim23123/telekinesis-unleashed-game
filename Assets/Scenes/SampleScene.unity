@@ -489,6 +489,8 @@ GameObject:
   - component: {fileID: 83932930}
   - component: {fileID: 83932931}
   - component: {fileID: 83932932}
+  - component: {fileID: 83932933}
+  - component: {fileID: 83932934}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -722,6 +724,34 @@ MonoBehaviour:
   _ladderLayers:
     serializedVersion: 2
     m_Bits: 4096
+--- !u!114 &83932933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83932921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c7c8dfc004ab54a947662bdb011b54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 100
+  _currentHealth: 100
+  _afterDamageImortalityFrames: 1
+  _afterDamageImortalityTime: 0.1
+--- !u!114 &83932934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83932921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51e5a70775b369548958f5c118e440ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &89449553
 GameObject:
   m_ObjectHideFlags: 0
@@ -5007,7 +5037,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.33333334}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.03137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
