@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class EntityHealthManager : MonoBehaviour
 {
-    public event Action onRunOutOfHealth;
+    public event Action runOutOfHealth;
+
+    public event Action<int> healthChanged;
 
     [SerializeField]
     int _maxHealth;
@@ -21,6 +23,9 @@ public class EntityHealthManager : MonoBehaviour
 
     bool _damageTakingOnCooldown = false;
 
+    public int CurrentHealth { get => _currentHealth; }
+    public int MaxHealth { get => _maxHealth; }
+
     public void ProcessDamage(int damage)
     {
         if (_currentHealth > 0 && !_damageTakingOnCooldown)
@@ -29,8 +34,10 @@ public class EntityHealthManager : MonoBehaviour
             if (_currentHealth < 1)
             {
                 _currentHealth = 0;
-                onRunOutOfHealth?.Invoke();
+                runOutOfHealth?.Invoke();
             }
+
+            healthChanged?.Invoke(_currentHealth);
 
             if (_afterDamageImortalityFrames)
             {
@@ -48,10 +55,12 @@ public class EntityHealthManager : MonoBehaviour
     public void ProcessHeal(int amount)
     {
         _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
+        healthChanged?.Invoke(_currentHealth);
     }
 
     public void ProcessFullHeal()
     {
         _currentHealth = _maxHealth;
+        healthChanged?.Invoke(_currentHealth);
     }
 }

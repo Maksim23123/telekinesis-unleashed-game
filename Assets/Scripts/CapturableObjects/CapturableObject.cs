@@ -4,5 +4,7 @@ using UnityEngine;
 
 public abstract class CapturableObject : MonoBehaviour
 {
-     public abstract void ProcessManipulation(Vector3 direction, float power);
+    public abstract void ProcessManipulation(Vector3 direction, float power);
+
+    public abstract float GetContactDamage();
 }

@@ -11,10 +11,7 @@ public class ProjectileDamageHandler : MonoBehaviour
 
     private void Start()
     {
-        if (_healthManager == null)
-        {
-            _healthManager = GetComponent<EntityHealthManager>();
-        }
+        _healthManager = GetComponent<EntityHealthManager>();
         _projectilesLayers = LayerMask.GetMask("Projectiles");
     }
 
