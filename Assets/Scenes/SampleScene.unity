@@ -738,7 +738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxHealth: 100
   _currentHealth: 100
-  _afterDamageImortalityFrames: 1
+  _afterDamageImortalityFrames: 0
   _afterDamageImortalityTime: 0.1
 --- !u!114 &83932934
 MonoBehaviour:
