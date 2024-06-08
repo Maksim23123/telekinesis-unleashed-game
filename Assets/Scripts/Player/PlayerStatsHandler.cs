@@ -14,7 +14,7 @@ public class PlayerStatsHandler : MonoBehaviour
     [SerializeField]
     float _movementSpeed;
     [SerializeField]
-    float _jumpHeight;
+    float _jumpStrength;
     [SerializeField] 
     float _criticalHitMultiplier;
     [SerializeField]
@@ -56,6 +56,7 @@ public class PlayerStatsHandler : MonoBehaviour
         PlayerObjectManager.Instance.CaptureZoneRadius = _captureZoneRadius;
         PlayerObjectManipulation.Instance.ManipulationCooldown = _objectManipulationCooldown;
         PlayerController.Instance.CharacterControllerScript.Speed = _movementSpeed;
+        PlayerController.Instance.CharacterControllerScript.JumpStrength = _jumpStrength;
     }
 
     private void ApplyHealthStat()
