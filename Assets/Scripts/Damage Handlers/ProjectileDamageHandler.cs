@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(EntityHealthManager))]
-public class ProjectileDamageHandler : MonoBehaviour
+public class ProjectileDamageHandler : DamageHandler
 {
     EntityHealthManager _healthManager;
 
@@ -21,7 +21,7 @@ public class ProjectileDamageHandler : MonoBehaviour
         if (_projectilesLayers.Contains(contactedObject.layer) 
                 && contactedObject.TryGetComponent(out ProjectileManager projectileManager))
         {
-            _healthManager.ProcessDamage((int)projectileManager.ProjectileProperties._damage);
+            _healthManager.ProcessDamage((int)Mathf.Clamp(projectileManager.ProjectileProperties._damage - GetCurrentResistanceAmount(), 0, int.MaxValue));
             projectileManager.PerformSelfDestroy();
         }
     }

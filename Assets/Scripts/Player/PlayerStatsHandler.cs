@@ -30,6 +30,7 @@ public class PlayerStatsHandler : MonoBehaviour
     
 
     EntityHealthManager _healthManager;
+    DamageHandler _damageHandler;
 
     bool _initialized = false;
 
@@ -49,6 +50,7 @@ public class PlayerStatsHandler : MonoBehaviour
     private void Connect()
     {
         TryGetComponent(out _healthManager);
+        TryGetComponent(out _damageHandler);
     }
 
     private void ApplyStats()
@@ -62,6 +64,8 @@ public class PlayerStatsHandler : MonoBehaviour
         PlayerObjectManipulation.Instance.ManipulationCooldown = _objectManipulationCooldown;
         PlayerController.Instance.CharacterControllerScript.Speed = _movementSpeed;
         PlayerController.Instance.CharacterControllerScript.JumpStrength = _jumpStrength;
+
+        _damageHandler.Resistance = _resistance;
     }
 
     private void ApplyHealthStat()

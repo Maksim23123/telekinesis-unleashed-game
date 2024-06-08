@@ -773,7 +773,7 @@ MonoBehaviour:
   _criticalHitMultiplier: 2
   _criticalHitChance: 0.05
   _healthCount: 500
-  _resistance: 0
+  _resistance: 5
   _regenerationAmount: 0
   _regenerationRate: 0
 --- !u!1 &89449553
@@ -2284,7 +2284,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ' Health: 100 / 100'
+  m_text: ' Health: 100/100'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

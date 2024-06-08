@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(EntityHealthManager))]
-public class PossesableObjectDamageHandler : MonoBehaviour
+public class PossesableObjectDamageHandler : DamageHandler
 {
     EntityHealthManager _healthManager;
     
@@ -11,7 +11,7 @@ public class PossesableObjectDamageHandler : MonoBehaviour
     {
         if (collision.gameObject.TryGetComponent(out CapturableObject capturableObject))
         {
-            _healthManager.ProcessDamage((int)capturableObject.GetContactDamage());
+            _healthManager.ProcessDamage((int)Mathf.Clamp(capturableObject.GetContactDamage() - GetCurrentResistanceAmount(), 0, int.MaxValue));
         }
     }
 
