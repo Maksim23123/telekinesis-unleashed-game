@@ -673,7 +673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec3a2819fa0b49242a49edb4515aa7fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impulsPower: 10
+  _impulsPower: 10
 --- !u!114 &83932930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -765,8 +765,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227545fdc2f67294ebb31ebf79c9230a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageMultiplier: 5
-  _objectManipulationCooldown: 0
+  _damageMultiplier: 1
+  _objectManipulationCooldown: 0.5
   _movementSpeed: 0
   _jumpHeight: 0
   _criticalHitMultiplier: 0

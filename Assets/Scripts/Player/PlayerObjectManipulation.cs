@@ -20,9 +20,13 @@ public class PlayerObjectManipulation : MonoBehaviour
         }
     }
 
+    public float ManipulationCooldown { get => _manipulationCooldown; set => _manipulationCooldown = value; }
+
     //Adjustable parameters
     [SerializeField]
-    private float impulsPower;
+    private float _impulsPower;
+
+    private float _manipulationCooldown;
 
     //Storage parameters
     bool _manipulationAllowed = true;
@@ -32,8 +36,11 @@ public class PlayerObjectManipulation : MonoBehaviour
         if (_manipulationAllowed)
         {
             PerformManipulation();
-            _manipulationAllowed = false;
-            Invoke(nameof(ResetManipulation), 0.5f);
+            if (_manipulationCooldown > 0)
+            {
+                _manipulationAllowed = false;
+                Invoke(nameof(ResetManipulation), _manipulationCooldown);
+            }
         }
     }
 
@@ -44,8 +51,11 @@ public class PlayerObjectManipulation : MonoBehaviour
         {
             Vector3 mousePos = StaticTools.GetMousePositionInWorld();
             Vector3 powerVector = mousePos - manipulatedObject.transform.position;
-            float finalPower = impulsPower 
-                * Vector3.Distance(powerVector, Vector3.zero) * 8 * Time.deltaTime ;
+            float minDistanceFactor = 10;
+            float finalPower = _impulsPower 
+                * Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue) * 8 * Time.fixedDeltaTime ;
+
+            Debug.Log(Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue));
             capturableObject.ProcessManipulation(powerVector.normalized, finalPower);
         }
     }
