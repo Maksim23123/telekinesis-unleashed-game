@@ -26,6 +26,7 @@ public class PlayerObjectManager : MonoBehaviour
 
     public GameObject CapturedObject { get; private set; }
     public float DamageMultipier { get => _damageMultipier; set => _damageMultipier = value; }
+    public float CaptureZoneRadius { get => _captureZoneRadius; set => _captureZoneRadius = value; }
 
     [SerializeField]
     private LayerMask _capturableObjectsLayers;
@@ -36,6 +37,8 @@ public class PlayerObjectManager : MonoBehaviour
     private float _damageMultipier = 1f;
 
     private float _defaultDamageMultiplier = 1f;
+
+    private float _captureZoneRadius = 2.7f;
 
     //Storage parameters
     bool _captureAllowed = true;
@@ -88,7 +91,7 @@ public class PlayerObjectManager : MonoBehaviour
 
         Vector3 mousePos = StaticTools.GetMousePositionInWorld();
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 2.7f, Vector2.down, 0, _capturableObjectsLayers);
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _captureZoneRadius, Vector2.down, 0, _capturableObjectsLayers);
 
         GameObject[] reachableObjects = hits.Select(x => x.transform.gameObject).ToArray();
 
@@ -107,8 +110,8 @@ public class PlayerObjectManager : MonoBehaviour
     private bool PerformFinalObjectTest(GameObject testedObject)
     {
         Vector2 directionTowardsItem = (testedObject.transform.position - gameObject.transform.position).normalized;
-        RaycastHit2D raycastHit = Physics2D.Raycast(gameObject.transform.position, directionTowardsItem, 3, _raycastTestLayers);
-        if (raycastHit.transform.gameObject == testedObject.gameObject)
+        RaycastHit2D raycastHit = Physics2D.Raycast(gameObject.transform.position, directionTowardsItem, _captureZoneRadius, _raycastTestLayers);
+        if (raycastHit.transform != null && raycastHit.transform.gameObject == testedObject.gameObject)
             return true;
         else
             return false;

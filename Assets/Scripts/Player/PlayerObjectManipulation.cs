@@ -53,9 +53,7 @@ public class PlayerObjectManipulation : MonoBehaviour
             Vector3 powerVector = mousePos - manipulatedObject.transform.position;
             float minDistanceFactor = 10;
             float finalPower = _impulsPower 
-                * Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue) * 8 * Time.fixedDeltaTime ;
-
-            Debug.Log(Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue));
+                * Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue) * 8 * Time.fixedDeltaTime;
             capturableObject.ProcessManipulation(powerVector.normalized, finalPower);
         }
     }

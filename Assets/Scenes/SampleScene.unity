@@ -767,6 +767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageMultiplier: 1
   _objectManipulationCooldown: 0.5
+  _captureZoneRadius: 2.7
   _movementSpeed: 0
   _jumpHeight: 0
   _criticalHitMultiplier: 0
@@ -774,7 +775,6 @@ MonoBehaviour:
   _resistance: 0
   _regenerationAmount: 0
   _regenerationRate: 0
-  _captureZoneSize: 0
 --- !u!1 &89449553
 GameObject:
   m_ObjectHideFlags: 0

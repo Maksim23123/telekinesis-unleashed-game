@@ -10,6 +10,8 @@ public class PlayerStatsHandler : MonoBehaviour
     [SerializeField]
     float _objectManipulationCooldown;
     [SerializeField]
+    float _captureZoneRadius;
+    [SerializeField]
     float _movementSpeed;
     [SerializeField]
     float _jumpHeight;
@@ -23,8 +25,7 @@ public class PlayerStatsHandler : MonoBehaviour
     float _regenerationAmount;
     [SerializeField]
     float _regenerationRate;
-    [SerializeField]
-    float _captureZoneSize;
+    
 
     EntityHealthManager _healthManager;
 
@@ -52,6 +53,7 @@ public class PlayerStatsHandler : MonoBehaviour
     {
         ApplyHealthStat();
         PlayerObjectManager.Instance.DamageMultipier = _damageMultiplier;
+        PlayerObjectManager.Instance.CaptureZoneRadius = _captureZoneRadius;
         PlayerObjectManipulation.Instance.ManipulationCooldown = _objectManipulationCooldown;
     }
 
