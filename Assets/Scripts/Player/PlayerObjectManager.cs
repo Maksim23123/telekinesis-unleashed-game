@@ -25,12 +25,17 @@ public class PlayerObjectManager : MonoBehaviour
     }
 
     public GameObject CapturedObject { get; private set; }
+    public float DamageMultipier { get => _damageMultipier; set => _damageMultipier = value; }
 
     [SerializeField]
     private LayerMask _capturableObjectsLayers;
 
     [SerializeField]
     private LayerMask _raycastTestLayers;
+
+    private float _damageMultipier = 1f;
+
+    private float _defaultDamageMultiplier = 1f;
 
     //Storage parameters
     bool _captureAllowed = true;
@@ -56,6 +61,15 @@ public class PlayerObjectManager : MonoBehaviour
         {
             PerformCaptureQuiting();
             CapturedObject = firstAvailable;
+            if (CapturedObject.TryGetComponent(out CapturableObject capturableObject))
+            {
+                _defaultDamageMultiplier = capturableObject.DamageMultiplier;
+                capturableObject.DamageMultiplier = _damageMultipier;
+            }
+                
+
+            // DEBUG
+            //---
             try
             {
                 CapturedObject.GetComponent<SpriteRenderer>().color = Color.red;
@@ -64,8 +78,8 @@ public class PlayerObjectManager : MonoBehaviour
             {
                 Debug.Log("Fail");
             }
+            //---
         }
-            
     }
 
     private bool TryGetAvailableCapturableObject(out GameObject firstAvailable)
@@ -102,8 +116,11 @@ public class PlayerObjectManager : MonoBehaviour
 
     private void PerformCaptureQuiting()
     {
+        // DEBUG
+        //---
         if (CapturedObject != null)
         {
+
             try
             {
                 CapturedObject.GetComponent<SpriteRenderer>().color = Color.green;
@@ -113,6 +130,10 @@ public class PlayerObjectManager : MonoBehaviour
                 Debug.Log("Fail");
             }
         }
+        //---
+
+        if (CapturedObject != null && CapturedObject.TryGetComponent(out CapturableObject capturableObject))
+            capturableObject.DamageMultiplier = _defaultDamageMultiplier;
         CapturedObject = null;
     }
 

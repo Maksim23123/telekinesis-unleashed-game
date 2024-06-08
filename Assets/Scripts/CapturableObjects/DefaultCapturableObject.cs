@@ -19,7 +19,7 @@ public class DefaultCapturableObject : CapturableObject
 
     public override float GetContactDamage()
     {
-        return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass;
+        return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * DamageMultiplier;
     }
 
     private void Start()

@@ -51,6 +51,7 @@ public class PlayerStatsHandler : MonoBehaviour
     private void ApplyStats()
     {
         ApplyHealthStat();
+        PlayerObjectManager.Instance.DamageMultipier = _damageMultiplier;
     }
 
     private void ApplyHealthStat()

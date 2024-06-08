@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227545fdc2f67294ebb31ebf79c9230a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageMultiplier: 1
+  _damageMultiplier: 5
   _objectManipulationCooldown: 0
   _movementSpeed: 0
   _jumpHeight: 0
