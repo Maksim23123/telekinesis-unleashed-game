@@ -55,6 +55,7 @@ public class PlayerStatsHandler : MonoBehaviour
         PlayerObjectManager.Instance.DamageMultipier = _damageMultiplier;
         PlayerObjectManager.Instance.CaptureZoneRadius = _captureZoneRadius;
         PlayerObjectManipulation.Instance.ManipulationCooldown = _objectManipulationCooldown;
+        PlayerController.Instance.CharacterControllerScript.Speed = _movementSpeed;
     }
 
     private void ApplyHealthStat()

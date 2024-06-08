@@ -40,6 +40,8 @@ public class CharacterControllerScript : MonoBehaviour
 
     public bool BlockHorizontalMovement { get; set; } = false;
     public bool UpdateGravityScale { get; set; } = true;
+    public float Speed { get => _speed; set => _speed = value; }
+    public float JumpStrength { get => _jumpStrength; set => _jumpStrength = value; }
 
     Rigidbody2D _rigidbody;
 

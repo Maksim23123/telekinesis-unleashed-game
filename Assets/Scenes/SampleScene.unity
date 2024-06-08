@@ -686,7 +686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d615f5920494649a9a5f0246fcce35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 12
+  _speed: 10
   _jumpStrength: 6
   _groundLayers:
     serializedVersion: 2
@@ -768,8 +768,8 @@ MonoBehaviour:
   _damageMultiplier: 1
   _objectManipulationCooldown: 0.5
   _captureZoneRadius: 2.7
-  _movementSpeed: 0
-  _jumpHeight: 0
+  _movementSpeed: 12
+  _jumpHeight: 6
   _criticalHitMultiplier: 0
   _healthCount: 500
   _resistance: 0
