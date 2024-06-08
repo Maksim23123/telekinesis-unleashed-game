@@ -774,8 +774,7 @@ MonoBehaviour:
   _criticalHitChance: 0.05
   _healthCount: 500
   _resistance: 5
-  _regenerationAmount: 0
-  _regenerationRate: 0
+  _regeneration: 0
 --- !u!1 &89449553
 GameObject:
   m_ObjectHideFlags: 0

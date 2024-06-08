@@ -23,6 +23,12 @@ public class EntityHealthManager : MonoBehaviour
 
     bool _damageTakingOnCooldown = false;
 
+    bool _performRegenerationIteration = true;
+
+    float _regenerationAmount;
+
+    float _regenerationPool;
+
     public int CurrentHealth { get => _currentHealth; }
     public int MaxHealth 
     { 
@@ -33,6 +39,36 @@ public class EntityHealthManager : MonoBehaviour
             _maxHealth = Mathf.Clamp(value, 1, int.MaxValue);
             healthChanged?.Invoke(_currentHealth);
         }
+    }
+
+    public float RegenerationAmount 
+    { 
+        get => _regenerationAmount;
+
+        set
+        {
+            _regenerationAmount = value;
+            if (_regenerationAmount > 0 && _performRegenerationIteration)
+                PerformRegenerationIteration();
+        } 
+    }
+
+    private void Start()
+    {
+        PerformRegenerationIteration();
+    }
+
+    private void PerformRegenerationIteration()
+    {
+        _regenerationPool += RegenerationAmount;
+        if (_regenerationPool >= 1)
+        {
+            ProcessHeal((int)Mathf.Floor(_regenerationPool));
+            _regenerationPool = _regenerationPool - Mathf.Floor(_regenerationPool);
+        }
+
+        if (RegenerationAmount > 0 && _performRegenerationIteration)
+            Invoke(nameof(PerformRegenerationIteration), 1);
     }
 
     public void ProcessDamage(int damage)

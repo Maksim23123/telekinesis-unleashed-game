@@ -24,9 +24,7 @@ public class PlayerStatsHandler : MonoBehaviour
     [SerializeField]
     float _resistance;
     [SerializeField]
-    float _regenerationAmount;
-    [SerializeField]
-    float _regenerationRate;
+    float _regeneration;
     
 
     EntityHealthManager _healthManager;
@@ -66,6 +64,8 @@ public class PlayerStatsHandler : MonoBehaviour
         PlayerController.Instance.CharacterControllerScript.JumpStrength = _jumpStrength;
 
         _damageHandler.Resistance = _resistance;
+
+        _healthManager.RegenerationAmount = _regeneration;
     }
 
     private void ApplyHealthStat()
