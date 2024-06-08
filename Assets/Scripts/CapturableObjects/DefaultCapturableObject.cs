@@ -19,7 +19,19 @@ public class DefaultCapturableObject : CapturableObject
 
     public override float GetContactDamage()
     {
-        return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * DamageMultiplier;
+        float aditionalMultiplier = 1;
+
+        if (Random.value < StatsStorage._criticalHitChance)
+        {
+            aditionalMultiplier = StatsStorage._criticalMultiplier;
+
+            //DEBUG
+            // Debug.Log("Crit");
+        }
+        //DEBUG
+        // Debug.Log(Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * StatsStorage._damageMultiplier * aditionalMultiplier);
+
+        return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * StatsStorage._damageMultiplier * aditionalMultiplier;
     }
 
     private void Start()

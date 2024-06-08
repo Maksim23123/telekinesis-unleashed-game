@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract class CapturableObject : MonoBehaviour
 {
-    private float _damageMultiplier;
+    private CapturableObjectStatsStorage statsStorage = new CapturableObjectStatsStorage();
 
-    public float DamageMultiplier { get => _damageMultiplier; set => _damageMultiplier = value; }
+    public CapturableObjectStatsStorage StatsStorage { get => statsStorage; set => statsStorage = value; }
 
     public abstract void ProcessManipulation(Vector3 direction, float power);
 

@@ -25,8 +25,8 @@ public class PlayerObjectManager : MonoBehaviour
     }
 
     public GameObject CapturedObject { get; private set; }
-    public float DamageMultipier { get => _damageMultipier; set => _damageMultipier = value; }
     public float CaptureZoneRadius { get => _captureZoneRadius; set => _captureZoneRadius = value; }
+    public CapturableObjectStatsStorage ObjectStatsStorage { get => _objectStatsStorage; set => _objectStatsStorage = value; }
 
     [SerializeField]
     private LayerMask _capturableObjectsLayers;
@@ -34,9 +34,9 @@ public class PlayerObjectManager : MonoBehaviour
     [SerializeField]
     private LayerMask _raycastTestLayers;
 
-    private float _damageMultipier = 1f;
+    private CapturableObjectStatsStorage _objectStatsStorage = new CapturableObjectStatsStorage();
 
-    private float _defaultDamageMultiplier = 1f;
+    private CapturableObjectStatsStorage _defaultObjectStatsStorage = new CapturableObjectStatsStorage();
 
     private float _captureZoneRadius = 2.7f;
 
@@ -66,8 +66,8 @@ public class PlayerObjectManager : MonoBehaviour
             CapturedObject = firstAvailable;
             if (CapturedObject.TryGetComponent(out CapturableObject capturableObject))
             {
-                _defaultDamageMultiplier = capturableObject.DamageMultiplier;
-                capturableObject.DamageMultiplier = _damageMultipier;
+                _defaultObjectStatsStorage = capturableObject.StatsStorage;
+                capturableObject.StatsStorage = _objectStatsStorage;
             }
                 
 
@@ -136,7 +136,7 @@ public class PlayerObjectManager : MonoBehaviour
         //---
 
         if (CapturedObject != null && CapturedObject.TryGetComponent(out CapturableObject capturableObject))
-            capturableObject.DamageMultiplier = _defaultDamageMultiplier;
+            capturableObject.StatsStorage = _defaultObjectStatsStorage;
         CapturedObject = null;
     }
 

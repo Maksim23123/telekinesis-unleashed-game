@@ -18,6 +18,8 @@ public class PlayerStatsHandler : MonoBehaviour
     [SerializeField] 
     float _criticalHitMultiplier;
     [SerializeField]
+    float _criticalHitChance;
+    [SerializeField]
     int _healthCount;
     [SerializeField]
     float _resistance;
@@ -52,7 +54,10 @@ public class PlayerStatsHandler : MonoBehaviour
     private void ApplyStats()
     {
         ApplyHealthStat();
-        PlayerObjectManager.Instance.DamageMultipier = _damageMultiplier;
+        
+        CapturableObjectStatsStorage objectStatsStorage = new CapturableObjectStatsStorage(_damageMultiplier, _criticalHitMultiplier, _criticalHitChance);
+        PlayerObjectManager.Instance.ObjectStatsStorage = objectStatsStorage;
+
         PlayerObjectManager.Instance.CaptureZoneRadius = _captureZoneRadius;
         PlayerObjectManipulation.Instance.ManipulationCooldown = _objectManipulationCooldown;
         PlayerController.Instance.CharacterControllerScript.Speed = _movementSpeed;

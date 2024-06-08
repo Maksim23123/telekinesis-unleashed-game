@@ -770,7 +770,8 @@ MonoBehaviour:
   _captureZoneRadius: 2.7
   _movementSpeed: 12
   _jumpStrength: 6
-  _criticalHitMultiplier: 0
+  _criticalHitMultiplier: 2
+  _criticalHitChance: 0.05
   _healthCount: 500
   _resistance: 0
   _regenerationAmount: 0
