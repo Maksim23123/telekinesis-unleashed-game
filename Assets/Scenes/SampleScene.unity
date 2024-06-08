@@ -491,6 +491,7 @@ GameObject:
   - component: {fileID: 83932932}
   - component: {fileID: 83932933}
   - component: {fileID: 83932934}
+  - component: {fileID: 83932935}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -752,6 +753,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e5a70775b369548958f5c118e440ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &83932935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83932921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 227545fdc2f67294ebb31ebf79c9230a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damageMultiplier: 1
+  _objectManipulationCooldown: 0
+  _movementSpeed: 0
+  _jumpHeight: 0
+  _criticalHitMultiplier: 0
+  _healthCount: 500
+  _resistance: 0
+  _regenerationAmount: 0
+  _regenerationRate: 0
+  _captureZoneSize: 0
 --- !u!1 &89449553
 GameObject:
   m_ObjectHideFlags: 0

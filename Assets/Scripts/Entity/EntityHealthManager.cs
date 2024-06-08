@@ -24,7 +24,16 @@ public class EntityHealthManager : MonoBehaviour
     bool _damageTakingOnCooldown = false;
 
     public int CurrentHealth { get => _currentHealth; }
-    public int MaxHealth { get => _maxHealth; }
+    public int MaxHealth 
+    { 
+        get => _maxHealth;
+
+        set 
+        {
+            _maxHealth = Mathf.Clamp(value, 1, int.MaxValue);
+            healthChanged?.Invoke(_currentHealth);
+        }
+    }
 
     public void ProcessDamage(int damage)
     {
