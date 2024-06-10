@@ -39,7 +39,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _target = PlayerObjectManager.Instance.gameObject;
+        _target = PlayerPossessableObjectManager.Instance.gameObject;
     }
 
     private void FixedUpdate()

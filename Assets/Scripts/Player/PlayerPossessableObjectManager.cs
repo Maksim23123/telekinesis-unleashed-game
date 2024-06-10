@@ -1,23 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using Unity.VisualScripting;
-using UnityEditor.TerrainTools;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class PlayerObjectManager : MonoBehaviour
+public class PlayerPossessableObjectManager : MonoBehaviour
 {
-    private static PlayerObjectManager _instance;
+    private static PlayerPossessableObjectManager _instance;
 
-    public static PlayerObjectManager Instance
+    public static PlayerPossessableObjectManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<PlayerObjectManager>();
+                _instance = FindObjectOfType<PlayerPossessableObjectManager>();
             }
 
             return _instance;
@@ -30,9 +25,6 @@ public class PlayerObjectManager : MonoBehaviour
 
     [SerializeField]
     private LayerMask _capturableObjectsLayers;
-
-    [SerializeField]
-    private LayerMask _raycastTestLayers;
 
     private CapturableObjectStatsStorage _objectStatsStorage = new CapturableObjectStatsStorage();
 
@@ -60,7 +52,7 @@ public class PlayerObjectManager : MonoBehaviour
 
     private void PerformCapturing()
     {
-        if (TryGetAvailableCapturableObject(out GameObject firstAvailable))
+        if (PlayerInteractionManager.Instance.TryGetAvailableInteractableObject(out GameObject firstAvailable, _capturableObjectsLayers, _captureZoneRadius))
         {
             PerformCaptureQuiting();
             CapturedObject = firstAvailable;
@@ -69,7 +61,7 @@ public class PlayerObjectManager : MonoBehaviour
                 _defaultObjectStatsStorage = capturableObject.StatsStorage;
                 capturableObject.StatsStorage = _objectStatsStorage;
             }
-                
+
 
             // DEBUG
             //---
@@ -83,38 +75,6 @@ public class PlayerObjectManager : MonoBehaviour
             }
             //---
         }
-    }
-
-    private bool TryGetAvailableCapturableObject(out GameObject firstAvailable)
-    {
-        firstAvailable = null;
-
-        Vector3 mousePos = StaticTools.GetMousePositionInWorld();
-
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, _captureZoneRadius, Vector2.down, 0, _capturableObjectsLayers);
-
-        GameObject[] reachableObjects = hits.Select(x => x.transform.gameObject).ToArray();
-
-        List<GameObject> objectsByDistance = reachableObjects
-            .OrderBy(x => Vector3.Distance(x.transform.position, mousePos)).ToList();
-
-        if (objectsByDistance.Count > 0 && PerformFinalObjectTest(objectsByDistance[0]))
-        {
-            firstAvailable = objectsByDistance[0];
-            return true;
-        }
-
-        return false;
-    }
-
-    private bool PerformFinalObjectTest(GameObject testedObject)
-    {
-        Vector2 directionTowardsItem = (testedObject.transform.position - gameObject.transform.position).normalized;
-        RaycastHit2D raycastHit = Physics2D.Raycast(gameObject.transform.position, directionTowardsItem, _captureZoneRadius, _raycastTestLayers);
-        if (raycastHit.transform != null && raycastHit.transform.gameObject == testedObject.gameObject)
-            return true;
-        else
-            return false;
     }
 
     private void PerformCaptureQuiting()

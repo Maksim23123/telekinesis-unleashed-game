@@ -190,7 +190,7 @@ MonoBehaviour:
   _characterController: {fileID: 8421312373836556325}
   _groundLayers:
     serializedVersion: 2
-    m_Bits: 1793
+    m_Bits: 1025
   _maxStairSize: 0.4
 --- !u!114 &8421312373836556325
 MonoBehaviour:

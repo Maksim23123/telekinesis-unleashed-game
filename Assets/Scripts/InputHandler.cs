@@ -20,6 +20,9 @@ public class InputHandler : MonoBehaviour
     [SerializeField]
     private KeyCode _stepOnLadder;
 
+    [SerializeField]
+    private KeyCode _pickUpItem;
+
     private static InputHandler _instance;
 
     public static InputHandler Instance
@@ -57,14 +60,16 @@ public class InputHandler : MonoBehaviour
             PlayerLadderHandler.Instance.ExitLadderRequest();
         }
         if (Input.GetKey(_captureObjectButton))
-            PlayerObjectManager.Instance.RequestCapturing();
+            PlayerPossessableObjectManager.Instance.RequestCapturing();
         if (Input.GetKey(_quitCapturingButton))
-            PlayerObjectManager.Instance.RequestQuitCapturing();
+            PlayerPossessableObjectManager.Instance.RequestQuitCapturing();
         if (Input.GetKey(_performManipulationButton))
             PlayerObjectManipulation.Instance.RequestManipulation();
         if (Input.GetKey(_fallThroughOneWayPlatform))
             OneWayPlatformHandler.Instance.FallThroughCurrentPlatform();
         if (Input.GetKey(_stepOnLadder))
             PlayerLadderHandler.Instance.PostStepOnLadderRequest();
+        if (Input.GetKey(_pickUpItem))
+            PlayerItemsManager.Instance.RequestPickUp();
     }
 }
