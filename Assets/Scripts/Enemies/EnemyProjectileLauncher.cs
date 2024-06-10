@@ -39,6 +39,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //DEBUG
         _target = PlayerPossessableObjectManager.Instance.gameObject;
     }
 

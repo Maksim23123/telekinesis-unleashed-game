@@ -19,6 +19,9 @@ public class PlayerItemsManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    PlayerStatsHandler _playerStatsHandler;
+
     private readonly float _pickUpZoneRadius = 2.7f;
 
     [SerializeField]
@@ -40,6 +43,10 @@ public class PlayerItemsManager : MonoBehaviour
     {
         if (PlayerInteractionManager.Instance.TryGetAvailableInteractableObject(out GameObject firstAvailable, _itemLayers, _pickUpZoneRadius))
         {
+            if (firstAvailable.TryGetComponent(out Item itemScript))
+            {
+                _playerStatsHandler?.AddStatsModifier(itemScript.StatsModifier);
+            }
             Destroy(firstAvailable);
         }
     }
