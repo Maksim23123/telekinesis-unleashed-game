@@ -79,24 +79,30 @@ public class PlayerStatsHandler : MonoBehaviour
         }
     }
 
-    public void AddStatsModifier(PlayerStatsStorage statsModifier)
+    public int AddStatsModifier(PlayerStatsStorage statsModifier)
     {
+        int statsModifierId = 0;
+
         StatsModifierSlot[] buffer = _statsModifierSlots.Where(x => x.StatsModifier == statsModifier).Take(1).ToArray();
         StatsModifierSlot slot;
+
         if (buffer.Length > 0)
         {
             slot = buffer[0];
             slot.Count++;
+            statsModifierId = slot.ModifierSlotId;
         }
         else
         {
-            int availableId = 0;
-            while (_statsModifierSlots.Any(x => x.ModifierSlotId == availableId))
-                availableId++;
+            int availableId = StaticTools.GetFreeId(_statsModifierSlots, x => x.ModifierSlotId);
             slot = new StatsModifierSlot(availableId, 1, statsModifier);
             _statsModifierSlots.Add(slot);
+            statsModifierId = availableId;
         }
+
         UpdateModifiedStats();
         ApplyStats();
+
+        return statsModifierId;
     }
 }

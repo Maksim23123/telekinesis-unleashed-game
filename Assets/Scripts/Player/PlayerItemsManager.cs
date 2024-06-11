@@ -29,6 +29,8 @@ public class PlayerItemsManager : MonoBehaviour
 
     bool _pickUpAllowed = true;
 
+    List<ItemInfluenceReferenceSlot> _itemInfluenceReferenceSlots = new List<ItemInfluenceReferenceSlot>();
+
     public void RequestPickUp()
     {
         if (_pickUpAllowed)
@@ -45,8 +47,10 @@ public class PlayerItemsManager : MonoBehaviour
         {
             if (firstAvailable.TryGetComponent(out Item itemScript))
             {
-                _playerStatsHandler?.AddStatsModifier(itemScript.StatsModifier);
-                ItemEventsExecutor.Instance.AddItemEvent(itemScript.ItemEvent);
+                int statsModifierId = _playerStatsHandler.AddStatsModifier(itemScript.StatsModifier);
+                int itemEventId = ItemEventsExecutor.Instance.AddItemEvent(itemScript.ItemEvent);
+                _itemInfluenceReferenceSlots.Add(new ItemInfluenceReferenceSlot(StaticTools.GetFreeId(_itemInfluenceReferenceSlots, x => x.SlotId)
+                    , itemScript.ItemID, statsModifierId, itemEventId));
             }
             Destroy(firstAvailable);
         }
