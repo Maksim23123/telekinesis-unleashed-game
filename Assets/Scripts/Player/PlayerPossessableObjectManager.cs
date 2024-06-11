@@ -21,14 +21,14 @@ public class PlayerPossessableObjectManager : MonoBehaviour
 
     public GameObject CapturedObject { get; private set; }
     public float CaptureZoneRadius { get => _captureZoneRadius; set => _captureZoneRadius = value; }
-    public CapturableObjectStatsStorage ObjectStatsStorage { get => _objectStatsStorage; set => _objectStatsStorage = value; }
+    public PossessableObjectStatsStorage ObjectStatsStorage { get => _objectStatsStorage; set => _objectStatsStorage = value; }
 
     [SerializeField]
     private LayerMask _capturableObjectsLayers;
 
-    private CapturableObjectStatsStorage _objectStatsStorage = new CapturableObjectStatsStorage();
+    private PossessableObjectStatsStorage _objectStatsStorage = new PossessableObjectStatsStorage();
 
-    private CapturableObjectStatsStorage _defaultObjectStatsStorage = new CapturableObjectStatsStorage();
+    private PossessableObjectStatsStorage _defaultObjectStatsStorage = new PossessableObjectStatsStorage();
 
     private float _captureZoneRadius = 2.7f;
 
@@ -56,7 +56,7 @@ public class PlayerPossessableObjectManager : MonoBehaviour
         {
             PerformCaptureQuiting();
             CapturedObject = firstAvailable;
-            if (CapturedObject.TryGetComponent(out CapturableObject capturableObject))
+            if (CapturedObject.TryGetComponent(out PossessableObject capturableObject))
             {
                 _defaultObjectStatsStorage = capturableObject.StatsStorage;
                 capturableObject.StatsStorage = _objectStatsStorage;
@@ -95,7 +95,7 @@ public class PlayerPossessableObjectManager : MonoBehaviour
         }
         //---
 
-        if (CapturedObject != null && CapturedObject.TryGetComponent(out CapturableObject capturableObject))
+        if (CapturedObject != null && CapturedObject.TryGetComponent(out PossessableObject capturableObject))
             capturableObject.StatsStorage = _defaultObjectStatsStorage;
         CapturedObject = null;
     }

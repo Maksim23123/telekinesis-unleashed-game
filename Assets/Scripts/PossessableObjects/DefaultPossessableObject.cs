@@ -4,7 +4,7 @@ using System.IO.Pipes;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class DefaultCapturableObject : CapturableObject
+public class DefaultPossessableObject : PossessableObject
 {
     Rigidbody2D _rigidbody;
 

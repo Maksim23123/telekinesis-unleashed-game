@@ -40,7 +40,7 @@ public class PlayerStatsHandler : MonoBehaviour
     {
         ApplyHealthStat();
         
-        CapturableObjectStatsStorage objectStatsStorage = new CapturableObjectStatsStorage(_modifiedStats.DamageMultiplier
+        PossessableObjectStatsStorage objectStatsStorage = new PossessableObjectStatsStorage(_modifiedStats.DamageMultiplier
             , _modifiedStats.CriticalHitMultiplier, _modifiedStats.CriticalHitChance);
         PlayerPossessableObjectManager.Instance.ObjectStatsStorage = objectStatsStorage;
 

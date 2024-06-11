@@ -2566,7 +2566,7 @@ GameObject:
   - component: {fileID: 631029356}
   - component: {fileID: 631029357}
   m_Layer: 8
-  m_Name: Iteractable object
+  m_Name: Possessable object
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5504,7 +5504,7 @@ GameObject:
   - component: {fileID: 1469569064}
   - component: {fileID: 1469569068}
   m_Layer: 8
-  m_Name: Iteractable object (1)
+  m_Name: Possessable object (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

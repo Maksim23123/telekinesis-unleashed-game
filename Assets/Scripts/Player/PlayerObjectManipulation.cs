@@ -47,7 +47,7 @@ public class PlayerObjectManipulation : MonoBehaviour
     private void PerformManipulation()
     {
         GameObject manipulatedObject = PlayerPossessableObjectManager.Instance.CapturedObject;
-        if (manipulatedObject != null && manipulatedObject.TryGetComponent(out CapturableObject capturableObject))
+        if (manipulatedObject != null && manipulatedObject.TryGetComponent(out PossessableObject capturableObject))
         {
             Vector3 mousePos = StaticTools.GetMousePositionInWorld();
             Vector3 powerVector = mousePos - manipulatedObject.transform.position;
