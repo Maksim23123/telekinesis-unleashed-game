@@ -31,8 +31,8 @@ public class InputHandler : MonoBehaviour
         {
             if (_instance == null)
             {
-                GameObject instance = new GameObject("Input Handler");
-                instance.AddComponent<InputHandler>();
+                GameObject newGameObject = new GameObject("Input Handler");
+                newGameObject.AddComponent<InputHandler>();
             }
 
             return _instance;

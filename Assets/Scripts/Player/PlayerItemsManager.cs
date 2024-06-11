@@ -46,6 +46,7 @@ public class PlayerItemsManager : MonoBehaviour
             if (firstAvailable.TryGetComponent(out Item itemScript))
             {
                 _playerStatsHandler?.AddStatsModifier(itemScript.StatsModifier);
+                ItemEventsExecutor.Instance.AddItemEvent(itemScript.ItemEvent);
             }
             Destroy(firstAvailable);
         }
