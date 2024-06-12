@@ -1494,7 +1494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 201d3eae7ea2622419624276a4fc6754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemID: 0
+  _itemID: 2
   _statsModifier:
     _damageMultiplier: 0
     _objectManipulationCooldown: 0
@@ -3810,7 +3810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 201d3eae7ea2622419624276a4fc6754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemID: 0
+  _itemID: 1
   _statsModifier:
     _damageMultiplier: 0
     _objectManipulationCooldown: 0
@@ -4815,7 +4815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 201d3eae7ea2622419624276a4fc6754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemID: 0
+  _itemID: 3
   _statsModifier:
     _damageMultiplier: 0
     _objectManipulationCooldown: 0
