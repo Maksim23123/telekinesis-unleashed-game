@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntityHealthManager : MonoBehaviour
+public class EntityHealthManager : MonoBehaviour, IRecordable
 {
     public event Action runOutOfHealth;
 
@@ -107,5 +107,19 @@ public class EntityHealthManager : MonoBehaviour
     {
         _currentHealth = _maxHealth;
         healthChanged?.Invoke(_currentHealth);
+    }
+
+    public ObjectData GetObjectData()
+    {
+        ObjectData data = new ObjectData();
+        data.variableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
+        data.variableValues.Add(nameof(_maxHealth), _maxHealth.ToString());
+        return data;
+    }
+
+    public void SetObjectData(ObjectData objectData)
+    {
+        int.TryParse(objectData.variableValues[nameof(_currentHealth)], out _currentHealth);
+        int.TryParse(objectData.variableValues[nameof(_maxHealth)], out _maxHealth);
     }
 }

@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 1837862242729897433}
   - component: {fileID: -8671300378081610665}
   - component: {fileID: 153471810552038655}
+  - component: {fileID: 4007924134781431302}
   m_Layer: 10
   m_Name: Soldier
   m_TagString: Untagged
@@ -251,6 +252,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff7e3bdfd3d79d744bf9d33dec6d060c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4007924134781431302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260962628893031756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 183ed7b4926c6414591d1ba72b27c77f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameObjectPrefabPath: Assets/Prefabs/Enemies/Soldier.prefab
 --- !u!1 &5817992819667207111
 GameObject:
   m_ObjectHideFlags: 0
