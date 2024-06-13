@@ -10,7 +10,7 @@ using System.IO;
 
 public static class SaveLoadManager
 {
-    public static event Action _saveGame;
+    public static event Action _gatherDataFromDataSources;
 
     private static Dictionary<int, ObjectData> _dataStack = new Dictionary<int, ObjectData>();
 
@@ -18,14 +18,13 @@ public static class SaveLoadManager
 
     private static string _currentSaveName = "defaultSave";
 
-
     public static string CurrentSaveName { get => _currentSaveName; set => _currentSaveName = value; }
 
     private static int _objectDataSourceCount = 0;
 
     public static void SaveGame()
     {
-        _saveGame?.Invoke();
+        _gatherDataFromDataSources?.Invoke();
     }
 
     public static void LoadGame() 
@@ -35,11 +34,16 @@ public static class SaveLoadManager
         {
             UnpackObjectData(data);
         }
+
+        _gatherDataFromDataSources = null;
+        _objectDataSourceCount = 0;
+
+        SceneRemaker.RequestRemakeScene(loadedData);
     }
 
     public static void RegisterObjectDataSource(Action action)
     {
-        _saveGame += action;
+        _gatherDataFromDataSources += action;
         _objectDataSourceCount++;
     }
 

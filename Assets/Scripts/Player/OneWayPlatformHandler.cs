@@ -11,22 +11,21 @@ public class OneWayPlatformHandler : MonoBehaviour
     [SerializeField]
     float _fallThroughTime;
 
-    private static OneWayPlatformHandler _instance;
-
-    
     bool _fallThroughOnCooldown;
+    
+    private static OneWayPlatformHandler _instance;
 
     public static OneWayPlatformHandler Instance
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<OneWayPlatformHandler>();
-            }
-
             return _instance;
         }
+    }
+
+    void Awake()
+    {
+        _instance = this;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -11,13 +11,13 @@ public class PlayerObjectManipulation : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<PlayerObjectManipulation>();
-            }
-
             return _instance;
         }
+    }
+
+    void Awake()
+    {
+        _instance = this;
     }
 
     public float ManipulationCooldown { get => _manipulationCooldown; set => _manipulationCooldown = value; }

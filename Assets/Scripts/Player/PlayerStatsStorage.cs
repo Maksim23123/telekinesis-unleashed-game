@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class PlayerStatsStorage
+public class PlayerStatsStorage : IRecordable
 {
     [SerializeField]
     float _damageMultiplier;
@@ -37,6 +37,8 @@ public class PlayerStatsStorage
     public int HealthCount { get => _healthCount; set => _healthCount = value; }
     public float Resistance { get => _resistance; set => _resistance = value; }
     public float Regeneration { get => _regeneration; set => _regeneration = value; }
+
+    public int Priority => throw new NotImplementedException();
 
     public static PlayerStatsStorage operator +(PlayerStatsStorage s1, PlayerStatsStorage s2)
     {
@@ -104,5 +106,35 @@ public class PlayerStatsStorage
         int hash1 = HashCode.Combine(DamageMultiplier, ObjectManipulationCooldown, CaptureZoneRadius, MovementSpeed, JumpStrength);
         int hash2 = HashCode.Combine(CriticalHitMultiplier, CriticalHitChance, HealthCount, Resistance, Regeneration);
         return HashCode.Combine(hash1, hash2);
+    }
+
+    public ObjectData GetObjectData()
+    {
+        ObjectData data = new ObjectData();
+        data.variableValues.Add(nameof(DamageMultiplier), DamageMultiplier.ToString());
+        data.variableValues.Add(nameof(ObjectManipulationCooldown), ObjectManipulationCooldown.ToString());
+        data.variableValues.Add(nameof(CaptureZoneRadius), CaptureZoneRadius.ToString());
+        data.variableValues.Add(nameof(MovementSpeed), MovementSpeed.ToString());
+        data.variableValues.Add(nameof(JumpStrength), JumpStrength.ToString());
+        data.variableValues.Add(nameof(CriticalHitMultiplier), CriticalHitMultiplier.ToString());
+        data.variableValues.Add(nameof(CriticalHitChance), CriticalHitChance.ToString());
+        data.variableValues.Add(nameof(HealthCount), HealthCount.ToString());
+        data.variableValues.Add(nameof(Resistance), Resistance.ToString());
+        data.variableValues.Add(nameof(Regeneration), Regeneration.ToString());
+        return data;
+    }
+
+    public void SetObjectData(ObjectData objectData)
+    {
+        float.TryParse(objectData.variableValues[nameof(DamageMultiplier)], out _damageMultiplier);
+        float.TryParse(objectData.variableValues[nameof(ObjectManipulationCooldown)], out _objectManipulationCooldown);
+        float.TryParse(objectData.variableValues[nameof(CaptureZoneRadius)], out _captureZoneRadius);
+        float.TryParse(objectData.variableValues[nameof(MovementSpeed)], out _movementSpeed);
+        float.TryParse(objectData.variableValues[nameof(JumpStrength)], out _jumpStrength);
+        float.TryParse(objectData.variableValues[nameof(CriticalHitMultiplier)], out _criticalHitMultiplier);
+        float.TryParse(objectData.variableValues[nameof(CriticalHitChance)], out _criticalHitChance);
+        int.TryParse(objectData.variableValues[nameof(HealthCount)], out _healthCount);
+        float.TryParse(objectData.variableValues[nameof(Resistance)], out _resistance);
+        float.TryParse(objectData.variableValues[nameof(Regeneration)], out _regeneration);
     }
 }

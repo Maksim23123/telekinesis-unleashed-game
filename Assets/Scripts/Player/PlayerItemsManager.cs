@@ -10,13 +10,13 @@ public class PlayerItemsManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<PlayerItemsManager>();
-            }
-
             return _instance;
         }
+    }
+
+    void Awake()
+    {
+        _instance = this;
     }
 
     [SerializeField]

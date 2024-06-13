@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.Accessibility;
+using UnityEngine.Rendering.Universal;
 
-public class PlayerStatsHandler : MonoBehaviour
+public class PlayerStatsHandler : MonoBehaviour, IRecordable
 {
     [SerializeField]
     private PlayerStatsStorage _defaultPlayerStats;
@@ -16,6 +18,8 @@ public class PlayerStatsHandler : MonoBehaviour
 
     EntityHealthManager _healthManager;
     DamageHandler _damageHandler;
+
+    public int Priority { get => 1; }
 
     private void Start()
     {
@@ -28,6 +32,12 @@ public class PlayerStatsHandler : MonoBehaviour
         UpdateModifiedStats();
         ApplyStats();
         ResetPlayer();
+
+        if (_healthManager != null)
+        {
+            _healthManager.TriggerWaitingObjectDataUnpacking();
+        }
+
     }
 
     private void Connect()
@@ -104,5 +114,31 @@ public class PlayerStatsHandler : MonoBehaviour
         ApplyStats();
 
         return statsModifierId;
+    }
+
+    public ObjectData GetObjectData()
+    {
+        ObjectData objectData = new ObjectData();
+        objectData.objectDataUnits.Add(nameof(_defaultPlayerStats), _defaultPlayerStats.GetObjectData());
+
+        for (int i = 0; i < _statsModifierSlots.Count; i++)
+        {
+            objectData.objectDataUnits.Add(nameof(_statsModifierSlots) + i, _statsModifierSlots[i].GetObjectData());
+        }
+
+        return objectData;
+    }
+
+    public void SetObjectData(ObjectData objectData)
+    {
+        _defaultPlayerStats.SetObjectData(objectData.objectDataUnits[nameof(_defaultPlayerStats)]);
+
+        _statsModifierSlots = new List<StatsModifierSlot>();
+        int statsModifierSlotIndex = 0;
+        while (objectData.objectDataUnits.TryGetValue(nameof(_statsModifierSlots) + statsModifierSlotIndex, out ObjectData slotData))
+        {
+            _statsModifierSlots.Add(StatsModifierSlot.RemakeStatsModifierSlot(slotData));
+            statsModifierSlotIndex++;
+        }
     }
 }

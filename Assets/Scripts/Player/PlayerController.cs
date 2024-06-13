@@ -11,13 +11,13 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<PlayerController>();
-            }
-
             return _instance;
         }
+    }
+
+    void Awake()
+    {
+        _instance = this;
     }
 
     [SerializeField]

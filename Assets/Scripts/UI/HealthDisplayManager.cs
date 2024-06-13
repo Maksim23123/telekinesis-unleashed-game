@@ -6,13 +6,13 @@ using UnityEngine;
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class HealthDisplayManager : MonoBehaviour
 {
-    TextMeshProUGUI _textMesh;
+    protected TextMeshProUGUI _textMesh;
 
     [SerializeField]
-    string _prefix;
+    protected string _prefix;
 
     [SerializeField]
-    EntityHealthManager _healthManager;
+    protected EntityHealthManager _healthManager;
 
     private void Start()
     {
@@ -25,12 +25,12 @@ public class HealthDisplayManager : MonoBehaviour
     }
 
 
-    private void OnHealthChanged(int health)
+    protected void OnHealthChanged(int health)
     {
         UpdateHealthText();
     }
 
-    private void UpdateHealthText()
+    protected void UpdateHealthText()
     {
         _textMesh.text = _prefix + _healthManager.CurrentHealth + "/" + _healthManager.MaxHealth;
     }

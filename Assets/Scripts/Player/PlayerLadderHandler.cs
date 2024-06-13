@@ -11,13 +11,13 @@ public class PlayerLadderHandler : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<PlayerLadderHandler>();
-            }
-
             return _instance;
         }
+    }
+
+    void Awake()
+    {
+        _instance = this;
     }
 
     private float _verticalFactor;

@@ -10,13 +10,13 @@ public class PlayerPossessableObjectManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<PlayerPossessableObjectManager>();
-            }
-
             return _instance;
         }
+    }
+
+    void Awake()
+    {
+        _instance = this;
     }
 
     public GameObject CapturedObject { get; private set; }

@@ -21,6 +21,10 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
     [SerializeField]
     float _afterDamageImortalityTime = 0.5f;
 
+    [Header("Save Load System related")]
+    [SerializeField]
+    bool _triggerObjectDataUnpack = false;
+
     bool _damageTakingOnCooldown = false;
 
     bool _performRegenerationIteration = true;
@@ -29,7 +33,15 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
 
     float _regenerationPool;
 
-    public int CurrentHealth { get => _currentHealth; }
+    ObjectData _waitingObjectData;
+
+    public int CurrentHealth 
+    { 
+        get => _currentHealth;
+        
+        set => _currentHealth = Mathf.Clamp(value, 0, _maxHealth);
+    }
+
     public int MaxHealth 
     { 
         get => _maxHealth;
@@ -52,6 +64,8 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
                 PerformRegenerationIteration();
         } 
     }
+
+    public int Priority { get => 0; }
 
     private void Start()
     {
@@ -111,15 +125,31 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
 
     public ObjectData GetObjectData()
     {
-        ObjectData data = new ObjectData();
-        data.variableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
-        data.variableValues.Add(nameof(_maxHealth), _maxHealth.ToString());
-        return data;
+        ObjectData objectData = new ObjectData();
+        objectData.variableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
+        return objectData;
     }
 
     public void SetObjectData(ObjectData objectData)
     {
+        if (_triggerObjectDataUnpack)
+            _waitingObjectData = objectData;
+        else
+            UnpackObjectData(objectData);
+    }
+
+    public void TriggerWaitingObjectDataUnpacking()
+    {
+        if (_triggerObjectDataUnpack && _waitingObjectData != null)
+        {
+            UnpackObjectData(_waitingObjectData);
+            _waitingObjectData = null;
+        }
+    }
+
+    public void UnpackObjectData(ObjectData objectData)
+    {
         int.TryParse(objectData.variableValues[nameof(_currentHealth)], out _currentHealth);
-        int.TryParse(objectData.variableValues[nameof(_maxHealth)], out _maxHealth);
+        healthChanged?.Invoke(_currentHealth);
     }
 }

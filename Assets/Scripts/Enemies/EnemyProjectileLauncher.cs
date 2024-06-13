@@ -40,11 +40,14 @@ public class EnemyProjectileLauncher : MonoBehaviour
     void Start()
     {
         //DEBUG
-        _target = PlayerPossessableObjectManager.Instance.gameObject;
+        //_target = PlayerPossessableObjectManager.Instance.gameObject;
     }
 
     private void FixedUpdate()
     {
+
+        // FIX
+        /*
         Vector2 direction = (_target.transform.position - transform.position).normalized;
         TestIfTargetIsVisible(direction);
 
@@ -55,6 +58,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
             _shootingAllowed = false;
             Invoke(nameof(ResetShootingPermission), _shootingCooldownTime);
         }
+        */
     }
 
     private void Shot(Vector2 direction)

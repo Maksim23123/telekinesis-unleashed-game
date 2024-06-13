@@ -14,4 +14,14 @@ public class CameraController : MonoBehaviour
     {
         transform.position = Vector2.Lerp(transform.position, _mainObject.transform.position, _lerpFactorScalar);
     }
+
+    private void Awake()
+    {
+        PlayerStatusInformer.newPlayerAssigned += OnNewTargetAssigned;
+    }
+
+    private void OnNewTargetAssigned(GameObject target)
+    {
+        _mainObject = target.transform;
+    }
 }
