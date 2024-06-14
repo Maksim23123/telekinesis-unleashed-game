@@ -1,39 +1,54 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
-public static class SaveLoadManager
+public class SaveLoadManager : MonoBehaviour
 {
-    public static event Action _gatherDataFromDataSources;
+    private static SaveLoadManager _instance;
 
-    private static Dictionary<int, ObjectData> _dataStack = new Dictionary<int, ObjectData>();
+    public static SaveLoadManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<SaveLoadManager>();
+            }
 
-    private static readonly string FILE_EXTENSION = "save";
+            return _instance;
+        }
+    }
 
-    private static string _currentSaveName = "defaultSave";
+    public event Action _gatherDataFromDataSources;
 
-    public static string CurrentSaveName { get => _currentSaveName; set => _currentSaveName = value; }
+    private readonly object _lockObject = new object();
+    private ObjectData _dataStack = new ObjectData();
 
-    private static int _objectDataSourceCount = 0;
+    private readonly string FILE_EXTENSION = "save";
 
-    public static void SaveGame()
+    private string _currentSaveName = "defaultSave";
+
+    public string CurrentSaveName { get => _currentSaveName; set => _currentSaveName = value; }
+
+    private int _objectDataSourceCount = 0;
+
+    public void SaveGame()
     {
         _gatherDataFromDataSources?.Invoke();
     }
 
-    public static void LoadGame() 
+    public void LoadGame()
     {
-        ObjectData[] loadedData = ReadDataFromFile();
+        ObjectData loadedData = ReadDataFromFile();
+        /*
         foreach (ObjectData data in loadedData)
         {
             UnpackObjectData(data);
-        }
+        }*/
 
         _gatherDataFromDataSources = null;
         _objectDataSourceCount = 0;
@@ -41,41 +56,42 @@ public static class SaveLoadManager
         SceneRemaker.RequestRemakeScene(loadedData);
     }
 
-    public static void RegisterObjectDataSource(Action action)
+    public void RegisterObjectDataSource(Action action)
     {
         _gatherDataFromDataSources += action;
         _objectDataSourceCount++;
     }
 
-    public static int EnrollToDataStack(ObjectData objectData)
+    public int EnrollToDataStack(ObjectData objectData)
     {
-        int stackPositionId = StaticTools.GetFreeId(_dataStack.Keys, x => x);
-        _dataStack.Add(stackPositionId, objectData);
+        int stackPositionId;
+        stackPositionId = StaticTools.GetFreeId(_dataStack.objectDataUnits.Keys.ToArray(), x => int.Parse(x));
+        _dataStack.objectDataUnits.Add(stackPositionId.ToString(), objectData);
         CheckDataStackLoad();
         return stackPositionId;
     }
 
-    private static void CheckDataStackLoad()
+    private void CheckDataStackLoad()
     {
-        if (_dataStack.Count <= _objectDataSourceCount)
+        if (_dataStack.objectDataUnits.Count >= _objectDataSourceCount)
             OnDataStackFull();
     }
 
-    private static void OnDataStackFull()
+    private void OnDataStackFull()
     {
-        ObjectData[] finalDataColection = _dataStack.Values.ToArray();
-        foreach (var data in _dataStack.Values)
+        /*
+        foreach (var data in _dataStack.objectDataUnits.Values)
         {
             UnpackObjectData(data);
-        }
+        }*/
 
-        WriteSaveToFile(finalDataColection);
+        WriteSaveToFile();
 
-        _dataStack.Clear();
+        _dataStack.objectDataUnits.Clear();
     }
-    
+
     //DEBUG
-    private static void UnpackObjectData(ObjectData objectData)
+    private void UnpackObjectData(ObjectData objectData)
     {
         foreach (var key in objectData.variableValues.Keys)
         {
@@ -88,17 +104,22 @@ public static class SaveLoadManager
         }
     }
 
-    private static void WriteSaveToFile(ObjectData[] finalDataColection)
+    private void WriteSaveToFile()
     {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Path.Combine(Application.persistentDataPath, _currentSaveName + "." + FILE_EXTENSION);
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        formatter.Serialize(stream, finalDataColection);
+        foreach (string objectData in _dataStack.objectDataUnits.Keys)
+        {
+            Debug.Log(objectData);
+        }
+
+        formatter.Serialize(stream, _dataStack);
         stream.Close();
     }
 
-    private static ObjectData[] ReadDataFromFile()
+    private ObjectData ReadDataFromFile()
     {
         string path = Path.Combine(Application.persistentDataPath, _currentSaveName + "." + FILE_EXTENSION);
         if (File.Exists(path))
@@ -107,7 +128,12 @@ public static class SaveLoadManager
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 FileStream stream = new FileStream(path, FileMode.Open);
-                ObjectData[] receivedData = (ObjectData[])formatter.Deserialize(stream);
+                ObjectData receivedData = (ObjectData)formatter.Deserialize(stream);
+
+                foreach (string objectData in receivedData.objectDataUnits.Keys)
+                {
+                    Debug.Log(objectData);
+                }
                 stream.Close();
                 return receivedData;
             }

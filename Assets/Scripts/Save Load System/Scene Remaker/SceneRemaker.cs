@@ -9,15 +9,15 @@ public static class SceneRemaker
 {
     public static event Action preRemakeActivity;
     
-    public static void RequestRemakeScene(ObjectData[] gameObjectsData)
+    public static void RequestRemakeScene(ObjectData gameObjectsData)
     {
         preRemakeActivity?.Invoke();
         UnpackGameObjectData(gameObjectsData);
     }
 
-    private static void UnpackGameObjectData(ObjectData[] gameObjectsData)
+    private static void UnpackGameObjectData(ObjectData gameObjectsData)
     {
-        foreach (ObjectData obj in gameObjectsData)
+        foreach (ObjectData obj in gameObjectsData.objectDataUnits.Values)
         {
             if (obj.variableValues.TryGetValue(PerGObjectSaveLoadManager.GAME_OBJECT_PREFAB_PATH_KEY, out string prefabPath))
             {

@@ -8,11 +8,11 @@ public class SaveLoadManagerInterface : MonoBehaviour
 {
     public void RequestSaveGame()
     {
-        SaveLoadManager.SaveGame();
+        SaveLoadManager.Instance.SaveGame();
     }
 
     public void RequestLoadGame()
     {
-        SaveLoadManager.LoadGame();
+        SaveLoadManager.Instance.LoadGame();
     }
 }

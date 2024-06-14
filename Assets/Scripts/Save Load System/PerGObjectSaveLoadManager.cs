@@ -54,11 +54,11 @@ public class PerGObjectSaveLoadManager : MonoBehaviour
     private void Awake()
     {
         _objectIdentificator = GetComponent<GameObjectIdentificator>();
-        SaveLoadManager.RegisterObjectDataSource(OnSaveGame);
+        SaveLoadManager.Instance.RegisterObjectDataSource(OnSaveGame);
     }
 
     private void OnSaveGame()
     {
-        SaveLoadManager.EnrollToDataStack(GetGObjectRecords());
+        SaveLoadManager.Instance.EnrollToDataStack(GetGObjectRecords());
     }
 }
