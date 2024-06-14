@@ -34,7 +34,6 @@ public class StatsModifierSlot : IRecordable
         StatsModifierSlot statsModifierSlot = new StatsModifierSlot(1, 1, new PlayerStatsStorage());
         statsModifierSlot.SetObjectData(objectData);
         return statsModifierSlot;
-
     }
 
     public ObjectData GetObjectData()

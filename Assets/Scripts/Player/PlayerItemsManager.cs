@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerItemsManager : MonoBehaviour
+public class PlayerItemsManager : MonoBehaviour, IRecordable
 {
     private static PlayerItemsManager _instance;
 
@@ -13,6 +13,8 @@ public class PlayerItemsManager : MonoBehaviour
             return _instance;
         }
     }
+
+    public int Priority => 0;
 
     void Awake()
     {
@@ -59,5 +61,29 @@ public class PlayerItemsManager : MonoBehaviour
     private void RestorPickUpAbility()
     {
         _pickUpAllowed = true;
+    }
+
+    public ObjectData GetObjectData()
+    {
+        // CONTINUE HERE
+        ObjectData objectData = new ObjectData();
+        
+        for (int i = 0; i < _itemInfluenceReferenceSlots.Count; i++)
+        {
+            objectData.objectDataUnits.Add(nameof(_itemInfluenceReferenceSlots) + i, _itemInfluenceReferenceSlots[i].GetObjectData());
+        }
+
+        return objectData;
+    }
+
+    public void SetObjectData(ObjectData objectData)
+    {
+        _itemInfluenceReferenceSlots = new List<ItemInfluenceReferenceSlot>();
+        int itemInfIndex = 0;
+        while (objectData.objectDataUnits.TryGetValue(nameof(_itemInfluenceReferenceSlots) + itemInfIndex, out ObjectData slotData))
+        {
+            _itemInfluenceReferenceSlots.Add(ItemInfluenceReferenceSlot.RemakeItemInfluenceReferenceSlot(slotData));
+            itemInfIndex++;
+        }
     }
 }
