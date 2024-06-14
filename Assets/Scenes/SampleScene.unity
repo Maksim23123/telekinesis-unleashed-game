@@ -6313,6 +6313,7 @@ GameObject:
   - component: {fileID: 2146936121}
   - component: {fileID: 2146936120}
   - component: {fileID: 2146936122}
+  - component: {fileID: 2146936123}
   m_Layer: 10
   m_Name: Soldier 1
   m_TagString: Untagged
@@ -6467,6 +6468,22 @@ MonoBehaviour:
   _notTransparentLayers:
     serializedVersion: 2
     m_Bits: 513
+--- !u!114 &2146936123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146936117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7503e2da14477247a8c5fa17373ce46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _notTransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  switchToMinorDistance: 0
 --- !u!1001 &2285125268159109694
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6703,6 +6720,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1586722088}
     m_Modifications:
+    - target: {fileID: 836950374614062255, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: switchToMinorDistance
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 836950374614062255, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+      propertyPath: _notTransparentLayers.m_Bits
+      value: 769
+      objectReference: {fileID: 0}
     - target: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
       propertyPath: m_Name
       value: Soldier

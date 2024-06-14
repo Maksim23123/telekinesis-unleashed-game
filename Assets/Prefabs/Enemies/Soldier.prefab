@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 570883004426774573}
   - component: {fileID: 2819610739811280458}
   - component: {fileID: 4718970406216911794}
+  - component: {fileID: 836950374614062255}
   m_Layer: 10
   m_Name: Soldier
   m_TagString: Untagged
@@ -177,6 +178,7 @@ MonoBehaviour:
   _notTransparentLayers:
     serializedVersion: 2
     m_Bits: 513
+  _maxSpread: 15
 --- !u!114 &7931921316799441834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +309,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _savePossition: 1
   _saveRotation: 0
+--- !u!114 &836950374614062255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4260962628893031756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7503e2da14477247a8c5fa17373ce46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _notTransparentLayers:
+    serializedVersion: 2
+    m_Bits: 769
+  switchToMinorDistance: 8
 --- !u!1 &5817992819667207111
 GameObject:
   m_ObjectHideFlags: 0
