@@ -62,6 +62,11 @@ public class SaveLoadManager : MonoBehaviour
         _objectDataSourceCount++;
     }
 
+    public void UnregisterObjectDataSource(Action action)
+    {
+        _gatherDataFromDataSources -= action;
+    }
+
     public int EnrollToDataStack(ObjectData objectData)
     {
         int stackPositionId;
@@ -73,7 +78,8 @@ public class SaveLoadManager : MonoBehaviour
 
     private void CheckDataStackLoad()
     {
-        if (_dataStack.objectDataUnits.Count >= _objectDataSourceCount)
+        int dataSourcesCount = _gatherDataFromDataSources?.GetInvocationList().Length ?? 0;
+        if (_dataStack.objectDataUnits.Count >= dataSourcesCount)
             OnDataStackFull();
     }
 
@@ -110,11 +116,6 @@ public class SaveLoadManager : MonoBehaviour
         string path = Path.Combine(Application.persistentDataPath, _currentSaveName + "." + FILE_EXTENSION);
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        foreach (string objectData in _dataStack.objectDataUnits.Keys)
-        {
-            Debug.Log(objectData);
-        }
-
         formatter.Serialize(stream, _dataStack);
         stream.Close();
     }
@@ -130,10 +131,6 @@ public class SaveLoadManager : MonoBehaviour
                 FileStream stream = new FileStream(path, FileMode.Open);
                 ObjectData receivedData = (ObjectData)formatter.Deserialize(stream);
 
-                foreach (string objectData in receivedData.objectDataUnits.Keys)
-                {
-                    Debug.Log(objectData);
-                }
                 stream.Close();
                 return receivedData;
             }

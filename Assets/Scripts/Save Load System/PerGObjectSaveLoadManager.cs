@@ -61,4 +61,9 @@ public class PerGObjectSaveLoadManager : MonoBehaviour
     {
         SaveLoadManager.Instance.EnrollToDataStack(GetGObjectRecords());
     }
+
+    private void OnDestroy()
+    {
+        SaveLoadManager.Instance?.UnregisterObjectDataSource(OnSaveGame);
+    }
 }
