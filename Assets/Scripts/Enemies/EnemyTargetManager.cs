@@ -109,7 +109,6 @@ public class EnemyTargetManager : MonoBehaviour
             if (hits.Length >= 1 && hits[0].transform.gameObject == target)
             {
                 isVisible = true;
-                Debug.Log(hits[0].transform.gameObject.name);
             }
                 
         }

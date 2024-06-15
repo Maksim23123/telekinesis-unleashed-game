@@ -7,6 +7,7 @@ public class InputHandler : MonoBehaviour
 {
     [SerializeField]
     private KeyCode _captureObjectButton;
+    private bool _captureObjectButtonPressed;
 
     [SerializeField]
     private KeyCode _quitCapturingButton;
@@ -22,6 +23,7 @@ public class InputHandler : MonoBehaviour
 
     [SerializeField]
     private KeyCode _pickUpItem;
+    private bool _pickUpItemPressed;
 
     private static InputHandler _instance;
 
@@ -59,8 +61,16 @@ public class InputHandler : MonoBehaviour
             PlayerController.Instance.CharacterControllerScript.RequestJump();
             PlayerLadderHandler.Instance.ExitLadderRequest();
         }
-        if (Input.GetKey(_captureObjectButton))
+
+        bool currentCaptureObjectButtonValue = Input.GetKey(_captureObjectButton);
+        if (currentCaptureObjectButtonValue && !_captureObjectButtonPressed)
+        {
             PlayerPossessableObjectManager.Instance.RequestCapturing();
+            _captureObjectButtonPressed = true;
+        }
+        else if (!currentCaptureObjectButtonValue)
+            _captureObjectButtonPressed = false;
+
         if (Input.GetKey(_quitCapturingButton))
             PlayerPossessableObjectManager.Instance.RequestQuitCapturing();
         if (Input.GetKey(_performManipulationButton))
@@ -69,7 +79,14 @@ public class InputHandler : MonoBehaviour
             OneWayPlatformHandler.Instance.FallThroughCurrentPlatform();
         if (Input.GetKey(_stepOnLadder))
             PlayerLadderHandler.Instance.PostStepOnLadderRequest();
-        if (Input.GetKey(_pickUpItem))
+
+        bool currentPickupItemValue = Input.GetKey(_pickUpItem);
+        if (currentPickupItemValue && !_pickUpItemPressed)
+        {
             PlayerItemsManager.Instance.RequestPickUp();
+            _pickUpItemPressed = true;
+        }
+        else if (!currentPickupItemValue)
+            _pickUpItemPressed = false;
     }
 }
