@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
 
+[RequireComponent(typeof(GravityScaleManager))]
 public class PlayerLadderHandler : MonoBehaviour
 {
     private static PlayerLadderHandler _instance;
@@ -15,10 +16,7 @@ public class PlayerLadderHandler : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-        _instance = this;
-    }
+    
 
     private float _verticalFactor;
 
@@ -53,13 +51,21 @@ public class PlayerLadderHandler : MonoBehaviour
 
     Rigidbody2D _rigidbody;
 
+    GravityScaleRequestManager _gravityScaleRequestManager;
+
+    void Awake()
+    {
+        _instance = this;
+        TryGetComponent(out GravityScaleManager gravityScaleManager);
+        _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, 0, 1);
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (_ladderLayers.Contains(collision.gameObject.layer) && !_playerOnLadder && _stepOnLadderRequested)
         {
             PerformStepOnLadder(collision.gameObject);
         }
-
     }
 
     public void PostStepOnLadderRequest()
@@ -84,7 +90,7 @@ public class PlayerLadderHandler : MonoBehaviour
 
     private void ExitLadder()
     {
-        
+        _gravityScaleRequestManager.RequestIsActive = false;
         characterController.BlockHorizontalMovement = false;
         characterController.UpdateGravityScale = true;
 
@@ -95,10 +101,10 @@ public class PlayerLadderHandler : MonoBehaviour
     {
         
         characterController.BlockHorizontalMovement = true;
-        characterController.UpdateGravityScale = false;
 
         transform.position = new Vector2(ladder.transform.position.x, transform.position.y);
-        _rigidbody.gravityScale = 0;
+        _gravityScaleRequestManager.RequestIsActive = true;
+
 
         _stepOnLadderRequested = false;
         _playerOnLadder = true;

@@ -57,7 +57,7 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
         PlayerPossessableObjectManager.Instance.CaptureZoneRadius = _modifiedStats.CaptureZoneRadius;
         PlayerObjectManipulation.Instance.ManipulationCooldown = _modifiedStats.ObjectManipulationCooldown;
         PlayerController.Instance.CharacterControllerScript.Speed = _modifiedStats.MovementSpeed;
-        PlayerController.Instance.CharacterControllerScript.JumpStrength = _modifiedStats.JumpStrength;
+        PlayerJumpHandler.Instance.JumpStrength = _modifiedStats.JumpStrength;
 
         _damageHandler.Resistance = _modifiedStats.Resistance;
 

@@ -25,6 +25,8 @@ public class InputHandler : MonoBehaviour
     private KeyCode _pickUpItem;
     private bool _pickUpItemPressed;
 
+    private bool _jumpPressed;
+
     private static InputHandler _instance;
 
     public static InputHandler Instance
@@ -56,11 +58,21 @@ public class InputHandler : MonoBehaviour
         PlayerController.Instance
             .CharacterControllerScript.DirectionalFactor = Input.GetAxis("Horizontal");
         PlayerLadderHandler.Instance.VerticalFactor = Input.GetAxis("Vertical");
+
+        bool currentJumpValue = Input.GetButton("Jump");
         if (Input.GetButton("Jump"))
         {
-            PlayerController.Instance.CharacterControllerScript.RequestJump();
+            _jumpPressed = true;
+            PlayerJumpHandler.Instance.RequestJump();
             PlayerLadderHandler.Instance.ExitLadderRequest();
         }
+        else if (!currentJumpValue && _jumpPressed)
+        {
+            _jumpPressed = false;
+            PlayerJumpHandler.Instance.RequestJumpCanceling();
+            //Here jump cancelling should be used
+        }
+            
 
         bool currentCaptureObjectButtonValue = Input.GetKey(_captureObjectButton);
         if (currentCaptureObjectButtonValue && !_captureObjectButtonPressed)

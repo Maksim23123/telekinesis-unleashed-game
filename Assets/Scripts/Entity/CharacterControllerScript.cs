@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -20,11 +21,13 @@ public class CharacterControllerScript : MonoBehaviour
         } 
     }
 
+    public event Action<bool> _groundedChanged;
+
     public LayerMask GroundLayers { get => _groundLayers; private set => _groundLayers = value; }
 
     //Adjustable parameters
     [SerializeField]
-    float _speed, _jumpStrength;
+    float _speed;
     [SerializeField]
     LayerMask _groundLayers;
 
@@ -32,24 +35,36 @@ public class CharacterControllerScript : MonoBehaviour
 
     //Storage parameters
     float _groundAngle = 0;
-    float _defaultGravityScale;
 
     bool _grounded = false;
-    bool _jumpInCooldown = false;
     bool _onSlope = false;
+
+    Rigidbody2D _rigidbody;
+
+    GravityScaleRequestManager _gravityScaleRequestManager;
 
     public bool BlockHorizontalMovement { get; set; } = false;
     public bool UpdateGravityScale { get; set; } = true;
     public float Speed { get => _speed; set => _speed = value; }
-    public float JumpStrength { get => _jumpStrength; set => _jumpStrength = value; }
-
-    Rigidbody2D _rigidbody;
+    public bool Grounded 
+    { 
+        get => _grounded;
+        set 
+        {
+            if (value != _grounded)
+            {
+                _grounded = value;
+                _groundedChanged?.Invoke(_grounded);
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _defaultGravityScale = _rigidbody.gravityScale;
+        TryGetComponent(out GravityScaleManager gravityScaleManager);
+        _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, 0, 0);
     }
 
     private void FixedUpdate()
@@ -62,19 +77,17 @@ public class CharacterControllerScript : MonoBehaviour
     {
         if (UpdateGravityScale)
         {
-            if (_onSlope && _grounded)
-            {
-                _rigidbody.gravityScale = 0;
-            }
+            if (_onSlope && Grounded)
+                _gravityScaleRequestManager.RequestIsActive = true;
             else
-                _rigidbody.gravityScale = _defaultGravityScale;
+                _gravityScaleRequestManager.RequestIsActive = false;
         }
 
 
         float movement = directionalFactor * _speed * Time.deltaTime;
 
         Vector2 adaptedVector = Vector2.right;
-        if (_grounded && _onSlope)
+        if (Grounded && _onSlope)
             adaptedVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
 
         if (!BlockHorizontalMovement) 
@@ -83,33 +96,17 @@ public class CharacterControllerScript : MonoBehaviour
         _rigidbody.velocity = new Vector2(0, _rigidbody.velocity.y);
     }
 
-    public void RequestJump()
-    {
-        if (_grounded && !_jumpInCooldown)
-        {
-            _rigidbody.velocity *= 0;
-            _rigidbody.AddForce(Vector2.up * _jumpStrength * Time.deltaTime * 100, ForceMode2D.Impulse);
-            _jumpInCooldown = true;
-            Invoke(nameof(ResetJump), 0.05f);
-        }
-    }
-
-    void ResetJump()
-    {
-        _jumpInCooldown = false;
-    }
-
     protected void CheckGround()
     {
-        _grounded = false;
-        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * 0.58f, 0.45f, Vector2.down, 0, _groundLayers);//Physics2D.Raycast(transform.position + Vector3.down * 1.2f, Vector2.up, 1.5f, _groundLayers);
+        Grounded = false;
+        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * 0.58f, 0.45f, Vector2.down, 0, _groundLayers);
 
 
         if (raycastHit.collider != null
             && raycastHit.transform.gameObject != gameObject)
         {
             _groundAngle = raycastHit.transform.rotation.eulerAngles.z;
-            _grounded = true;
+            Grounded = true;
             float angle = Mathf.Abs(_groundAngle);
             if (angle > 0 && angle < _maxSlopeAngle)
                 _onSlope = true;

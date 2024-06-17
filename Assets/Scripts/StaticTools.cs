@@ -18,7 +18,7 @@ public static class StaticTools
         int[] capturedIds = idEnvironment.Select(unpuckObject).ToArray();
         if (capturedIds.Length > 0)
         {
-            int freeId = capturedIds.Length + 1;
+            int freeId = capturedIds.Length;
             while (capturedIds.Contains(freeId))
             {
                 freeId++;
