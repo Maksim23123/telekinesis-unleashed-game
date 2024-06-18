@@ -12,6 +12,8 @@ public class EmptyConditionalOneTimeItemEvent : ItemEvent
     [SerializeField]
     float height = 10;
 
+    public override int Priority => throw new NotImplementedException();
+
     public override void ExecuteItemEvent()
     {
         Debug.Log(output);

@@ -85,12 +85,6 @@ public class SaveLoadManager : MonoBehaviour
 
     private void OnDataStackFull()
     {
-        /*
-        foreach (var data in _dataStack.objectDataUnits.Values)
-        {
-            UnpackObjectData(data);
-        }*/
-
         WriteSaveToFile();
 
         _dataStack.objectDataUnits.Clear();

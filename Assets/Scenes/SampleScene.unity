@@ -5895,7 +5895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1586722088
 Transform:
   m_ObjectHideFlags: 0
@@ -7535,6 +7535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1974055184}
   - component: {fileID: 1974055183}
+  - component: {fileID: 1974055185}
   m_Layer: 0
   m_Name: ItemEventsExecutor
   m_TagString: Untagged
@@ -7569,6 +7570,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 683662352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1974055185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1974055182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 381058415c08c7140a555ac54d4c836c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _onLoadDataDestributionType: 1
+  _staticAddress: ItemEventExecutor-STATIC_ADDRESS
 --- !u!1001 &2017455888
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8767,9 +8782,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3680259111668438647, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
+      propertyPath: _staticAddress
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3680259111668438647, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
+      propertyPath: _onLoadDataDestributionType
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5618133477230246537, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7142930323693090614, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.58
       objectReference: {fileID: 0}
     - target: {fileID: 7795185024421144655, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
       propertyPath: _groundLayers.m_Bits
@@ -8787,6 +8814,10 @@ PrefabInstance:
       propertyPath: _ungroundedJumpPermDuration
       value: 0.04
       objectReference: {fileID: 0}
+    - target: {fileID: 7872239999347119217, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7910908005681768640, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -8798,6 +8829,10 @@ PrefabInstance:
     - target: {fileID: 8141769343589219794, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
       propertyPath: _clampFallingSpeed
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8525371282271674529, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
+      propertyPath: _gameObjectPrefabPath
+      value: Assets/Resources/Prefabs/Player/Player.prefab
       objectReference: {fileID: 0}
     - target: {fileID: 8905245988348025065, guid: cc666abfc4f008a46a5bf2c57fc064f9, type: 3}
       propertyPath: m_Enabled

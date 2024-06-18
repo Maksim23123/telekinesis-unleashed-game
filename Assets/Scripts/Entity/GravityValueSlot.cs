@@ -28,7 +28,11 @@ public class GravityValueSlot : IComparer<GravityValueSlot>
         {
             throw new ArgumentException("Cannot compare null values");
         }
-
-        return x.Priority.CompareTo(y.Priority);
+        int comparisonResult = x.Priority.CompareTo(y.Priority);
+        if (comparisonResult == 0)
+        {
+            comparisonResult = x.SlotId.CompareTo(y.SlotId);
+        }
+        return comparisonResult;
     }
 }

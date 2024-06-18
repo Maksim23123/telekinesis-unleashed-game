@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 public static class SceneRemaker
@@ -21,7 +20,8 @@ public static class SceneRemaker
         {
             if (obj.variableValues.TryGetValue(PerGObjectSaveLoadManager.GAME_OBJECT_PREFAB_PATH_KEY, out string prefabPath))
             {
-                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+                string resourcePath = StaticTools.GetResourcePath(prefabPath);
+                GameObject prefab = Resources.Load<GameObject>(resourcePath);
                 if (prefab != null)
                 {
                     GameObject gameObjectInstance = GameObject.Instantiate(prefab);
@@ -30,6 +30,11 @@ public static class SceneRemaker
                         ofObjectSaveLoadManager.SetGObjectData(obj);
                     }
                 }
+            }
+            else if (obj.variableValues.TryGetValue(PerGObjectSaveLoadManager.GAME_OBJECT_STATIC_ADDRESS_KEY, out string staticAddress) 
+                    && PerGObjectSaveLoadManager.TryGetPerGObjectStaticAddressManager(staticAddress, out PerGObjectSaveLoadManager perGObjectSaveLoadManager))
+            {
+                perGObjectSaveLoadManager.SetGObjectData(obj);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -12,7 +13,8 @@ public class CameraController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = Vector2.Lerp(transform.position, _mainObject.transform.position, _lerpFactorScalar);
+        if (!_mainObject.IsDestroyed())
+            transform.position = Vector2.Lerp(transform.position, _mainObject.transform.position, _lerpFactorScalar);
     }
 
     private void Awake()

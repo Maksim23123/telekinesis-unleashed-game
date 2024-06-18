@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcb93d4c81651104ca330994cc2a4481, type: 3}
-  m_Name: EmptyConditionalOneTimeItemEvent
+  m_Script: {fileID: 11500000, guid: 7db0f6b3c1a66ca47b3e45c786a43c05, type: 3}
+  m_Name: EmptyEventNo2
   m_EditorClassIdentifier: 
-  _eventsCount: 0
-  _eventType: 2
-  _unionPermission: 0
-  output: Player above 10
-  height: 10
+  _eventType: 0
+  _unionPermission: 1
+  _itemEventPath: Assets/Resources/Data/Item Events/EmptyEventNo2.asset
+  output: Another event Executed

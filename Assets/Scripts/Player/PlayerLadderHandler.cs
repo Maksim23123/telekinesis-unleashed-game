@@ -92,7 +92,6 @@ public class PlayerLadderHandler : MonoBehaviour
     {
         _gravityScaleRequestManager.RequestIsActive = false;
         characterController.BlockHorizontalMovement = false;
-        characterController.UpdateGravityScale = true;
 
         _playerOnLadder = false;
     } 

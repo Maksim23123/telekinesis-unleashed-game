@@ -39,7 +39,7 @@ public class PlayerJumpHandler : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         GetComponent<CharacterControllerScript>()._groundedChanged += OnGroundedChanged;
         GravityScaleManager gravityScaleManager = GetComponent<GravityScaleManager>();
-        _onJumpCancelingRequest = new GravityScaleRequestManager(gravityScaleManager, 4f, 1);
+        _onJumpCancelingRequest = new GravityScaleRequestManager(gravityScaleManager, 4f, 0);
     }
 
     private void FixedUpdate()

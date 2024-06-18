@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ItemEventsExecutor : MonoBehaviour
+public class ItemEventsExecutor : MonoBehaviour, IRecordable
 {
-    private static ItemEventsExecutor _instance;
-
     //public event Action executeEvents;
 
     List<ItemEventSlot> _itemEventSlots = new List<ItemEventSlot>();
 
+    private static ItemEventsExecutor _instance;
 
     public static ItemEventsExecutor Instance
     {
@@ -26,6 +25,8 @@ public class ItemEventsExecutor : MonoBehaviour
             return _instance;
         }
     }
+
+    public int Priority => 0;
 
     public int AddItemEvent(ItemEvent itemEvent)
     {
@@ -83,5 +84,26 @@ public class ItemEventsExecutor : MonoBehaviour
     void Awake()
     {
         _instance = this;
+    }
+
+    public ObjectData GetObjectData()
+    {
+        ObjectData objectData = new ObjectData();
+        for (int i = 0; i < _itemEventSlots.Count; i++)
+        {
+            objectData.objectDataUnits.Add(nameof(_itemEventSlots) + i, _itemEventSlots[i].GetObjectData());
+        }
+        return objectData;
+    }
+
+    public void SetObjectData(ObjectData objectData)
+    {
+        _itemEventSlots.Clear(); // ATTENTION: Here additional actions may be needed in the future
+        int index = 0;
+        while (objectData.objectDataUnits.TryGetValue(nameof(_itemEventSlots) + index, out ObjectData slotData))
+        {
+            _itemEventSlots.Add(ItemEventSlot.RemakeItemEventSlot(slotData));
+            index++;
+        }
     }
 }

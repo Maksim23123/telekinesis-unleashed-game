@@ -9,8 +9,7 @@ public class EmptyItemEvent : ItemEvent
     [SerializeField]
     string output;
 
-    protected new bool _unionPermission = true;
-
+    public override int Priority => throw new NotImplementedException();
 
     public override void ExecuteItemEvent()
     {

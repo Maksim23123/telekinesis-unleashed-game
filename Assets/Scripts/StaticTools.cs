@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -26,5 +27,14 @@ public static class StaticTools
             return freeId;
         }
         return 0;
+    }
+
+    public static string GetResourcePath(string assetPath)
+    {
+        if (assetPath.StartsWith("Assets/Resources/"))
+        {
+            assetPath = assetPath.Substring("Assets/Resources/".Length);
+        }
+        return Path.ChangeExtension(assetPath, null);
     }
 }

@@ -175,9 +175,6 @@ MonoBehaviour:
   _projectile: {fileID: 9012604491603070756, guid: c398b6e424cb5b14c9bcd9cfc33eb617, type: 3}
   _target: {fileID: 0}
   _shootingCooldownTime: 0.3
-  _notTransparentLayers:
-    serializedVersion: 2
-    m_Bits: 513
   _maxSpread: 15
 --- !u!114 &7931921316799441834
 MonoBehaviour:
@@ -211,7 +208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 4
-  _jumpStrength: 6
   _groundLayers:
     serializedVersion: 2
     m_Bits: 1793
@@ -270,7 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 183ed7b4926c6414591d1ba72b27c77f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameObjectPrefabPath: Assets/Prefabs/Enemies/Soldier.prefab
+  _gameObjectPrefabPath: Assets/Resources/Prefabs/Enemies/Soldier.prefab
 --- !u!114 &570883004426774573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381058415c08c7140a555ac54d4c836c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onLoadDataDestributionType: 0
+  _staticAddress: 
 --- !u!114 &2819610739811280458
 MonoBehaviour:
   m_ObjectHideFlags: 0

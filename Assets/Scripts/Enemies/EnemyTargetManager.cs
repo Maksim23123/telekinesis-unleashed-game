@@ -19,13 +19,13 @@ public class EnemyTargetManager : MonoBehaviour
 
     void Start()
     {
-        //UpdateTargets(PlayerStatusInformer.PlayerGameObject);
-        //PlayerStatusInformer.newPlayerAssigned += UpdateTargets;
+        PlayerStatusInformer.newPlayerAssigned += UpdateTargets;
     }
 
     private void FixedUpdate()
     {
-        UpdateTargets(PlayerStatusInformer.PlayerGameObject);
+        if (PlayerStatusInformer.PlayerGameObject != null)
+            UpdateTargets(PlayerStatusInformer.PlayerGameObject);
     }
 
     private void Awake()
@@ -147,5 +147,10 @@ public class EnemyTargetManager : MonoBehaviour
         Debug.DrawLine(endCorners[1], endCorners[2], color);
         Debug.DrawLine(endCorners[2], endCorners[3], color);
         Debug.DrawLine(endCorners[3], endCorners[0], color);
+    }
+
+    private void OnDestroy()
+    {
+        PlayerStatusInformer.newPlayerAssigned -= UpdateTargets;
     }
 }

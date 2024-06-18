@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Item events/Empty conditional event")]
@@ -11,6 +12,8 @@ public class EmptyConditionalItemEvent : ItemEvent
 
     [SerializeField]
     float height = -9;
+
+    public override int Priority => throw new NotImplementedException();
 
     public override void ExecuteItemEvent()
     {
@@ -25,6 +28,9 @@ public class EmptyConditionalItemEvent : ItemEvent
 
     public override bool CheckCondition()
     {
-        return PlayerController.Instance.gameObject.transform.position.y < height;
+        if (PlayerStatusInformer.PlayerGameObject != null && !PlayerStatusInformer.PlayerGameObject.IsDestroyed())
+            return PlayerStatusInformer.PlayerGameObject.transform.position.y < height;
+        else
+            return false;
     }
 }

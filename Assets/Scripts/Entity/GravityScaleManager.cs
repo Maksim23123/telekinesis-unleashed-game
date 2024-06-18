@@ -36,7 +36,7 @@ public class GravityScaleManager : MonoBehaviour
     {
         List<GravityValueSlot> slotsToRemove = _gravityValueSlots.Where(x => x.SlotId == slotId).ToList();
         foreach (var slot in slotsToRemove) 
-        { 
+        {
             _gravityValueSlots.Remove(slot);
         }
     }

@@ -336,7 +336,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 11
-  _jumpStrength: 5
   _groundLayers:
     serializedVersion: 2
     m_Bits: 4481
@@ -466,6 +465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381058415c08c7140a555ac54d4c836c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onLoadDataDestributionType: 0
+  _staticAddress: 
 --- !u!114 &9071680986166906769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,6 +503,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f173ba0d0c8e5b43a6b9c03aea4a3c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _clampFallingSpeed: 1
+  _maxFallingSpeed: -30
 --- !u!114 &7795185024421144655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,6 +518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _jumpStrength: 6
+  _ungroundedJumpPermDuration: 0.04
 --- !u!1 &7872239999347119217
 GameObject:
   m_ObjectHideFlags: 0
