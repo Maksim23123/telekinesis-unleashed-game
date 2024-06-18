@@ -6479,7 +6479,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lerpFactorScalar: 0.1
+  _minorObjectFocus: 0.5
   _mainObject: {fileID: 8211316141156231320}
+  _minorObject: {fileID: 0}
+  _camera: {fileID: 519420031}
+  _distanceToCameraSizeFactor: 0.15
+  _cameraSizingTrasholdDistance: 20
+  _distanceAxisWeights: {x: 1, y: 2.8}
+  _maxDistFromMainObjectForPositioning: 100
+  _maxDistFromMainObjectForSizing: 150
 --- !u!1 &1840317648
 GameObject:
   m_ObjectHideFlags: 0
