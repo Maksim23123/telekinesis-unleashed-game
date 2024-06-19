@@ -1,23 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class ItemInfluenceReferenceSlot : IRecordable
 {
     private int _slotId;
-
     private int _itemId;
-
     private int _statsModifierId;
-
     private int _itemEventId;
 
     public int ItemEventId { get => _itemEventId; }
     public int SlotId { get => _slotId; set => _slotId = value; }
     public int ItemId { get => _itemId; set => _itemId = value; }
     public int StatsModifierId { get => _statsModifierId; set => _statsModifierId = value; }
-
-    public int Priority => 0;
 
     public ItemInfluenceReferenceSlot(int slotId, int itemId, int statsModifierId, int itemEventId)
     {
@@ -51,5 +42,4 @@ public class ItemInfluenceReferenceSlot : IRecordable
         statsModifierSlot.SetObjectData(objectData);
         return statsModifierSlot;
     }
-
 }

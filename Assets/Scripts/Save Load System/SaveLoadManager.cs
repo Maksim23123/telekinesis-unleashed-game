@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -25,56 +23,12 @@ public class SaveLoadManager : MonoBehaviour
 
     public event Action _gatherDataFromDataSources;
 
-    private readonly object _lockObject = new object();
     private ObjectData _dataStack = new ObjectData();
-
-    private readonly string FILE_EXTENSION = "save";
-
+    static readonly string FILE_EXTENSION = "save";
     private string _currentSaveName = "defaultSave";
-
-    public string CurrentSaveName { get => _currentSaveName; set => _currentSaveName = value; }
-
     private int _objectDataSourceCount = 0;
 
-    public void SaveGame()
-    {
-        _gatherDataFromDataSources?.Invoke();
-    }
-
-    public void LoadGame()
-    {
-        ObjectData loadedData = ReadDataFromFile();
-        /*
-        foreach (ObjectData data in loadedData)
-        {
-            UnpackObjectData(data);
-        }*/
-
-        _gatherDataFromDataSources = null;
-        _objectDataSourceCount = 0;
-
-        SceneRemaker.RequestRemakeScene(loadedData);
-    }
-
-    public void RegisterObjectDataSource(Action action)
-    {
-        _gatherDataFromDataSources += action;
-        _objectDataSourceCount++;
-    }
-
-    public void UnregisterObjectDataSource(Action action)
-    {
-        _gatherDataFromDataSources -= action;
-    }
-
-    public int EnrollToDataStack(ObjectData objectData)
-    {
-        int stackPositionId;
-        stackPositionId = StaticTools.GetFreeId(_dataStack.objectDataUnits.Keys.ToArray(), x => int.Parse(x));
-        _dataStack.objectDataUnits.Add(stackPositionId.ToString(), objectData);
-        CheckDataStackLoad();
-        return stackPositionId;
-    }
+    public string CurrentSaveName { get => _currentSaveName; set => _currentSaveName = value; }
 
     private void CheckDataStackLoad()
     {
@@ -90,7 +44,7 @@ public class SaveLoadManager : MonoBehaviour
         _dataStack.objectDataUnits.Clear();
     }
 
-    //DEBUG
+    // DEBUG
     private void UnpackObjectData(ObjectData objectData)
     {
         foreach (var key in objectData.variableValues.Keys)
@@ -139,5 +93,40 @@ public class SaveLoadManager : MonoBehaviour
             Debug.LogError("Save file not found in " + path);
             return null;
         }
+    }
+
+    public void SaveGame()
+    {
+        _gatherDataFromDataSources?.Invoke();
+    }
+
+    public void LoadGame()
+    {
+        ObjectData loadedData = ReadDataFromFile();
+
+        _gatherDataFromDataSources = null;
+        _objectDataSourceCount = 0;
+
+        SceneRemaker.RequestRemakeScene(loadedData);
+    }
+
+    public void RegisterObjectDataSource(Action action)
+    {
+        _gatherDataFromDataSources += action;
+        _objectDataSourceCount++;
+    }
+
+    public void UnregisterObjectDataSource(Action action)
+    {
+        _gatherDataFromDataSources -= action;
+    }
+
+    public int EnrollToDataStack(ObjectData objectData)
+    {
+        int stackPositionId;
+        stackPositionId = StaticTools.GetFreeId(_dataStack.objectDataUnits.Keys.ToArray(), x => int.Parse(x));
+        _dataStack.objectDataUnits.Add(stackPositionId.ToString(), objectData);
+        CheckDataStackLoad();
+        return stackPositionId;
     }
 }

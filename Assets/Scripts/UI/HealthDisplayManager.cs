@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -10,7 +8,6 @@ public class HealthDisplayManager : MonoBehaviour
 
     [SerializeField]
     protected string _prefix;
-
     [SerializeField]
     protected EntityHealthManager _healthManager;
 
@@ -23,7 +20,6 @@ public class HealthDisplayManager : MonoBehaviour
             UpdateHealthText();
         }
     }
-
 
     protected void OnHealthChanged(int health)
     {

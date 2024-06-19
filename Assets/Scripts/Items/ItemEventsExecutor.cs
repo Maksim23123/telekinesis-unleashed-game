@@ -1,16 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ItemEventsExecutor : MonoBehaviour, IRecordable
 {
-    //public event Action executeEvents;
-
-    List<ItemEventSlot> _itemEventSlots = new List<ItemEventSlot>();
-
+    private List<ItemEventSlot> _itemEventSlots = new List<ItemEventSlot>();
     private static ItemEventsExecutor _instance;
+    
+    public int Priority => 0;
 
     public static ItemEventsExecutor Instance
     {
@@ -26,7 +24,26 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
         }
     }
 
-    public int Priority => 0;
+    private void Awake()
+    {
+        _instance = this;
+    }
+
+    private void FixedUpdate()
+    {
+        Func<ItemEvent, bool> isConditional = (ItemEvent x) => x.EventType == ItemEventType.Conditional || x.EventType == ItemEventType.ConditionalOneTime;
+        Func<ItemEvent, bool> isOneTime = (ItemEvent x) => x.EventType == ItemEventType.OneTime || x.EventType == ItemEventType.ConditionalOneTime;
+
+        foreach (var itemEventSlot in _itemEventSlots.Where(x => !(isOneTime(x.ItemEvent) && x.ItemEvent.EventExecuted)))
+        {
+            ItemEvent currentItemEvent = itemEventSlot.ItemEvent;
+            if ((isConditional(currentItemEvent) && currentItemEvent.CheckCondition())
+                    || currentItemEvent.EventType == ItemEventType.OneTime)
+            {
+                currentItemEvent.ExecuteItemEvent();
+            }
+        }
+    }
 
     public int AddItemEvent(ItemEvent itemEvent)
     {
@@ -51,39 +68,7 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
 
     public void RemoveItemEvent(int itemId, int count = 1)
     {
-        // CHANGE
-        /*
-        if (_events.TryGetValue(itemId, out ItemEvent itemEvent))
-        {
-            itemEvent.eventsCount -= count;
-
-            if (itemEvent.eventsCount <= 0)
-            {
-                _events.Remove(itemId);
-            }
-        }
-        */
-    }
-
-    private void FixedUpdate()
-    {
-        Func<ItemEvent, bool> isConditional = (ItemEvent x) => x.EventType == ItemEventType.Conditional || x.EventType == ItemEventType.ConditionalOneTime;
-        Func<ItemEvent, bool> isOneTime = (ItemEvent x) => x.EventType == ItemEventType.OneTime || x.EventType == ItemEventType.ConditionalOneTime;
-
-        foreach (var itemEventSlot in _itemEventSlots.Where(x => !(isOneTime(x.ItemEvent) && x.ItemEvent.EventExecuted)))
-        {
-            ItemEvent currentItemEvent = itemEventSlot.ItemEvent;
-            if ((isConditional(currentItemEvent) && currentItemEvent.CheckCondition()) 
-                    || currentItemEvent.EventType == ItemEventType.OneTime)
-            {
-                currentItemEvent.ExecuteItemEvent();
-            }
-        }
-    }
-
-    void Awake()
-    {
-        _instance = this;
+        throw new NotImplementedException();
     }
 
     public ObjectData GetObjectData()

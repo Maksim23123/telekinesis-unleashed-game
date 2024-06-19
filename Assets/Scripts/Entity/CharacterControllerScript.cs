@@ -1,56 +1,42 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using UnityEditor;
 using UnityEngine;
 
 public class CharacterControllerScript : MonoBehaviour
 {
-    private float _directionalFactor;
+    [SerializeField]
+    private float _speed;
+    [SerializeField]
+    private LayerMask _groundLayers;
 
-    public float DirectionalFactor { 
+    private float _directionalFactor;
+    private float _maxSlopeAngle = 46;
+    private float _groundAngle = 0;
+    private bool _grounded = false;
+    private bool _onSlope = false;
+    private Rigidbody2D _rigidbody;
+    private GravityScaleRequestManager _gravityScaleRequestManager;
+
+    public event Action<bool> _groundedChanged;
+
+    public bool BlockHorizontalMovement { get; set; } = false;
+    public float Speed { get => _speed; set => _speed = value; }
+    public LayerMask GroundLayers { get => _groundLayers; private set => _groundLayers = value; }
+    public float DirectionalFactor
+    {
         get
         {
             return _directionalFactor;
-        } 
+        }
 
         set
         {
             _directionalFactor = Mathf.Clamp(value, -1, 1);
-        } 
+        }
     }
-
-    public event Action<bool> _groundedChanged;
-
-    public LayerMask GroundLayers { get => _groundLayers; private set => _groundLayers = value; }
-
-    //Adjustable parameters
-    [SerializeField]
-    float _speed;
-    [SerializeField]
-    LayerMask _groundLayers;
-
-    float _maxSlopeAngle = 45;
-
-    //Storage parameters
-    float _groundAngle = 0;
-
-    bool _grounded = false;
-    bool _onSlope = false;
-
-    ConsistentBoolean _onSlopConsistent = new ConsistentBoolean(true, 100);
-
-    Rigidbody2D _rigidbody;
-
-    GravityScaleRequestManager _gravityScaleRequestManager;
-
-    public bool BlockHorizontalMovement { get; set; } = false;
-    public float Speed { get => _speed; set => _speed = value; }
-    public bool Grounded 
-    { 
+    public bool Grounded
+    {
         get => _grounded;
-        set 
+        set
         {
             if (value != _grounded)
             {
@@ -60,16 +46,14 @@ public class CharacterControllerScript : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        
+
         if (TryGetComponent(out GravityScaleManager gravityScaleManager))
         {
             _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, 0, 0);
         }
-        
     }
 
     private void FixedUpdate()
@@ -89,7 +73,6 @@ public class CharacterControllerScript : MonoBehaviour
             else
                 _gravityScaleRequestManager.RequestIsActive = false;
         }
-       
 
         float movement = directionalFactor * _speed * Time.deltaTime;
 
@@ -97,7 +80,7 @@ public class CharacterControllerScript : MonoBehaviour
         if (Grounded && _onSlope)
             adaptedVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
 
-        if (!BlockHorizontalMovement) 
+        if (!BlockHorizontalMovement)
             transform.Translate(movement * adaptedVector);
 
         _rigidbody.velocity = new Vector2(0, _rigidbody.velocity.y);
@@ -105,7 +88,7 @@ public class CharacterControllerScript : MonoBehaviour
 
     protected void CheckGround()
     {
-        
+
         RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * 0.58f, 0.45f, Vector2.down, 0, _groundLayers);
 
         if (raycastHit.collider != null)
@@ -113,16 +96,16 @@ public class CharacterControllerScript : MonoBehaviour
             Grounded = true;
             _groundAngle = raycastHit.transform.rotation.eulerAngles.z;
             float angle = Mathf.Abs(_groundAngle);
-            if (angle > 0 && angle < _maxSlopeAngle)
+            if (angle > 0 && angle <= _maxSlopeAngle)
             {
                 _onSlope = true;
-                
+
             }
             else
             {
                 _onSlope = false;
-                
-            }  
+
+            }
         }
         else
         {

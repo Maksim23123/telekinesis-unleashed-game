@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public interface IRecordable
 {
-    public abstract int Priority { get; }
+    public virtual int Priority { get => 0; }
 
     public abstract ObjectData GetObjectData();
 

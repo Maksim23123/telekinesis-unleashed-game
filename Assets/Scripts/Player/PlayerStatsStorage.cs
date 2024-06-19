@@ -1,31 +1,29 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class PlayerStatsStorage : IRecordable
 {
     [SerializeField]
-    float _damageMultiplier;
+    private float _damageMultiplier;
     [SerializeField]
-    float _objectManipulationCooldown;
+    private float _objectManipulationCooldown;
     [SerializeField]
-    float _captureZoneRadius;
+    private float _captureZoneRadius;
     [SerializeField]
-    float _movementSpeed;
+    private float _movementSpeed;
     [SerializeField]
-    float _jumpStrength;
+    private float _jumpStrength;
     [SerializeField]
-    float _criticalHitMultiplier;
+    private float _criticalHitMultiplier;
     [SerializeField]
-    float _criticalHitChance;
+    private float _criticalHitChance;
     [SerializeField]
-    int _healthCount;
+    private int _healthCount;
     [SerializeField]
-    float _resistance;
+    private float _resistance;
     [SerializeField]
-    float _regeneration;
+    private float _regeneration;
 
     public float DamageMultiplier { get => _damageMultiplier; set => _damageMultiplier = value; }
     public float ObjectManipulationCooldown { get => _objectManipulationCooldown; set => _objectManipulationCooldown = value; }
@@ -37,8 +35,6 @@ public class PlayerStatsStorage : IRecordable
     public int HealthCount { get => _healthCount; set => _healthCount = value; }
     public float Resistance { get => _resistance; set => _resistance = value; }
     public float Regeneration { get => _regeneration; set => _regeneration = value; }
-
-    public int Priority => throw new NotImplementedException();
 
     public static PlayerStatsStorage operator +(PlayerStatsStorage s1, PlayerStatsStorage s2)
     {

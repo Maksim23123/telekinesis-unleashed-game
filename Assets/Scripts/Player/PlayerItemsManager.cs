@@ -1,10 +1,19 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerItemsManager : MonoBehaviour, IRecordable
 {
+    [SerializeField]
+    private PlayerStatsHandler _playerStatsHandler;
+    [SerializeField]
+    private LayerMask _itemLayers;
+
+    private readonly float _pickUpZoneRadius = 2.7f;
+    private bool _pickUpAllowed = true;
+    private List<ItemInfluenceReferenceSlot> _itemInfluenceReferenceSlots = new List<ItemInfluenceReferenceSlot>();
     private static PlayerItemsManager _instance;
+
+    public int Priority => 0;
 
     public static PlayerItemsManager Instance
     {
@@ -14,33 +23,9 @@ public class PlayerItemsManager : MonoBehaviour, IRecordable
         }
     }
 
-    public int Priority => 0;
-
-    void Awake()
+    private void Awake()
     {
         _instance = this;
-    }
-
-    [SerializeField]
-    PlayerStatsHandler _playerStatsHandler;
-
-    private readonly float _pickUpZoneRadius = 2.7f;
-
-    [SerializeField]
-    private LayerMask _itemLayers;
-
-    bool _pickUpAllowed = true;
-
-    List<ItemInfluenceReferenceSlot> _itemInfluenceReferenceSlots = new List<ItemInfluenceReferenceSlot>();
-
-    public void RequestPickUp()
-    {
-        if (_pickUpAllowed)
-        {
-            PickUpItem();
-            _pickUpAllowed = false;
-            Invoke(nameof(RestorPickUpAbility), 0.1f);
-        }
     }
 
     private void PickUpItem()
@@ -63,11 +48,20 @@ public class PlayerItemsManager : MonoBehaviour, IRecordable
         _pickUpAllowed = true;
     }
 
+    public void RequestPickUp()
+    {
+        if (_pickUpAllowed)
+        {
+            PickUpItem();
+            _pickUpAllowed = false;
+            Invoke(nameof(RestorPickUpAbility), 0.1f);
+        }
+    }
+
     public ObjectData GetObjectData()
     {
-        // CONTINUE HERE
         ObjectData objectData = new ObjectData();
-        
+
         for (int i = 0; i < _itemInfluenceReferenceSlots.Count; i++)
         {
             objectData.objectDataUnits.Add(nameof(_itemInfluenceReferenceSlots) + i, _itemInfluenceReferenceSlots[i].GetObjectData());

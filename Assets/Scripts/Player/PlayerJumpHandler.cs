@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(GravityScaleManager))]
@@ -7,8 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterControllerScript))]
 public class PlayerJumpHandler : MonoBehaviour
 {
-    private static PlayerJumpHandler _instance;
+    [SerializeField]
+    private float _jumpStrength, _ungroundedJumpPermDuration;
 
+    private static PlayerJumpHandler _instance;
+    private bool _jumpInCooldown = false;
+    private bool _grounded = false;
+    private bool _ungroundedJumpPermission = false;
+    private bool _ungroundedJumpPermTimerStarted = false;
+    private Rigidbody2D _rigidbody;
+    private GravityScaleRequestManager _onJumpCancelingRequest;
+
+    public float JumpStrength { get => _jumpStrength; set => _jumpStrength = value; }
     public static PlayerJumpHandler Instance
     {
         get
@@ -16,22 +24,6 @@ public class PlayerJumpHandler : MonoBehaviour
             return _instance;
         }
     }
-
-    [SerializeField]
-    float _jumpStrength, _ungroundedJumpPermDuration;
-
-    bool _jumpInCooldown = false;
-
-    bool _grounded = false;
-
-    bool _ungroundedJumpPermission = false;
-    bool _ungroundedJumpPermTimerStarted = false; 
-
-    Rigidbody2D _rigidbody;
-
-    GravityScaleRequestManager _onJumpCancelingRequest;
-
-    public float JumpStrength { get => _jumpStrength; set => _jumpStrength = value; }
 
     private void Awake()
     {
@@ -59,6 +51,16 @@ public class PlayerJumpHandler : MonoBehaviour
         _ungroundedJumpPermission = false;
     }
 
+    private void ResetJump()
+    {
+        _jumpInCooldown = false;
+    }
+
+    private void OnGroundedChanged(bool newGrounded)
+    {
+        _grounded = newGrounded;
+    }
+
     public void RequestJump()
     {
         if ((_grounded || _ungroundedJumpPermission) && !_jumpInCooldown)
@@ -69,16 +71,6 @@ public class PlayerJumpHandler : MonoBehaviour
             _jumpInCooldown = true;
             Invoke(nameof(ResetJump), 0.05f);
         }
-    }
-
-    void ResetJump()
-    {
-        _jumpInCooldown = false;
-    }
-
-    void OnGroundedChanged(bool newGrounded)
-    {
-        _grounded = newGrounded;
     }
 
     public void RequestJumpCanceling()

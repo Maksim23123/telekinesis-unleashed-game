@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using TMPro;
 using UnityEngine;
 
@@ -25,7 +22,7 @@ public class PlayerHealthDisplayManager : HealthDisplayManager
         if (player.TryGetComponent(out EntityHealthManager playerHealthManager))
         {
             _healthManager = playerHealthManager;
-        } 
+        }
     }
 
     private void ConnectToHealthManager()

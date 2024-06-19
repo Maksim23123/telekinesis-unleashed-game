@@ -1,10 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class PlayerInteractionManager : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask _raycastTestLayers;
+    
     private static PlayerInteractionManager _instance;
 
     public static PlayerInteractionManager Instance
@@ -20,8 +22,15 @@ public class PlayerInteractionManager : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    private LayerMask _raycastTestLayers;
+    private bool PerformFinalObjectTest(GameObject testedObject, float maxObjectDistance)
+    {
+        Vector2 directionTowardsItem = (testedObject.transform.position - gameObject.transform.position).normalized;
+        RaycastHit2D raycastHit = Physics2D.Raycast(gameObject.transform.position, directionTowardsItem, maxObjectDistance, _raycastTestLayers);
+        if (raycastHit.transform != null && raycastHit.transform.gameObject == testedObject.gameObject)
+            return true;
+        else
+            return false;
+    }
 
     public bool TryGetAvailableInteractableObject(out GameObject firstAvailable, LayerMask interactableObjectsLayerMask, float interactionZoneRadius)
     {
@@ -43,15 +52,5 @@ public class PlayerInteractionManager : MonoBehaviour
         }
 
         return false;
-    }
-
-    private bool PerformFinalObjectTest(GameObject testedObject, float maxObjectDistance)
-    {
-        Vector2 directionTowardsItem = (testedObject.transform.position - gameObject.transform.position).normalized;
-        RaycastHit2D raycastHit = Physics2D.Raycast(gameObject.transform.position, directionTowardsItem, maxObjectDistance, _raycastTestLayers);
-        if (raycastHit.transform != null && raycastHit.transform.gameObject == testedObject.gameObject)
-            return true;
-        else
-            return false;
     }
 }

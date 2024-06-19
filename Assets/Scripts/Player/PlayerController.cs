@@ -1,10 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField]
+    private CharacterControllerScript _characterControllerScript;
+
     private static PlayerController _instance;
 
     public static PlayerController Instance
@@ -15,16 +15,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         _instance = this;
     }
 
-    [SerializeField]
-    private CharacterControllerScript _characterControllerScript;
-
-    public CharacterControllerScript CharacterControllerScript 
-    { 
+    public CharacterControllerScript CharacterControllerScript
+    {
         get
         {
             return _characterControllerScript;

@@ -1,19 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Item : MonoBehaviour
 {
     [SerializeField]
-    int _itemID;
-
+    private int _itemID;
     [SerializeField]
-    PlayerStatsStorage _statsModifier;
-
+    private PlayerStatsStorage _statsModifier;
     [SerializeField]
-    ItemEvent _itemEvent;
+    private ItemEvent _itemEvent;
 
     public PlayerStatsStorage StatsModifier { get => _statsModifier; set => _statsModifier = value; }
     public ItemEvent ItemEvent { get => _itemEvent; }

@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
-using UnityEngine.Accessibility;
-using UnityEngine.Rendering.Universal;
 
 public class PlayerStatsHandler : MonoBehaviour, IRecordable
 {
@@ -13,11 +8,9 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
     private PlayerStatsStorage _defaultPlayerStats;
 
     private PlayerStatsStorage _modifiedStats;
-
-    List<StatsModifierSlot> _statsModifierSlots = new List<StatsModifierSlot>();
-
-    EntityHealthManager _healthManager;
-    DamageHandler _damageHandler;
+    private List<StatsModifierSlot> _statsModifierSlots = new List<StatsModifierSlot>();
+    private EntityHealthManager _healthManager;
+    private DamageHandler _damageHandler;
 
     public int Priority { get => 1; }
 
@@ -37,7 +30,6 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
         {
             _healthManager.TriggerWaitingObjectDataUnpacking();
         }
-
     }
 
     private void Connect()
@@ -49,7 +41,7 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
     private void ApplyStats()
     {
         ApplyHealthStat();
-        
+
         PossessableObjectStatsStorage objectStatsStorage = new PossessableObjectStatsStorage(_modifiedStats.DamageMultiplier
             , _modifiedStats.CriticalHitMultiplier, _modifiedStats.CriticalHitChance);
         PlayerPossessableObjectManager.Instance.ObjectStatsStorage = objectStatsStorage;

@@ -1,34 +1,24 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyMovementOperator : MonoBehaviour
 {
     [SerializeField]
-    Vector2 _relativeRayPossition;
-
+    private Vector2 _relativeRayPossition;
     [SerializeField]
-    float _vectorSize;
-
+    private float _vectorSize;
     [SerializeField]
-    CharacterControllerScript _characterController;
-
+    private CharacterControllerScript _characterController;
     [SerializeField]
-    LayerMask _groundLayers;
-
+    private LayerMask _groundLayers;
     [SerializeField]
-    float _maxStairSize;
-
-    Dictionary<string, bool> _externalMovementPermissions = new Dictionary<string, bool>();
-
-    MovementDirection _movementDirection;
-
-    bool _wayIsFree = false;
+    private float _maxStairSize;
+    private Dictionary<string, bool> _externalMovementPermissions = new Dictionary<string, bool>();
+    private MovementDirection _movementDirection;
+    private bool _wayIsFree = false;
+    private Dictionary<MovementDirection, int> _directionalFactor = new Dictionary<MovementDirection, int>();
 
     public LayerMask GroundLayers { get => _groundLayers; set => _groundLayers = value; }
-
-    Dictionary<MovementDirection, int> _directionalFactor = new Dictionary<MovementDirection, int>();
 
     private void Start()
     {
@@ -42,22 +32,6 @@ public class EnemyMovementOperator : MonoBehaviour
         _directionalFactor[MovementDirection.Left] = -1;
     }
 
-    public void SetExternalPermission(string permissionName, bool value)
-    {
-        _externalMovementPermissions[permissionName] = value;
-    }
-
-    public bool RemoveExternalPermission(string permissionName)
-    {
-        if (_externalMovementPermissions.ContainsKey(permissionName))
-        {
-            _externalMovementPermissions.Remove(permissionName);
-            return true;
-        }
-        else 
-            return false; 
-    }
-
     private void FixedUpdate()
     {
         CheckWay();
@@ -69,17 +43,6 @@ public class EnemyMovementOperator : MonoBehaviour
             _movementDirection = MovementDirection.Right;
         else
             _characterController.DirectionalFactor = 0;
-    }
-
-    public void ShowUpVectors()
-    {
-        Vector2 mirrorRayPosition = _relativeRayPossition * new Vector2(-1, 1);
-        Vector2 objectPossition = (Vector2)gameObject.transform.position;
-        Vector2 worldRayPosition = _relativeRayPossition + objectPossition;
-        Vector2 mirrorWorldRayPosition = mirrorRayPosition + objectPossition;
-
-        Debug.DrawLine(worldRayPosition, worldRayPosition + Vector2.down * _vectorSize, Color.blue, 10f);
-        Debug.DrawLine(mirrorWorldRayPosition, mirrorWorldRayPosition + Vector2.down * _vectorSize, Color.red, 10f);
     }
 
     private void CheckWay()
@@ -105,5 +68,32 @@ public class EnemyMovementOperator : MonoBehaviour
             else
                 _wayIsFree = false;
         }
+    }
+
+    public void SetExternalPermission(string permissionName, bool value)
+    {
+        _externalMovementPermissions[permissionName] = value;
+    }
+
+    public bool RemoveExternalPermission(string permissionName)
+    {
+        if (_externalMovementPermissions.ContainsKey(permissionName))
+        {
+            _externalMovementPermissions.Remove(permissionName);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public void ShowUpVectors()
+    {
+        Vector2 mirrorRayPosition = _relativeRayPossition * new Vector2(-1, 1);
+        Vector2 objectPossition = (Vector2)gameObject.transform.position;
+        Vector2 worldRayPosition = _relativeRayPossition + objectPossition;
+        Vector2 mirrorWorldRayPosition = mirrorRayPosition + objectPossition;
+
+        Debug.DrawLine(worldRayPosition, worldRayPosition + Vector2.down * _vectorSize, Color.blue, 10f);
+        Debug.DrawLine(mirrorWorldRayPosition, mirrorWorldRayPosition + Vector2.down * _vectorSize, Color.red, 10f);
     }
 }

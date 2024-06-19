@@ -1,16 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TransformRecordableAddapter : MonoBehaviour, IRecordable
 {
-    public int Priority => 0;
-
     [SerializeField]
-    bool _savePossition = true;
-
+    private bool _savePossition = true;
     [SerializeField]
-    bool _saveRotation = true;
+    private bool _saveRotation = true;
 
     public ObjectData GetObjectData()
     {

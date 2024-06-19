@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-enum MovementDirection
+internal enum MovementDirection
 {
     Left,
     Right

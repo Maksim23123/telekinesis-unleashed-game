@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StatsModifierSlot : IRecordable
 {
-    int _modifierSlotId;
-
-    int _count;
-
     [SerializeField]
-    PlayerStatsStorage _statsModifier;
+    private PlayerStatsStorage _statsModifier;
+    
+    private int _modifierSlotId;
+    private int _count;
+
+    public PlayerStatsStorage StatsModifier { get => _statsModifier; set => _statsModifier = value; }
+    public int ModifierSlotId { get => _modifierSlotId; }
+    public int Count { get => _count; set => _count = value; }
 
     public StatsModifierSlot(int modifierSlotId, int count, PlayerStatsStorage statsModifier)
     {
@@ -22,12 +23,6 @@ public class StatsModifierSlot : IRecordable
     {
         return _statsModifier * _count;
     }
-
-    public PlayerStatsStorage StatsModifier { get => _statsModifier; set => _statsModifier = value; }
-    public int ModifierSlotId { get => _modifierSlotId; }
-    public int Count { get => _count; set => _count = value; }
-
-    public int Priority => throw new System.NotImplementedException();
 
     public static StatsModifierSlot RemakeStatsModifierSlot(ObjectData objectData)
     {

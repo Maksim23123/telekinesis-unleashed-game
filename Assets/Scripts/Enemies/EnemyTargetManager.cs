@@ -1,23 +1,23 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class EnemyTargetManager : MonoBehaviour
 {
-    public event Action<GameObject, bool> activeTargetReassigned;
 
     [SerializeField]
-    LayerMask _notTransparentLayers;
+    private LayerMask _notTransparentLayers;
+
     [SerializeField]
-    float switchToMinorDistance;
-    EnemyProjectileLauncher _launcher;
-    List<TargetSlot> _targetSlots = new List<TargetSlot>();
+    private float switchToMinorDistance;
+    private EnemyProjectileLauncher _launcher;
+    private SortedSet<TargetSlot> _targetSlots = new SortedSet<TargetSlot>(new TargetSlot(0, TargetType.Main, null));
+    private TargetSlot previousMostPriorSlot;
 
-    TargetSlot previousMostPriorSlot;
+    public event Action<GameObject, bool> activeTargetReAssigned;
 
-    void Start()
+    private void Start()
     {
         PlayerStatusInformer.newPlayerAssigned += UpdateTargets;
     }
@@ -33,41 +33,39 @@ public class EnemyTargetManager : MonoBehaviour
         TryGetComponent(out _launcher);
     }
 
-    void AssignTarget()
+    private void AssignTarget()
     {
-        TargetSlot mostPriorSlot = _targetSlots.OrderBy(x => x.targetPriority).Reverse().Take(1).ToArray()[0];
+        TargetSlot mostPriorSlot = _targetSlots.Max; 
 
-        if (mostPriorSlot != null && (previousMostPriorSlot == null 
-                || previousMostPriorSlot.target != mostPriorSlot.target 
+        if (mostPriorSlot != null && (previousMostPriorSlot == null
+                || previousMostPriorSlot.target != mostPriorSlot.target
                 || previousMostPriorSlot.targetIsVisible != mostPriorSlot.targetIsVisible))
         {
             previousMostPriorSlot = mostPriorSlot;
-            activeTargetReassigned?.Invoke(mostPriorSlot.target, mostPriorSlot.targetIsVisible);
+            activeTargetReAssigned?.Invoke(mostPriorSlot.target, mostPriorSlot.targetIsVisible);
         }
     }
 
-    void UpdateTargets(GameObject mainTarget)
+    private void UpdateTargets(GameObject mainTarget)
     {
         _targetSlots.Clear();
         _targetSlots.Add(new TargetSlot(1, TargetType.Main, mainTarget));
-        /*
-        if (PlayerPossessableObjectManager.Instance.CapturedObject != null)
-        {
-            _targetSlots.Add(new TargetSlot(1, TargetType.Minor, PlayerPossessableObjectManager.Instance.CapturedObject));
-        }*/
+
         RecalculateTargetsPriority();
         AssignTarget();
     }
 
-    void RecalculateTargetsPriority()
+    private void RecalculateTargetsPriority()
     {
-        for (int i = 0; i < _targetSlots.Count; i++)
+        List<TargetSlot> slotsList = _targetSlots.ToList();
+        _targetSlots.Clear();
+        foreach (TargetSlot slot in slotsList) 
         {
-            _targetSlots[i] = CalculatePriorityForTarget(_targetSlots[i]);
+            _targetSlots.Add(CalculatePriorityForTarget(slot));
         }
     }
 
-    TargetSlot CalculatePriorityForTarget(TargetSlot targetSlot)
+    private TargetSlot CalculatePriorityForTarget(TargetSlot targetSlot)
     {
         targetSlot.targetIsVisible = true;
         if (targetSlot.targetType == TargetType.Main && TestIfTargetIsVisible(targetSlot))
@@ -110,12 +108,12 @@ public class EnemyTargetManager : MonoBehaviour
             {
                 isVisible = true;
             }
-                
+
         }
         return isVisible;
     }
 
-    void DebugDrawBoxCast(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance, Color color)
+    private void DebugDrawBoxCast(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance, Color color)
     {
         Vector2[] corners = new Vector2[4];
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
@@ -130,11 +128,9 @@ public class EnemyTargetManager : MonoBehaviour
         Debug.DrawLine(corners[2], corners[3], color);
         Debug.DrawLine(corners[3], corners[0], color);
 
-        // Draw the movement direction of the BoxCast
         Vector2 endPoint = origin + direction.normalized * distance;
         Debug.DrawLine(origin, endPoint, color);
 
-        // Draw the box at the end position of the BoxCast
         Vector2 endOrigin = endPoint;
         Vector2[] endCorners = new Vector2[4];
 

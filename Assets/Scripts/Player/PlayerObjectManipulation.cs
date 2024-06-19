@@ -1,12 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class PlayerObjectManipulation : MonoBehaviour
 {
+    [SerializeField]
+    private float _impulsPower;
+
+    private float _manipulationCooldown;
+    private bool _manipulationAllowed = true;
     private static PlayerObjectManipulation _instance;
 
+    public float ManipulationCooldown { get => _manipulationCooldown; set => _manipulationCooldown = value; }
     public static PlayerObjectManipulation Instance
     {
         get
@@ -15,21 +18,29 @@ public class PlayerObjectManipulation : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         _instance = this;
     }
 
-    public float ManipulationCooldown { get => _manipulationCooldown; set => _manipulationCooldown = value; }
+    private void PerformManipulation()
+    {
+        GameObject manipulatedObject = PlayerPossessableObjectManager.Instance.CapturedObject;
+        if (manipulatedObject != null && manipulatedObject.TryGetComponent(out PossessableObject capturableObject))
+        {
+            Vector3 mousePos = StaticTools.GetMousePositionInWorld();
+            Vector3 powerVector = mousePos - manipulatedObject.transform.position;
+            float minDistanceFactor = 10;
+            float finalPower = _impulsPower
+                * Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue) * 8 * Time.fixedDeltaTime;
+            capturableObject.ProcessManipulation(powerVector.normalized, finalPower);
+        }
+    }
 
-    //Adjustable parameters
-    [SerializeField]
-    private float _impulsPower;
-
-    private float _manipulationCooldown;
-
-    //Storage parameters
-    bool _manipulationAllowed = true;
+    private void ResetManipulation()
+    {
+        _manipulationAllowed = true;
+    }
 
     public void RequestManipulation()
     {
@@ -42,24 +53,5 @@ public class PlayerObjectManipulation : MonoBehaviour
                 Invoke(nameof(ResetManipulation), _manipulationCooldown);
             }
         }
-    }
-
-    private void PerformManipulation()
-    {
-        GameObject manipulatedObject = PlayerPossessableObjectManager.Instance.CapturedObject;
-        if (manipulatedObject != null && manipulatedObject.TryGetComponent(out PossessableObject capturableObject))
-        {
-            Vector3 mousePos = StaticTools.GetMousePositionInWorld();
-            Vector3 powerVector = mousePos - manipulatedObject.transform.position;
-            float minDistanceFactor = 10;
-            float finalPower = _impulsPower 
-                * Mathf.Clamp(Vector3.Distance(powerVector, Vector3.zero), minDistanceFactor, float.MaxValue) * 8 * Time.fixedDeltaTime;
-            capturableObject.ProcessManipulation(powerVector.normalized, finalPower);
-        }
-    }
-
-    private void ResetManipulation()
-    {
-        _manipulationAllowed = true;
     }
 }

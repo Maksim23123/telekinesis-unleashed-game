@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,9 +12,8 @@ public static class StaticTools
         return Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Camera.main.nearClipPlane));
     }
 
-    public static int GetFreeId<T>(IEnumerable<T> idEnvironment, Func<T ,int> unpuckObject)
+    public static int GetFreeId<T>(IEnumerable<T> idEnvironment, Func<T, int> unpuckObject)
     {
-        
         int[] capturedIds = idEnvironment.Select(unpuckObject).ToArray();
         if (capturedIds.Length > 0)
         {

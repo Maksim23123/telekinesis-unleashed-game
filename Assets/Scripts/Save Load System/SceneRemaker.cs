@@ -1,0 +1,38 @@
+using System;
+using UnityEngine;
+
+public static class SceneRemaker
+{
+    public static event Action _preRemakeActivity;
+
+    private static void UnpackGameObjectData(ObjectData gameObjectsData)
+    {
+        foreach (ObjectData obj in gameObjectsData.objectDataUnits.Values)
+        {
+            if (obj.variableValues.TryGetValue(InstanceSaveLoadManager.GAME_OBJECT_PREFAB_PATH_KEY, out string prefabPath))
+            {
+                string resourcePath = StaticTools.GetResourcePath(prefabPath);
+                GameObject prefab = Resources.Load<GameObject>(resourcePath);
+                if (prefab != null)
+                {
+                    GameObject gameObjectInstance = GameObject.Instantiate(prefab);
+                    if (gameObjectInstance.TryGetComponent(out InstanceSaveLoadManager ofObjectSaveLoadManager))
+                    {
+                        ofObjectSaveLoadManager.SetGObjectData(obj);
+                    }
+                }
+            }
+            else if (obj.variableValues.TryGetValue(InstanceSaveLoadManager.GAME_OBJECT_STATIC_ADDRESS_KEY, out string staticAddress)
+                    && InstanceSaveLoadManager.TryGetInstanceSaveLoadManager(staticAddress, out InstanceSaveLoadManager instanceSaveLoadManager))
+            {
+                instanceSaveLoadManager.SetGObjectData(obj);
+            }
+        }
+    }
+
+    public static void RequestRemakeScene(ObjectData gameObjectsData)
+    {
+        _preRemakeActivity?.Invoke();
+        UnpackGameObjectData(gameObjectsData);
+    }
+}

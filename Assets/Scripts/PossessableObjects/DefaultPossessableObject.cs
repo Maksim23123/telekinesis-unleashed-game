@@ -1,12 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO.Pipes;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class DefaultPossessableObject : PossessableObject
 {
-    Rigidbody2D _rigidbody;
+    private Rigidbody2D _rigidbody;
+
+    private void Start()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
 
     public override void ProcessManipulation(Vector3 direction, float power)
     {
@@ -24,18 +26,7 @@ public class DefaultPossessableObject : PossessableObject
         if (Random.value < StatsStorage._criticalHitChance)
         {
             aditionalMultiplier = StatsStorage._criticalMultiplier;
-
-            //DEBUG
-            // Debug.Log("Crit");
         }
-        //DEBUG
-        // Debug.Log(Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * StatsStorage._damageMultiplier * aditionalMultiplier);
-
         return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * StatsStorage._damageMultiplier * aditionalMultiplier;
-    }
-
-    private void Start()
-    {
-        _rigidbody = GetComponent<Rigidbody2D>();
     }
 }

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public static class QuaternionExtension
@@ -18,7 +15,7 @@ public static class QuaternionExtension
     public static Quaternion ObjectDataToVector3(ObjectData objectData)
     {
         float x, y, z, w;
-        if (    float.TryParse(objectData.variableValues[nameof(x)], out x)
+        if (float.TryParse(objectData.variableValues[nameof(x)], out x)
                 && float.TryParse(objectData.variableValues[nameof(y)], out y)
                 && float.TryParse(objectData.variableValues[nameof(z)], out z)
                 && float.TryParse(objectData.variableValues[nameof(w)], out w))

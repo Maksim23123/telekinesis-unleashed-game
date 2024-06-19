@@ -1,11 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 using UnityEngine;
 
 [RequireComponent(typeof(GravityScaleManager))]
 public class PlayerLadderHandler : MonoBehaviour
 {
+    [SerializeField]
+    private CharacterControllerScript _characterController;
+    [SerializeField]
+    private float _ladderRequestLifetime = 0.5f;
+    [SerializeField]
+    private float _ladderMovementSpeed;
+    [SerializeField]
+    private LayerMask _ladderLayers;
+
+    private bool _stepOnLadderRequested = false;
+    private bool _playerOnLadder = false;
+    private Rigidbody2D _rigidbody;
+    private GravityScaleRequestManager _gravityScaleRequestManager;
+    private float _verticalFactor;
     private static PlayerLadderHandler _instance;
 
     public static PlayerLadderHandler Instance
@@ -15,11 +26,6 @@ public class PlayerLadderHandler : MonoBehaviour
             return _instance;
         }
     }
-
-    
-
-    private float _verticalFactor;
-
     public float VerticalFactor
     {
         get
@@ -33,27 +39,7 @@ public class PlayerLadderHandler : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    CharacterControllerScript characterController;
-
-    bool _stepOnLadderRequested = false;
-    bool _playerOnLadder = false;
-
-
-    [SerializeField]
-    float _ladderRequestLifetime = 0.5f;
-
-    [SerializeField]
-    float _ladderMovementSpeed;
-
-    [SerializeField]
-    private LayerMask _ladderLayers;
-
-    Rigidbody2D _rigidbody;
-
-    GravityScaleRequestManager _gravityScaleRequestManager;
-
-    void Awake()
+    private void Awake()
     {
         _instance = this;
         TryGetComponent(out GravityScaleManager gravityScaleManager);
@@ -68,38 +54,23 @@ public class PlayerLadderHandler : MonoBehaviour
         }
     }
 
-    public void PostStepOnLadderRequest()
-    {
-        if (!_playerOnLadder )
-        {
-            _stepOnLadderRequested = true;
-            Invoke(nameof(DeleteStepOnLadderRequest), _ladderRequestLifetime);
-        }
-    }
-
     private void DeleteStepOnLadderRequest()
     {
         _stepOnLadderRequested = false;
     }
 
-    public void ExitLadderRequest()
-    {
-        if (_playerOnLadder)
-            ExitLadder();
-    }
-
     private void ExitLadder()
     {
         _gravityScaleRequestManager.RequestIsActive = false;
-        characterController.BlockHorizontalMovement = false;
+        _characterController.BlockHorizontalMovement = false;
 
         _playerOnLadder = false;
-    } 
+    }
 
     private void PerformStepOnLadder(GameObject ladder)
     {
-        
-        characterController.BlockHorizontalMovement = true;
+
+        _characterController.BlockHorizontalMovement = true;
 
         transform.position = new Vector2(ladder.transform.position.x, transform.position.y);
         _gravityScaleRequestManager.RequestIsActive = true;
@@ -135,11 +106,26 @@ public class PlayerLadderHandler : MonoBehaviour
 
     private void CheckLadder()
     {
-        Collider2D collider = Physics2D.OverlapPoint(transform.position + Vector3.down , _ladderLayers);
-        
+        Collider2D collider = Physics2D.OverlapPoint(transform.position + Vector3.down, _ladderLayers);
+
         if (collider == null)
         {
             ExitLadderRequest();
         }
+    }
+
+    public void PostStepOnLadderRequest()
+    {
+        if (!_playerOnLadder)
+        {
+            _stepOnLadderRequested = true;
+            Invoke(nameof(DeleteStepOnLadderRequest), _ladderRequestLifetime);
+        }
+    }
+
+    public void ExitLadderRequest()
+    {
+        if (_playerOnLadder)
+            ExitLadder();
     }
 }

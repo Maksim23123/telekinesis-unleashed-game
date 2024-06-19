@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileManager : MonoBehaviour
 {
-    [SerializeField]  
-    ProjectileProperties _projectileProperties;
+    [SerializeField]
+    private ProjectileProperties _projectileProperties;
 
     public ProjectileProperties ProjectileProperties { get => _projectileProperties; }
 
@@ -16,7 +14,7 @@ public class ProjectileManager : MonoBehaviour
             if (Vector2.Angle(Vector2.down, direction) > 90)
                 transform.rotation = Quaternion.Euler(Vector2.Angle(Vector2.right, direction) * new Vector3(0, 0, 1));
             else
-                transform.rotation = Quaternion.Euler( Vector2.Angle(Vector2.left, direction) * new Vector3(0, 0, 1));
+                transform.rotation = Quaternion.Euler(Vector2.Angle(Vector2.left, direction) * new Vector3(0, 0, 1));
 
             rigidbody.AddForce(direction * _projectileProperties._impulsPower, ForceMode2D.Impulse);
         }

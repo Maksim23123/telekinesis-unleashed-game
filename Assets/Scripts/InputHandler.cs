@@ -1,32 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
     [SerializeField]
     private KeyCode _captureObjectButton;
-    private bool _captureObjectButtonPressed;
-
     [SerializeField]
     private KeyCode _quitCapturingButton;
-
     [SerializeField]
     private KeyCode _performManipulationButton;
-
     [SerializeField]
     private KeyCode _fallThroughOneWayPlatform;
-
     [SerializeField]
     private KeyCode _stepOnLadder;
-
     [SerializeField]
     private KeyCode _pickUpItem;
+
+    private bool _captureObjectButtonPressed;
     private bool _pickUpItemPressed;
-
     private bool _jumpPressed;
-
     private static InputHandler _instance;
 
     public static InputHandler Instance
@@ -43,7 +34,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         _instance = this;
     }
@@ -70,9 +61,7 @@ public class InputHandler : MonoBehaviour
         {
             _jumpPressed = false;
             PlayerJumpHandler.Instance.RequestJumpCanceling();
-            //Here jump cancelling should be used
         }
-            
 
         bool currentCaptureObjectButtonValue = Input.GetKey(_captureObjectButton);
         if (currentCaptureObjectButtonValue && !_captureObjectButtonPressed)

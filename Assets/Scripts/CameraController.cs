@@ -1,42 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    float _lerpFactorScalar;
-
+    private float _lerpFactorScalar;
     [Range(0, 1)]
     [SerializeField]
-    float _minorObjectFocus;
-
+    private float _minorObjectFocus;
     [SerializeField]
-    Transform _mainObject;
-
+    private Transform _mainObject;
     [SerializeField]
-    Transform _minorObject;
-
+    private Transform _minorObject;
     [SerializeField]
-    Camera _camera;
-
-    private float _defaultCameraSize;
-
+    private Camera _camera;
     [SerializeField]
     private float _distanceToCameraSizeFactor;
-
     [SerializeField]
     private float _cameraSizingTrasholdDistance;
-
     [SerializeField]
     private Vector2 _distanceAxisWeights = Vector2.one;
-
     [SerializeField]
     private float _maxDistFromMainObjectForPositioning;
-
     [SerializeField]
     private float _maxDistFromMainObjectForSizing;
+
+    private float _defaultCameraSize;
 
     private void FixedUpdate()
     {
@@ -74,7 +63,7 @@ public class CameraController : MonoBehaviour
 
     private void UpdateMinorTarget()
     {
-        if (PlayerPossessableObjectManager.Instance != null && !PlayerPossessableObjectManager.Instance.IsDestroyed() 
+        if (PlayerPossessableObjectManager.Instance != null && !PlayerPossessableObjectManager.Instance.IsDestroyed()
                 && PlayerPossessableObjectManager.Instance.CapturedObject != null)
         {
             _minorObject = PlayerPossessableObjectManager.Instance.CapturedObject.transform;

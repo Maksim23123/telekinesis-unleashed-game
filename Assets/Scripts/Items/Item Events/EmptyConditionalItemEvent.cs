@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,12 +5,9 @@ using UnityEngine;
 public class EmptyConditionalItemEvent : ItemEvent
 {
     [SerializeField]
-    string output;
-
+    private string output;
     [SerializeField]
-    float height = -9;
-
-    public override int Priority => throw new NotImplementedException();
+    private float height = -9;
 
     public override void ExecuteItemEvent()
     {

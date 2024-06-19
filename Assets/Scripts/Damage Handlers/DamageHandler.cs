@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(EntityHealthManager))]
 public class DamageHandler : MonoBehaviour
 {
     private float _resistance;

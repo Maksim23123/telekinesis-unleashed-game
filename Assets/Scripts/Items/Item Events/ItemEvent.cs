@@ -1,36 +1,25 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
 public abstract class ItemEvent : ScriptableObject, IRecordable
 {
     [NonSerialized]
-    int _eventsCount;
-
+    private int _eventsCount;
     [NonSerialized]
-    bool _eventExecuted;
-
-    [SerializeField]
-    protected ItemEventType _eventType;
-
+    private bool _eventExecuted;
     [SerializeField]
     private bool _unionPermission = false;
-
     [AssetPath(typeof(ItemEvent))]
     [SerializeField]
     private string _itemEventPath;
+    [SerializeField]
+    protected ItemEventType _eventType;
 
     public int eventsCount { get => _eventsCount; set => _eventsCount = value; }
     internal ItemEventType EventType { get => _eventType; set => _eventType = value; }
     public bool EventExecuted { get => _eventExecuted; set => _eventExecuted = value; }
     public bool UnionPermission { get => _unionPermission; set => _unionPermission = value; }
-
-    public abstract int Priority { get; }
 
     public abstract void ExecuteItemEvent();
 
@@ -69,5 +58,5 @@ public abstract class ItemEvent : ScriptableObject, IRecordable
         bool.TryParse(objectData.variableValues[nameof(_eventExecuted)], out _eventExecuted);
     }
 
-    
+
 }

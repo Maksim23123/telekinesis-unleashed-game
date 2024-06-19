@@ -17,11 +17,9 @@ public class AssetPathDrawer : PropertyDrawer
         Rect buttonPosition = new Rect(position.x + position.width - 65, position.y, 65, position.height);
         if (GUI.Button(buttonPosition, "Browse"))
         {
-            // Open the object picker window
             EditorGUIUtility.ShowObjectPicker<UnityEngine.Object>(null, false, "", 0);
         }
 
-        // Check if an object is selected
         if (Event.current.commandName == "ObjectSelectorClosed")
         {
             UnityEngine.Object selectedObject = EditorGUIUtility.GetObjectPickerObject();

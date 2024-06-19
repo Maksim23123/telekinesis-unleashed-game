@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class GravityScaleRequestManager
 {
-    bool _requestIsActive;
+    private bool _requestIsActive;
+    private int _requestId;
+    private float _value;
+    private int _priority;
+    private GravityScaleManager _gravityScaleManager;
 
-    int _requestId;
-
-    float _value;
-
-    int _priority;
-
-    GravityScaleManager _gravityScaleManager;
+    public float Value { get => _value; set => _value = value; }
+    public int Priority { get => _priority; set => _priority = value; }
 
     public GravityScaleRequestManager(GravityScaleManager gravityScaleManager, float value, int priority)
     {
@@ -21,9 +16,9 @@ public class GravityScaleRequestManager
         Priority = priority;
     }
 
-    public bool RequestIsActive 
-    { 
-        get => _requestIsActive; 
+    public bool RequestIsActive
+    {
+        get => _requestIsActive;
         set
         {
             if (_gravityScaleManager != null && _requestIsActive != value)
@@ -40,7 +35,4 @@ public class GravityScaleRequestManager
 
         }
     }
-
-    public float Value { get => _value; set => _value = value; }
-    public int Priority { get => _priority; set => _priority = value; }
 }

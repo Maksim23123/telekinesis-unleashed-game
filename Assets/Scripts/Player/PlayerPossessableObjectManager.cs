@@ -1,11 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerPossessableObjectManager : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask _capturableObjectsLayers;
+
+    private PossessableObjectStatsStorage _objectStatsStorage = new PossessableObjectStatsStorage();
+    private PossessableObjectStatsStorage _defaultObjectStatsStorage = new PossessableObjectStatsStorage();
+    private float _captureZoneRadius = 2.7f;
+    private bool _captureAllowed = true;
     private static PlayerPossessableObjectManager _instance;
 
+    public GameObject CapturedObject { get; private set; }
+    public float CaptureZoneRadius { get => _captureZoneRadius; set => _captureZoneRadius = value; }
+    public PossessableObjectStatsStorage ObjectStatsStorage { get => _objectStatsStorage; set => _objectStatsStorage = value; }
     public static PlayerPossessableObjectManager Instance
     {
         get
@@ -14,40 +22,9 @@ public class PlayerPossessableObjectManager : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         _instance = this;
-    }
-
-    public GameObject CapturedObject { get; private set; }
-    public float CaptureZoneRadius { get => _captureZoneRadius; set => _captureZoneRadius = value; }
-    public PossessableObjectStatsStorage ObjectStatsStorage { get => _objectStatsStorage; set => _objectStatsStorage = value; }
-
-    [SerializeField]
-    private LayerMask _capturableObjectsLayers;
-
-    private PossessableObjectStatsStorage _objectStatsStorage = new PossessableObjectStatsStorage();
-
-    private PossessableObjectStatsStorage _defaultObjectStatsStorage = new PossessableObjectStatsStorage();
-
-    private float _captureZoneRadius = 2.7f;
-
-    //Storage parameters
-    bool _captureAllowed = true;
-
-    public void RequestCapturing()
-    {
-        if (_captureAllowed)
-        {
-            PerformCapturing();
-            _captureAllowed = false;
-            Invoke(nameof(ResetCapture), 0.1f);
-        }
-    }
-
-    public void RequestQuitCapturing()
-    {
-        PerformCaptureQuiting();
     }
 
     private void PerformCapturing()
@@ -103,5 +80,20 @@ public class PlayerPossessableObjectManager : MonoBehaviour
     private void ResetCapture()
     {
         _captureAllowed = true;
+    }
+
+    public void RequestCapturing()
+    {
+        if (_captureAllowed)
+        {
+            PerformCapturing();
+            _captureAllowed = false;
+            Invoke(nameof(ResetCapture), 0.1f);
+        }
+    }
+
+    public void RequestQuitCapturing()
+    {
+        PerformCaptureQuiting();
     }
 }

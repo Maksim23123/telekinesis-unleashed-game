@@ -1,18 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class OneWayPlatformHandler : MonoBehaviour
 {
-    GameObject _currentOneWayPlatform;
-
     [SerializeField]
-    LayerMask _oneWayPlatformLayer;
+    private LayerMask _oneWayPlatformLayer;
     [SerializeField]
-    float _fallThroughTime;
+    private float _fallThroughTime;
 
-    bool _fallThroughOnCooldown;
-    
+    private GameObject _currentOneWayPlatform;
+    private bool _fallThroughOnCooldown;
     private static OneWayPlatformHandler _instance;
 
     public static OneWayPlatformHandler Instance
@@ -23,7 +20,7 @@ public class OneWayPlatformHandler : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         _instance = this;
     }
@@ -38,24 +35,14 @@ public class OneWayPlatformHandler : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        
+
         if (_oneWayPlatformLayer.Contains(collision.gameObject.layer))
         {
             _currentOneWayPlatform = null;
         }
     }
 
-    public void FallThroughCurrentPlatform()
-    {
-        if (!_fallThroughOnCooldown && _currentOneWayPlatform != null)
-        {
-            StartCoroutine(DisableCollision());
-            _fallThroughOnCooldown = true;
-            Invoke(nameof(ResetFallThrough), _fallThroughTime);
-        }
-    }
-
-    private void ResetFallThrough ()
+    private void ResetFallThrough()
     {
         _fallThroughOnCooldown = false;
     }
@@ -67,5 +54,15 @@ public class OneWayPlatformHandler : MonoBehaviour
         Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), platformCollider);
         yield return new WaitForSeconds(_fallThroughTime);
         Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), platformCollider, false);
+    }
+
+    public void FallThroughCurrentPlatform()
+    {
+        if (!_fallThroughOnCooldown && _currentOneWayPlatform != null)
+        {
+            StartCoroutine(DisableCollision());
+            _fallThroughOnCooldown = true;
+            Invoke(nameof(ResetFallThrough), _fallThroughTime);
+        }
     }
 }

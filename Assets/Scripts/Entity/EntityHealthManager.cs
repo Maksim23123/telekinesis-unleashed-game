@@ -1,60 +1,49 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityHealthManager : MonoBehaviour, IRecordable
 {
-    public event Action runOutOfHealth;
-
-    public event Action<int> healthChanged;
-
     [SerializeField]
-    int _maxHealth;
-
+    private int _maxHealth;
     [SerializeField]
-    int _currentHealth;
-
+    private int _currentHealth;
     [SerializeField]
-    bool _afterDamageImortalityFrames;
-
+    private bool _afterDamageImortalityFrames;
     [SerializeField]
-    float _afterDamageImortalityTime = 0.5f;
-
+    private float _afterDamageImortalityTime = 0.5f;
     [Header("Save Load System related")]
     [SerializeField]
-    bool _triggerObjectDataUnpack = false;
+    private bool _triggerObjectDataUnpack = false;
 
-    bool _damageTakingOnCooldown = false;
+    private bool _damageTakingOnCooldown = false;
+    private bool _performRegenerationIteration = true;
+    private float _regenerationAmount;
+    private float _regenerationPool;
+    private ObjectData _waitingObjectData;
 
-    bool _performRegenerationIteration = true;
+    public event Action runOutOfHealth;
+    public event Action<int> healthChanged;
 
-    float _regenerationAmount;
-
-    float _regenerationPool;
-
-    ObjectData _waitingObjectData;
-
-    public int CurrentHealth 
-    { 
+    public int CurrentHealth
+    {
         get => _currentHealth;
-        
+
         set => _currentHealth = Mathf.Clamp(value, 0, _maxHealth);
     }
 
-    public int MaxHealth 
-    { 
+    public int MaxHealth
+    {
         get => _maxHealth;
 
-        set 
+        set
         {
             _maxHealth = Mathf.Clamp(value, 1, int.MaxValue);
             healthChanged?.Invoke(_currentHealth);
         }
     }
 
-    public float RegenerationAmount 
-    { 
+    public float RegenerationAmount
+    {
         get => _regenerationAmount;
 
         set
@@ -62,7 +51,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
             _regenerationAmount = value;
             if (_regenerationAmount > 0 && _performRegenerationIteration)
                 PerformRegenerationIteration();
-        } 
+        }
     }
 
     public int Priority { get => 0; }
@@ -85,6 +74,11 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
             Invoke(nameof(PerformRegenerationIteration), 1);
     }
 
+    private void RestoreDamageTakingAbility()
+    {
+        _damageTakingOnCooldown = false;
+    }
+
     public void ProcessDamage(int damage)
     {
         if (_currentHealth > 0 && !_damageTakingOnCooldown)
@@ -104,11 +98,6 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
                 Invoke(nameof(RestoreDamageTakingAbility), _afterDamageImortalityTime);
             }
         }
-    }
-
-    private void RestoreDamageTakingAbility()
-    {
-        _damageTakingOnCooldown = false;
     }
 
     public void ProcessHeal(int amount)
