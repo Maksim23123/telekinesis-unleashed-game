@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 
@@ -13,6 +12,7 @@ public class SaveLoadManagerInterface : MonoBehaviour
 
     public void RequestLoadGame()
     {
-        SaveLoadManager.Instance.LoadGame();
+        if (Application.isPlaying)
+            SaveLoadManager.Instance.LoadGame();
     }
 }
