@@ -18,9 +18,7 @@ GameObject:
   - component: {fileID: 1837862242729897433}
   - component: {fileID: -8671300378081610665}
   - component: {fileID: 153471810552038655}
-  - component: {fileID: 4007924134781431302}
   - component: {fileID: 570883004426774573}
-  - component: {fileID: 2819610739811280458}
   - component: {fileID: 4718970406216911794}
   - component: {fileID: 836950374614062255}
   m_Layer: 10
@@ -254,19 +252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff7e3bdfd3d79d744bf9d33dec6d060c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4007924134781431302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4260962628893031756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 183ed7b4926c6414591d1ba72b27c77f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameObjectPrefabPath: Assets/Resources/Prefabs/Enemies/Soldier.prefab
 --- !u!114 &570883004426774573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,20 +264,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381058415c08c7140a555ac54d4c836c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObjectPrefabPath: Assets/Resources/Prefabs/Enemies/Soldier.prefab
   _onLoadDataDestributionType: 0
   _staticAddress: 
---- !u!114 &2819610739811280458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4260962628893031756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbfcb07ed6863af4c9a4d37eca166c89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4718970406216911794
 MonoBehaviour:
   m_ObjectHideFlags: 0

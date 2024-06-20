@@ -12,11 +12,9 @@ GameObject:
   - component: {fileID: 3872152282416790597}
   - component: {fileID: 936026311124486792}
   - component: {fileID: 3367940381476166632}
-  - component: {fileID: 7634538733564199858}
   - component: {fileID: 5200878426634173982}
   - component: {fileID: 2988602811116802817}
   - component: {fileID: 3949776267342848708}
-  - component: {fileID: 1686901581476099337}
   m_Layer: 8
   m_Name: Green cube
   m_TagString: Untagged
@@ -163,19 +161,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &7634538733564199858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 175348172864843790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 183ed7b4926c6414591d1ba72b27c77f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameObjectPrefabPath: Assets/Resources/Prefabs/Possessable Objects/Green cube.prefab
 --- !u!114 &5200878426634173982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,17 +199,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381058415c08c7140a555ac54d4c836c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObjectPrefabPath: Assets/Resources/Prefabs/Possessable Objects/Green cube.prefab
   _onLoadDataDestributionType: 0
   _staticAddress: 
---- !u!114 &1686901581476099337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 175348172864843790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbfcb07ed6863af4c9a4d37eca166c89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

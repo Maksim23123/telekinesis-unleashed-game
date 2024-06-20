@@ -13,9 +13,7 @@ GameObject:
   - component: {fileID: 2618823224126863913}
   - component: {fileID: 2930113953738895330}
   - component: {fileID: 659143182819549476}
-  - component: {fileID: 2825083531184820536}
   - component: {fileID: 5646998314816058463}
-  - component: {fileID: 5905523144386111764}
   m_Layer: 13
   m_Name: Pink Hexagon Item 2
   m_TagString: Untagged
@@ -164,18 +162,6 @@ MonoBehaviour:
     _resistance: 0
     _regeneration: 0
   _itemEvent: {fileID: 11400000, guid: ad7629a3cba4d4045b8cd7e4da1959d0, type: 2}
---- !u!114 &2825083531184820536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2081023746520025578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbfcb07ed6863af4c9a4d37eca166c89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5646998314816058463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,18 +174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381058415c08c7140a555ac54d4c836c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameObjectPrefabPath: Assets/Resources/Prefabs/Items/Pink Hexagon Item 2.prefab
   _onLoadDataDestributionType: 0
   _staticAddress: 
---- !u!114 &5905523144386111764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2081023746520025578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 183ed7b4926c6414591d1ba72b27c77f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameObjectPrefabPath: Assets/Resources/Prefabs/Items/Pink Hexagon Item 2.prefab

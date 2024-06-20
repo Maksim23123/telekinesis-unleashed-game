@@ -110,7 +110,8 @@ public class CharacterControllerScript : MonoBehaviour
         else
         {
             Grounded = false;
-            _gravityScaleRequestManager.RequestIsActive = false;
+            if (_gravityScaleRequestManager != null)
+                _gravityScaleRequestManager.RequestIsActive = false;
         }
     }
 }
