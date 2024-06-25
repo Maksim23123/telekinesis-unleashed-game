@@ -54,25 +54,18 @@ public class LevelManager : MonoBehaviour
     public void Generate()
     {
         ClearLevel();
-         
+
+        if (_horizontalExpandDirectionFactor == 0)
+        {
+            _horizontalExpandDirectionFactor = 1;
+        }
+
         Vector2Int startPosition = new Vector2Int((int)(_mapDimensions.x * _horizontalGenerationStartPosition - _horizontalGenerationStartPosition), 0);
 
-        // ATTENTION: Replace with methods
-
-        List<BlockInfoHolder> firstBlockSuitable = _blocksInfo.Where(x => CheckIfRightLeftCorridor(x)).ToList();
-        if (firstBlockSuitable.Count > 0)
+        if (TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder corridorPrefab))
         {
-            GameObject currentBlock = Instantiate(firstBlockSuitable[0].Block, _grid.transform);
-            currentBlock.transform.position = new Vector2(_horizontalExpandDirectionFactor * _blocksSize.x * startPosition.x + _possitionBias.x
-                , _blocksSize.y * startPosition.y + _possitionBias.y);
-
-            BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(currentBlock, startPosition);
-            newBlockInfoHolder.SetConnections(firstBlockSuitable[0].GetConnections());
-
             _currentGeneration = 0;
-
-            _levelElements.Add(newBlockInfoHolder);
-
+            InstantiateBlock(startPosition, corridorPrefab);
             
             for (int i = 0; (i < _minGenerationIterationsCount || _blocksCount < _minBlocksCount) && i < _maxGenerationIterationsCount; i++)
             {
@@ -82,7 +75,6 @@ public class LevelManager : MonoBehaviour
                 {
                     ReActivateGeneration();
                 }
-                Debug.Log(_blocksGenerationSize);
             }
 
             SealHolesInCorridors();
@@ -100,11 +92,10 @@ public class LevelManager : MonoBehaviour
         Vector2Int rightBias = new Vector2Int(1 * _horizontalExpandDirectionFactor, 0);
         Vector2Int leftBias = new Vector2Int(-1 * _horizontalExpandDirectionFactor, 0);
 
-        // ATTENTION: Fix order
         Func<BlockInfoHolder, bool> checkRightNeighbor = x 
-            => TryGetBlockInfoByPosition(x.BlockPosstion + leftBias, out var _);
-        Func<BlockInfoHolder, bool> checkLeftNeighbor = x
             => TryGetBlockInfoByPosition(x.BlockPosstion + rightBias, out var _);
+        Func<BlockInfoHolder, bool> checkLeftNeighbor = x
+            => TryGetBlockInfoByPosition(x.BlockPosstion + leftBias, out var _);
 
         BlockInfoHolder[] corridorsToSeal = _levelElements
             .GroupBy(x => x.Generation)
@@ -113,37 +104,35 @@ public class LevelManager : MonoBehaviour
             .SelectMany(x => x)
             .Where(x => CheckIfRightLeftCorridor(x) && (!checkRightNeighbor(x) ^ !checkLeftNeighbor(x)))
             .ToArray();
-        
+
+        TryGetSuitableBlock(false, false, true, false, out BlockInfoHolder rightConnectedDeadEndPrefab, true);
+        TryGetSuitableBlock(false, false, false, true, out BlockInfoHolder leftConnectedDeadEndPrefab, true);
+
         foreach (var corridor in corridorsToSeal)
         {
             DestroyBlock(corridor);
-            if (!checkRightNeighbor(corridor) && TryGetSuitableBlock(false, false, true, false, out BlockInfoHolder leftBlockInfoHolder, true))
-            {
-                InstantiateBlock(corridor.BlockPosstion, leftBlockInfoHolder);
-            }
-            else if (TryGetSuitableBlock(false, false, false, true, out BlockInfoHolder rightBlockInfoHolder, true))
-            {
-                InstantiateBlock(corridor.BlockPosstion, rightBlockInfoHolder);
-            }
+            if (checkRightNeighbor(corridor))
+                InstantiateBlock(corridor.BlockPosstion, rightConnectedDeadEndPrefab);
+            else 
+                InstantiateBlock(corridor.BlockPosstion, leftConnectedDeadEndPrefab);
         }
 
         BlockInfoHolder[] laddersToCheck = _levelElements
             .Where(x => x.DownConnected || x.UpConnected)
             .ToArray();
 
-        TryGetSuitableBlock(false, false, false, true, out BlockInfoHolder rightDeadEnd, true);
-        TryGetSuitableBlock(false, false, true, false, out BlockInfoHolder leftDeadEnd, true);
+        
 
         foreach (BlockInfoHolder ladder in laddersToCheck)
         {
             if (!checkRightNeighbor(ladder))
             {
-                InstantiateBlock(ladder.BlockPosstion + leftBias, leftDeadEnd);
+                InstantiateBlock(ladder.BlockPosstion + rightBias, leftConnectedDeadEndPrefab);
             }
 
             if (!checkLeftNeighbor(ladder))
             {
-                InstantiateBlock(ladder.BlockPosstion + rightBias, rightDeadEnd);
+                InstantiateBlock(ladder.BlockPosstion + leftBias, rightConnectedDeadEndPrefab);
             }
         }
 
@@ -161,8 +150,6 @@ public class LevelManager : MonoBehaviour
                 InstantiateBlock(regularDeadEnd.BlockPosstion, twoSidedDeadEndPrefab);
             }
         }
-
-        
     }
 
     private void ReActivateGeneration()
@@ -243,19 +230,17 @@ public class LevelManager : MonoBehaviour
     {
         if (TryGetBlockInfoByPosition(position, out BlockInfoHolder currentBlockInfo))
         {
-            if (_horizontalExpandDirectionFactor == 0)
-            {
-                _horizontalExpandDirectionFactor = 1;
-            }
-
             bool ladderNeighbor = false;
             if (currentBlockInfo.UpConnected || currentBlockInfo.DownConnected)
                 ladderNeighbor = true;
 
+            Vector2Int rightBias = new Vector2Int(1 * _horizontalExpandDirectionFactor, 0);
+            Vector2Int leftBias = new Vector2Int(-1 * _horizontalExpandDirectionFactor, 0);
+
             Vector2Int neighborPosition;
             if (currentBlockInfo.RightConnected)
             {
-                neighborPosition = new Vector2Int(position.x + 1 * _horizontalExpandDirectionFactor, position.y);
+                neighborPosition = position + rightBias;
                 if (CheckPosition(neighborPosition) && !TryGetBlockInfoByPosition(neighborPosition, out BlockInfoHolder neighbor))
                 {
                     GenerateBlock(neighborPosition, false, true, ladderNeighbor);
@@ -264,7 +249,7 @@ public class LevelManager : MonoBehaviour
 
             if (currentBlockInfo.LeftConnected)
             {
-                neighborPosition = new Vector2Int(position.x - 1 * _horizontalExpandDirectionFactor, position.y);
+                neighborPosition = position + leftBias;
                 if (CheckPosition(neighborPosition) && !TryGetBlockInfoByPosition(neighborPosition, out BlockInfoHolder neighbor))
                 {
                     GenerateBlock(neighborPosition, true, false, ladderNeighbor);
@@ -303,30 +288,37 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    // ATTENTION: fix height generation
+
     private int GenerateLadderHeight()
     {
         int maxLadderHeight = 4;
         int minLadderHeight = 2;
-        return (int)((maxLadderHeight - minLadderHeight) * UnityEngine.Random.value + minLadderHeight);
+        return (int)((maxLadderHeight - minLadderHeight + 1) * UnityEngine.Random.value + minLadderHeight);
     }
 
     private void InstantiateBlock(Vector2Int position, BlockInfoHolder blockInfo, bool ladderNeighbor = false)
     {
-        GameObject currentBlock = Instantiate(blockInfo.Block, _grid.transform);
-        currentBlock.transform.position = new Vector2(_horizontalExpandDirectionFactor * _blocksSize.x * position.x + _possitionBias.x
-            , _blocksSize.y * position.y + _possitionBias.y);
+        if (!TryGetBlockInfoByPosition(position, out var _))
+        {
+            GameObject currentBlock = Instantiate(blockInfo.Block, _grid.transform);
+            currentBlock.transform.position = new Vector2(_horizontalExpandDirectionFactor * _blocksSize.x * position.x + _possitionBias.x
+                , _blocksSize.y * position.y + _possitionBias.y);
 
-        BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(currentBlock, position);
-        newBlockInfoHolder.SetConnections(blockInfo.GetConnections());
-        newBlockInfoHolder.IsLadderNeighbor = ladderNeighbor;
+            BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(currentBlock, position);
+            newBlockInfoHolder.SetConnections(blockInfo.GetConnections());
+            newBlockInfoHolder.IsLadderNeighbor = ladderNeighbor;
 
-        newBlockInfoHolder.Generation = _currentGeneration;
+            newBlockInfoHolder.Generation = _currentGeneration;
 
-        _levelElements.Add(newBlockInfoHolder);
+            _levelElements.Add(newBlockInfoHolder);
 
-        _blocksCount = _levelElements.Count;
-        _blocksGenerationSize++;
+            _blocksCount = _levelElements.Count;
+            _blocksGenerationSize++;
+        }
+        else
+        {
+            Debug.LogError("Trying to and block in a filled cell.");
+        }
     }
 
     private bool TryBuildLadder(Vector2Int position, int ladderHeight)
