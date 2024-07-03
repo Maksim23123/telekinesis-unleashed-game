@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class CharacterControllerScript : MonoBehaviour
 {
-    [SerializeField]
-    private float _speed;
-    [SerializeField]
-    private LayerMask _groundLayers;
+    [SerializeField] private float _speed;
+    [SerializeField] private LayerMask _groundLayers;
 
     private float _directionalFactor;
     private float _maxSlopeAngle = 46;
@@ -88,23 +86,20 @@ public class CharacterControllerScript : MonoBehaviour
 
     protected void CheckGround()
     {
-
-        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * 0.58f, 0.45f, Vector2.down, 0, _groundLayers);
+        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * 0.555f, 0.475f, Vector2.down, 0, _groundLayers);
 
         if (raycastHit.collider != null)
         {
             Grounded = true;
-            _groundAngle = raycastHit.transform.rotation.eulerAngles.z;
-            float angle = Mathf.Abs(_groundAngle);
-            if (angle > 0 && angle <= _maxSlopeAngle)
+            _groundAngle = Vector3.Angle(Vector3.up, raycastHit.transform.rotation * Vector3.up) * (raycastHit.transform.rotation.eulerAngles.z < 180 ? 1 : -1);
+            float angleSize = Mathf.Abs(_groundAngle);
+            if (angleSize > 0 && angleSize <= _maxSlopeAngle)
             {
                 _onSlope = true;
-
             }
             else
             {
                 _onSlope = false;
-
             }
         }
         else

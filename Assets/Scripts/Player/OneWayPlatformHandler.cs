@@ -1,13 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(GravityScaleManager))]
 public class OneWayPlatformHandler : MonoBehaviour
 {
-    [SerializeField]
-    private LayerMask _oneWayPlatformLayer;
-    [SerializeField]
-    private float _fallThroughTime;
+    [SerializeField] private LayerMask _oneWayPlatformLayer;
+    [SerializeField] private float _fallThroughTime;
+    [SerializeField] private float _fallThroughGravityScale;
 
+    private GravityScaleRequestManager _gravityScaleRequestManager;
     private GameObject _currentOneWayPlatform;
     private bool _fallThroughOnCooldown;
     private static OneWayPlatformHandler _instance;
@@ -23,6 +24,11 @@ public class OneWayPlatformHandler : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+
+        if (TryGetComponent(out GravityScaleManager gravityScaleManager))
+        {
+            _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, _fallThroughGravityScale, 1);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -44,6 +50,7 @@ public class OneWayPlatformHandler : MonoBehaviour
 
     private void ResetFallThrough()
     {
+        _gravityScaleRequestManager.RequestIsActive = false;
         _fallThroughOnCooldown = false;
     }
 
@@ -62,6 +69,7 @@ public class OneWayPlatformHandler : MonoBehaviour
         {
             StartCoroutine(DisableCollision());
             _fallThroughOnCooldown = true;
+            _gravityScaleRequestManager.RequestIsActive = true;
             Invoke(nameof(ResetFallThrough), _fallThroughTime);
         }
     }

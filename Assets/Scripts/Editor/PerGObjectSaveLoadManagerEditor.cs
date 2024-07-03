@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 
 // ATTENTION: Need to renamed after InstanceSaveLoadManager
 [CustomEditor(typeof(InstanceSaveLoadManager))]
