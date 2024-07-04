@@ -43,6 +43,7 @@ public class BlockInfoHolder
     public bool IsLadderNeighbor { get => _isLadderNeighbor; set => _isLadderNeighbor = value; }
     public int Generation { get => _generation; set => _generation = value; }
     public bool DeadEnd { get => _deadEnd; set => _deadEnd = value; }
+    public string Name { get => _name;}
 
     /// <summary>
     /// Returns information about connections of a block in form of 

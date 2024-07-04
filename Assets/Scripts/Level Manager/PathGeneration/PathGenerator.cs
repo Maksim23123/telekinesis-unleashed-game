@@ -9,14 +9,17 @@ using UnityEngine.Assertions.Must;
 
 public class PathGenerator : MonoBehaviour
 {
-    // ATTENTION: DEBUG
+    //TODO: Remove debug functions after they aren't needed anymore 
     //----------
     [SerializeField] private Transform _startPositionBeacon, _endPositionBeacon;
+    [SerializeField] private GameObject _pathPlaceholder;
     //----------
     [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField] private LevelManager _levelManager;
     [SerializeField] private PathType _pathType = PathType.OneTurnManhattan;
     [SerializeField] private float _straightWayMaxError;
+    private Vector2Int _startPositionInGrid, _endPositionInGrid;
+    private SmartPath _smartPath;
     private BlockGridSettings _blockGridSettings;
 
     
@@ -33,6 +36,10 @@ public class PathGenerator : MonoBehaviour
         else if (_pathType == PathType.Straight)
         {
             GenerateStraightWay();
+        }
+        else if (_pathType == PathType.Smart)
+        {
+            GenerateSmartWay();
         }
     }
 
@@ -168,25 +175,49 @@ public class PathGenerator : MonoBehaviour
         }
     }
 
+    private void GenerateSmartWay()
+    {
+        if (_smartPath == null)
+        {
+            _smartPath = new SmartPath(_levelManager);
+        }
+
+        UpdateStartEndPositionsInGrid();
+
+        _smartPath.AStar(_startPositionInGrid, _endPositionInGrid, out Vector2Int[] path);
+        BlockInfoHolder pathPart = new BlockInfoHolder(_pathPlaceholder, Vector2Int.zero);
+
+        
+        foreach (Vector2Int position in path)
+        {
+            _levelManager.InstantiateCustomBlock(pathPart, position);
+        }
+    }
+
+    private void UpdateStartEndPositionsInGrid()
+    {
+        _startPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_startPosition);
+        _endPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_endPosition);
+    }
+
     private void GenerateOneTurnManhattanWay()
     {
-        Vector2Int startPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_startPosition);
-        Vector2Int endPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_endPosition);
-        Vector2Int endPositionInGridForHorizWay = endPositionInGrid;
+        UpdateStartEndPositionsInGrid();
+        Vector2Int endPositionInGridForHorizWay = _endPositionInGrid;
 
-        if (startPositionInGrid.x != endPositionInGrid.x)
-            endPositionInGridForHorizWay.x = endPositionInGrid.x
-                + (endPositionInGrid.x < startPositionInGrid.x ? 1 : -1);
+        if (_startPositionInGrid.x != _endPositionInGrid.x)
+            endPositionInGridForHorizWay.x = _endPositionInGrid.x
+                + (_endPositionInGrid.x < _startPositionInGrid.x ? 1 : -1);
 
-        _levelManager.BuildHorizontalPath(startPositionInGrid.x, endPositionInGridForHorizWay.x
+        _levelManager.BuildHorizontalPath(_startPositionInGrid.x, endPositionInGridForHorizWay.x
             , _levelManager.BlockGridSettings.WorldToGridPosition(_startPosition).y);
 
         int horizExpandDirectionFactor = _blockGridSettings.HorizontalExpandDirectionFactor;
 
-        if (startPositionInGrid.y != endPositionInGrid.y)
+        if (_startPositionInGrid.y != _endPositionInGrid.y)
         {
-            _levelManager.BuildVerticalPath(startPositionInGrid.y, endPositionInGrid.y, endPositionInGrid.x
-                , horizExpandDirectionFactor > 0 ? startPositionInGrid.x > endPositionInGrid.x : startPositionInGrid.x < endPositionInGrid.x);
+            _levelManager.BuildVerticalPath(_startPositionInGrid.y, _endPositionInGrid.y, _endPositionInGrid.x
+                , horizExpandDirectionFactor > 0 ? _startPositionInGrid.x > _endPositionInGrid.x : _startPositionInGrid.x < _endPositionInGrid.x);
         }
     }
 

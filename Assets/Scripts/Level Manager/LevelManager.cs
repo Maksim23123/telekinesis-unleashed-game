@@ -52,6 +52,7 @@ public class LevelManager : MonoBehaviour
     private int _currentGeneration;
 
     public BlockGridSettings BlockGridSettings { get => _blockGridSettings; set => _blockGridSettings = value; }
+    public List<BlockInfoHolder> BlocksInfo { get => _blocksInfo.ToList(); }
 
     public void Generate()
     {
@@ -218,10 +219,17 @@ public class LevelManager : MonoBehaviour
 
     // Build and generate
 
-    public void InstantiateCustomBlock(GameObject gameObject, Vector2Int position)
+    public void InstantiateCustomBlock(BlockInfoHolder blockInfoHolder, Vector2Int position, bool force = false)
     {
-        BlockInfoHolder customBlock = new BlockInfoHolder(gameObject, position);
-        InstantiateBlock(position, customBlock);
+        if (force)
+        {
+            InstantiateOrReplaceBlock(position, blockInfoHolder);
+        }
+        else
+        {
+            InstantiateBlock(position, blockInfoHolder);
+        }
+        
     }
 
     public void FillRectWithPlaceholders(Vector2Int startGridPosition, Vector2Int endGridPosition, bool force = false)
@@ -234,9 +242,7 @@ public class LevelManager : MonoBehaviour
             {
                 for (int j = 0; j < Mathf.Abs(fillAreaSizes.y); j++)
                 {
-                    Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs // find absolute position in grid than rotate it to primal direction 
-                        /**/; /*/+ new Vector2Int(Mathf.Clamp(_blockGridSettings.HorizontalExpandDirectionFactor, -1, 0), 0) * signs.x;/**/ // Add additional correction to mathch Horizontal expand direction
-                    Debug.Log(new Vector2Int(i, j) * signs);
+                    Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
                     if (force)
                     {
                         InstantiateOrReplaceBlock(currentBlockPossition, placeholder);
@@ -448,7 +454,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Trying to and block in a filled cell.");
+            Debug.LogWarning("Trying to and block in a filled cell.");
         }
     }
 
@@ -523,7 +529,7 @@ public class LevelManager : MonoBehaviour
         return position.x >= 0 && position.y >= 0 && position.x < _blockGridSettings.MapDimensions.x && position.y < _blockGridSettings.MapDimensions.y;
     }
 
-    private bool TryGetBlockInfoByPosition(Vector2Int position, out BlockInfoHolder blockInfoHolder)
+    public bool TryGetBlockInfoByPosition(Vector2Int position, out BlockInfoHolder blockInfoHolder)
     {
         BlockInfoHolder[] blocksInfoByPossition = _levelElements.Where(x => x.BlockPosstion == position).ToArray();
         blockInfoHolder = null;
@@ -540,6 +546,16 @@ public class LevelManager : MonoBehaviour
     }
 
     //Destroying
+
+    public bool TryDestroyBlockByPosition(Vector2Int position)
+    {
+        if (TryGetBlockInfoByPosition(position, out BlockInfoHolder blockInfoHolder))
+        {
+            DestroyBlock(blockInfoHolder);
+            return true;
+        }
+        return false;
+    }
 
     private void DestroyBlock(BlockInfoHolder block)
     {

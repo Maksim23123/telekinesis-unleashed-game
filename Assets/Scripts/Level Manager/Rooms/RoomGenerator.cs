@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,19 +10,31 @@ public class RoomGenerator : MonoBehaviour
     [SerializeField] GameObject[] _roomPrefabs = new GameObject[0];
 
     BlockGridSettings _blockGridSettings;
-    
+
+    public GameObject[] RoomPrefabs { get => _roomPrefabs.ToArray(); }
+    public BlockGridSettings BlockGridSettings 
+    { 
+        get
+        {
+            return _levelManager.BlockGridSettings;
+        }
+    }
 
     public void GenerateRooms()
     {
-        _blockGridSettings = _levelManager.BlockGridSettings;
+        Vector2Int roomCenterGridPosition = new Vector2Int((int)(BlockGridSettings.MapDimensions.x * Random.value)
+                , (int)(BlockGridSettings.MapDimensions.y * Random.value));
+        GameObject currentRoom = _roomPrefabs[0];
+        CreateRoom(roomCenterGridPosition, currentRoom);
+    }
 
-        if (_roomPrefabs[0].TryGetComponent(out RoomData roomData))
+    public void CreateRoom(Vector2Int roomCenterGridPosition, GameObject currentRoom)
+    {
+        if (currentRoom.TryGetComponent(out RoomData roomData))
         {
-            Vector2Int roomCenterGridPosition = new Vector2Int((int)(_blockGridSettings.MapDimensions.x * Random.value)
-                , (int)(_blockGridSettings.MapDimensions.y * Random.value));
-            
-            _levelManager.InstantiateCustomBlock(_roomPrefabs[0], roomCenterGridPosition);
-            roomData.InitInGridParams(_blockGridSettings);
+            BlockInfoHolder roomBlock = new BlockInfoHolder(currentRoom, Vector2Int.zero);
+            _levelManager.InstantiateCustomBlock(roomBlock, roomCenterGridPosition);
+            roomData.InitInGridParams(BlockGridSettings);
             _levelManager.FillRectWithPlaceholders(roomCenterGridPosition + roomData.CapturedZoneInBlockGridStart
                 , roomCenterGridPosition + roomData.CapturedZoneInBlockGridEnd);
         }
