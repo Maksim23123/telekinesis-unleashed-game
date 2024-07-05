@@ -219,6 +219,27 @@ public class LevelManager : MonoBehaviour
 
     // Build and generate
 
+    public void BuildPathPart(Vector2Int position, Vector2Int[] neighborsRepresentativePositions)
+    {
+        bool upperConnection = false;
+        bool lowerConnection = false;
+
+        if (neighborsRepresentativePositions.Any(g => g.y < position.y))
+        {
+            lowerConnection = true;
+        }
+
+        if (neighborsRepresentativePositions.Any(g => g.y > position.y))
+        {
+            upperConnection = true;
+        }
+
+        if (TryGetSuitableBlock(upperConnection, lowerConnection, true, true, out BlockInfoHolder suitableBlockPrefab))
+        {
+            InstantiateBlock(position, suitableBlockPrefab);
+        }
+    }
+
     public void InstantiateCustomBlock(BlockInfoHolder blockInfoHolder, Vector2Int position, bool force = false)
     {
         if (force)
