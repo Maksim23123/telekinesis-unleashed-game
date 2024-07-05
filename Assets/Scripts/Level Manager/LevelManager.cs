@@ -63,7 +63,10 @@ public class LevelManager : MonoBehaviour
         if (TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder corridorPrefab))
         {
             _currentGeneration = 0;
-            InstantiateOrReplaceBlock(startPosition, corridorPrefab);
+            if (_levelElements.Count == 0)
+            {
+                InstantiateOrReplaceBlock(startPosition, corridorPrefab);
+            }
 
             for (int i = 0; (i < _minGenerationIterationsCount || _blocksCount < _minBlocksCount) && i < _maxGenerationIterationsCount; i++)
             {
