@@ -18,7 +18,7 @@ public class SmartPath
     {
         path = new Vector2Int[0];
         List<PathCell> openList = new();
-        List<PathCell> closedList = new();
+        HashSet<PathCell> closedList = new();
         bool goalFound = false;
         PathCell pathEnd = null;
 
@@ -59,6 +59,7 @@ public class SmartPath
                     openList.Add(successors[i]);
                 }
             }
+
             closedList.Add(q);
         }
 
@@ -74,8 +75,6 @@ public class SmartPath
             return false;
         }
     }
-
-    
 
     private List<Vector2Int> EvenUpParrents(List<Vector2Int> previous, PathCell next)
     {

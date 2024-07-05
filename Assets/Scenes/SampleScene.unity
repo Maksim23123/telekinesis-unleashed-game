@@ -7140,7 +7140,6 @@ GameObject:
   - component: {fileID: 1806064889}
   - component: {fileID: 1806064890}
   - component: {fileID: 1806064891}
-  - component: {fileID: 1806064892}
   m_Layer: 0
   m_Name: Level Manager
   m_TagString: Untagged
@@ -7314,24 +7313,6 @@ MonoBehaviour:
   _levelManager: {fileID: 1806064889}
   _roomPrefabs:
   - {fileID: 7448808275392801, guid: bb4044c87d13f0b4b94e82679f0e6207, type: 3}
---- !u!114 &1806064892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1806064887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42f353c0ebd3003439a282908c361004, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _levelManager: {fileID: 1806064889}
-  _current: {fileID: 0}
-  _closed: {fileID: 4919044101916346796, guid: d5c584548d89add4c86f69ee92706bb0, type: 3}
-  _temp: {fileID: 799251971}
-  _run: 0
-  _clearTemp: 1
 --- !u!1 &1822672077
 GameObject:
   m_ObjectHideFlags: 0
