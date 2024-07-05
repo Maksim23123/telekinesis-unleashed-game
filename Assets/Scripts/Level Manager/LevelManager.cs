@@ -250,7 +250,6 @@ public class LevelManager : MonoBehaviour
         {
             InstantiateBlock(position, blockInfoHolder);
         }
-        
     }
 
     public void FillRectWithPlaceholders(Vector2Int startGridPosition, Vector2Int endGridPosition, bool force = false)

@@ -187,10 +187,41 @@ public class PathGenerator : MonoBehaviour
         _smartPath.AStar(_startPositionInGrid, _endPositionInGrid, out Vector2Int[] path);
         BlockInfoHolder pathPart = new BlockInfoHolder(_pathPlaceholder, Vector2Int.zero);
 
-        
-        foreach (Vector2Int position in path)
+        for (int i = 0; i < path.Length; i++)
         {
-            _levelManager.InstantiateCustomBlock(pathPart, position);
+            Vector2Int[] currentCellNeighbors;
+            bool onStart = !(i > 0);
+            bool onEnd = !(i < path.Length - 1);
+
+            if (!onStart && !onEnd)
+            {
+                currentCellNeighbors = new Vector2Int[] 
+                { 
+                    path[i - 1], 
+                    path[i + 1] 
+                };
+                _levelManager.BuildPathPart(path[i], currentCellNeighbors);
+            }
+            else if (onStart && !onEnd)
+            {
+                currentCellNeighbors = new Vector2Int[]
+                {
+                    path[i + 1]
+                };
+                _levelManager.BuildPathPart(path[i], currentCellNeighbors);
+            }
+            else if (!onStart && onEnd)
+            {
+                currentCellNeighbors = new Vector2Int[]
+                {
+                    path[i - 1]
+                };
+                _levelManager.BuildPathPart(path[i], currentCellNeighbors);
+            }
+            else
+            {
+                _levelManager.BuildPathPart(path[i], new Vector2Int[0]);
+            }
         }
     }
 

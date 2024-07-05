@@ -63,11 +63,9 @@ public class SmartPath
             closedList.Add(q);
         }
 
-        Debug.Log(itters);
-
         if (goalFound)
         {
-            path = EvenUpParrents(new List<Vector2Int>(), pathEnd).ToArray();
+            path = EvenUpParrents(pathEnd).ToArray();
             return true;
         }
         else
@@ -76,17 +74,16 @@ public class SmartPath
         }
     }
 
-    private List<Vector2Int> EvenUpParrents(List<Vector2Int> previous, PathCell next)
+    private List<Vector2Int> EvenUpParrents(PathCell endCell)
     {
-        previous.Add(next.Position);
-        if (next.Parent != null)
+        List<Vector2Int> path = new();
+        PathCell currentCell = endCell;
+        while (currentCell != null)
         {
-            return EvenUpParrents(previous, next.Parent);
+            path.Add(currentCell.Position);
+            currentCell = currentCell.Parent;
         }
-        else
-        {
-            return previous;
-        }
+        return path;
     }
 
     private PathCell[] GenerateSuccessors(PathCell q, LevelManager levelManager)
