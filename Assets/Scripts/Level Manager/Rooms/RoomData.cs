@@ -35,7 +35,7 @@ public class RoomData : MonoBehaviour
 
             foreach (Transform connectionPointer in _connectionPointers)
             {
-                _connections.Add(connectionPointer.position - transform.position - (Vector3)_standartCenterBias);
+                _connections.Add(connectionPointer.position);
             }
         }
         else
