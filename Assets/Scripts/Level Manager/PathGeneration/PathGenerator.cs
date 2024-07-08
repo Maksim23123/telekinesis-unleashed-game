@@ -29,11 +29,7 @@ public class PathGenerator : MonoBehaviour
         InitPositionsFromBeacons();
         GetBlockGridSettings();
 
-        if (_pathType == PathType.OneTurnManhattan) 
-        {
-            GenerateOneTurnManhattanWay();
-        }
-        else if (_pathType == PathType.Smart)
+        if (_pathType == PathType.Smart)
         {
             GenerateSmartWay();
         }
@@ -103,6 +99,7 @@ public class PathGenerator : MonoBehaviour
         _endPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_endPosition);
     }
 
+    /*
     private void GenerateOneTurnManhattanWay()
     {
         UpdateStartEndPositionsInGrid();
@@ -122,7 +119,7 @@ public class PathGenerator : MonoBehaviour
             _levelManager.BuildVerticalPath(_startPositionInGrid.y, _endPositionInGrid.y, _endPositionInGrid.x
                 , horizExpandDirectionFactor > 0 ? _startPositionInGrid.x > _endPositionInGrid.x : _startPositionInGrid.x < _endPositionInGrid.x);
         }
-    }
+    }*/
 
     private void InitPositionsFromBeacons()
     {

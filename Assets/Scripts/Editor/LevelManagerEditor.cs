@@ -10,11 +10,6 @@ public class LevelManagerEditor : Editor
 
         LevelManager myScript = (LevelManager)target;
 
-        if (GUILayout.Button("Generate"))
-        {
-            myScript.Generate();
-        }
-
         if (GUILayout.Button("Clear"))
         {
             myScript.ClearLevel();
