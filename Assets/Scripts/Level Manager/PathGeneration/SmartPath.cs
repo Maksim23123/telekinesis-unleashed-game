@@ -14,6 +14,7 @@ public class SmartPath
         _levelManager = levelManager ?? throw new ArgumentNullException(nameof(levelManager));
     }
 
+    // TODO: Rename method
     public bool AStar(Vector2Int startPosition, Vector2Int endPosition, out Vector2Int[] path)
     {
         path = new Vector2Int[0];
@@ -30,8 +31,6 @@ public class SmartPath
         {
             itters++;
             PathCell q = openList.OrderBy(x => x.F).First();
-
-            Vector2 worldPosition = q.Position * _levelManager.BlockGridSettings.BlocksSize + _levelManager.BlockGridSettings.PossitionBias;
 
             openList.Remove(q);
 

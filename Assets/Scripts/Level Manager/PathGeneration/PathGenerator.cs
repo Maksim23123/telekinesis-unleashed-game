@@ -22,8 +22,6 @@ public class PathGenerator : MonoBehaviour
     private SmartPath _smartPath;
     private BlockGridSettings _blockGridSettings;
 
-    
-
     public void Generate()
     {
         InitPositionsFromBeacons();
@@ -33,145 +31,9 @@ public class PathGenerator : MonoBehaviour
         {
             GenerateOneTurnManhattanWay();
         }
-        else if (_pathType == PathType.Straight)
-        {
-            GenerateStraightWay();
-        }
         else if (_pathType == PathType.Smart)
         {
             GenerateSmartWay();
-        }
-    }
-
-    private void GenerateStraightWay()
-    {
-        Vector2Int startPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_startPosition);
-        Vector2Int endPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_endPosition);
-
-        Vector2 pathDirection = ((Vector2)(endPositionInGrid - startPositionInGrid)).normalized;
-
-        // Horizontal Path
-        List<Vector3Int> horizontalWays = new(); // start coordinate x, start coordinate y, Length 
-        int horizontalLength = endPositionInGrid.x - startPositionInGrid.x;
-        int horizontalDirection = Mathf.Clamp(endPositionInGrid.x - startPositionInGrid.x, -1, 1);
-        int currentHorizontalPosition = 0;
-
-        Action<Vector3Int> setLastHorizWay = (Vector3Int horizWay) =>
-        {
-            if (horizontalWays.Count > 0)
-            {
-                horizontalWays[horizontalWays.Count - 1] = horizWay;
-                return;
-            }
-            horizontalWays.Add(horizWay);
-        };
-
-        // Vertical Path
-        List<Vector3Int> verticalWays = new(); // start coordinate x, start coordinate y, Height
-        int verticalLength = endPositionInGrid.y - startPositionInGrid.y;
-        int verticalDirection = Mathf.Clamp(endPositionInGrid.y - startPositionInGrid.y, -1, 1);
-        int currentVerticalPosition = 0;
-
-        Action<Vector3Int> setLastVertWay = (Vector3Int vertWay) =>
-        {
-            if (verticalWays.Count > 0)
-            {
-                verticalWays[verticalWays.Count - 1] = vertWay;
-                return;
-            }
-            verticalWays.Add(vertWay);
-        };
-
-        bool verticalCorection = false;
-
-        Vector2Int currentPosition = startPositionInGrid;
-
-        bool upperTrasholdTriggered = verticalDirection > 0;
-
-        //TODO: remove infinite loop stoper
-        int iterations = 0;
-
-        while (horizontalLength != currentHorizontalPosition && iterations < 1000) 
-        {
-            Vector2 currentPositionFromZero = currentPosition - startPositionInGrid;
-            float pathDirectionMultiplier = currentPositionFromZero.x / pathDirection.x;
-            Vector2 estimatedPath = pathDirection * pathDirectionMultiplier;
-            bool currentPointBellowEstimatedPath = currentPositionFromZero.y < estimatedPath.y;
-            if (!verticalCorection && horizontalLength > 0)
-            {
-                if (Mathf.Abs(currentPositionFromZero.y - estimatedPath.y) > _straightWayMaxError // check if way within the line
-                    && (currentPointBellowEstimatedPath == upperTrasholdTriggered))
-                {
-                    verticalCorection = true;
-                    upperTrasholdTriggered = currentPositionFromZero.y > estimatedPath.y; 
-                }
-                else
-                {
-                    if (horizontalWays.Count > 0 && currentPosition.y == horizontalWays.Last().y)
-                    {
-                        Vector3Int currentWay = horizontalWays.Last();
-                        currentWay.z += horizontalDirection;
-                        setLastHorizWay(currentWay);
-                    }
-                    else
-                    {
-                        horizontalWays.Add((Vector3Int)currentPosition);
-                    }
-
-                    currentPosition.x += horizontalDirection;
-                    currentHorizontalPosition += horizontalDirection;
-                }
-            }
-            else
-            {
-
-                if (Mathf.Abs(currentPositionFromZero.y - estimatedPath.y) > _straightWayMaxError // check if way within the line
-                    && (currentPointBellowEstimatedPath == upperTrasholdTriggered))
-                {
-                    verticalCorection = false;
-                    upperTrasholdTriggered = !currentPointBellowEstimatedPath;
-                }
-                else
-                {
-                    if (verticalWays.Count > 0 && currentPosition.x == verticalWays.Last().x)
-                    {
-                        Vector3Int currentWay = verticalWays.Last();
-                        currentWay.z += verticalDirection;
-                        setLastVertWay(currentWay);
-                    }
-                    else
-                    {
-                        verticalWays.Add((Vector3Int)currentPosition);
-                    }
-
-                    currentPosition.y += verticalDirection;
-                    currentVerticalPosition += verticalDirection;
-                }
-            }
-
-            foreach (Vector3Int horizontalWay in horizontalWays)
-            {
-                _levelManager.BuildHorizontalPath(horizontalWay.x, horizontalWay.x + horizontalWay.z, horizontalWay.y);
-            }
-
-            foreach (Vector3Int verticalWay in verticalWays)
-            {
-                _levelManager.BuildVerticalPath(verticalWay.y, verticalWay.y + verticalWay.z + 1, verticalWay.x, true);
-            }
-
-            iterations++;
-        }
-
-        foreach (var horizWay in horizontalWays)
-        {
-            Debug.Log(horizWay);
-        }
-
-        Debug.Log("-----");
-
-        foreach (var vertWay in verticalWays)
-        {
-            Debug.Log(vertWay);
         }
     }
 

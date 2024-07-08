@@ -47,8 +47,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private int _blocksGenerationSize;
 
-
-
     private int _currentGeneration;
 
     public BlockGridSettings BlockGridSettings { get => _blockGridSettings; set => _blockGridSettings = value; }
@@ -56,8 +54,6 @@ public class LevelManager : MonoBehaviour
 
     public void Generate()
     {
-        //ClearLevel();
-
         Vector2Int startPosition = new Vector2Int((int)(_blockGridSettings.MapDimensions.x * _horizontalGenerationStartPosition - _horizontalGenerationStartPosition), 0);
 
         if (TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder corridorPrefab))
