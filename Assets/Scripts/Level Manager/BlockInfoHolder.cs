@@ -43,8 +43,13 @@ public class BlockInfoHolder
     public bool IsLadderNeighbor { get => _isLadderNeighbor; set => _isLadderNeighbor = value; }
     public int Generation { get => _generation; set => _generation = value; }
     public bool DeadEnd { get => _deadEnd; set => _deadEnd = value; }
+    public string Name { get => _name;}
 
-    //UP DOWN RIGHT LEFT
+    /// <summary>
+    /// Returns information about connections of a block in form of 
+    /// bitmask in that order: UP DOWN RIGHT LEFT IS_DEAD_END
+    /// </summary>
+    /// <returns></returns>
     public int GetConnections()
     {
         int connections = 0;
@@ -69,6 +74,11 @@ public class BlockInfoHolder
         return connections;
     }
 
+    /// <summary>
+    /// Applys information about connections of a block in form of 
+    /// bitmask in that order: UP DOWN RIGHT LEFT IS_DEAD_END
+    /// </summary>
+    /// <param name="connections"></param>
     public void SetConnections(int connections)
     {
         _leftConnected = (connections & (1 << 0)) != 0; 
