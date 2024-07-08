@@ -3678,7 +3678,7 @@ Transform:
   m_GameObject: {fileID: 864807044}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -346.1, y: 73.7, z: 0}
+  m_LocalPosition: {x: -345.23, y: 69.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7287,9 +7287,8 @@ MonoBehaviour:
   _endPositionBeacon: {fileID: 864807046}
   _pathPlaceholder: {fileID: 1093853083205643083, guid: d4f6937927ad88846be55ea3944a73c1, type: 3}
   _startPosition: {x: -127, y: 24.5}
-  _endPosition: {x: -346.1, y: 73.7}
+  _endPosition: {x: -345.23, y: 69.55}
   _levelManager: {fileID: 1806064889}
-  _pathType: 2
   _straightWayMaxError: 0.5
 --- !u!114 &1806064891
 MonoBehaviour:
@@ -7325,8 +7324,8 @@ MonoBehaviour:
   _minBlocksCount: 500
   _maxLadderHeight: 4
   _minLadderHeight: 2
-  _blocksCount: 946
-  _blocksGenerationSize: 22
+  _blocksCount: 720
+  _blocksGenerationSize: 13
 --- !u!1 &1822672077
 GameObject:
   m_ObjectHideFlags: 0

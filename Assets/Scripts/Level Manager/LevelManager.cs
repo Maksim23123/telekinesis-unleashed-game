@@ -6,24 +6,14 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField]
-    List<BlockInfoHolder> _blocksInfo = new List<BlockInfoHolder>();
-
-    [SerializeField]
-    GameObject _grid;
-
-    [SerializeField]
-    BlockGridSettings _blockGridSettings;
-
-    [HideInInspector]
-    [SerializeField]
-    List<BlockInfoHolder> _levelElements;
+    [SerializeField] List<BlockInfoHolder> _blocksInfo = new List<BlockInfoHolder>();
+    [SerializeField] GameObject _grid;
+    [SerializeField] BlockGridSettings _blockGridSettings;
+    [HideInInspector][SerializeField] List<BlockInfoHolder> _levelElements;
 
     public BlockGridSettings BlockGridSettings { get => _blockGridSettings; set => _blockGridSettings = value; }
     public List<BlockInfoHolder> BlocksInfo { get => _blocksInfo.ToList(); }
     public List<BlockInfoHolder> LevelElements { get => _levelElements.ToList(); }
-
-    // Finalizing generation
 
     // Build and generate
 

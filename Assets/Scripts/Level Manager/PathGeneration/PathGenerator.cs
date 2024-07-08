@@ -16,23 +16,16 @@ public class PathGenerator : MonoBehaviour
     //----------
     [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField] private LevelManager _levelManager;
-    [SerializeField] private PathType _pathType = PathType.OneTurnManhattan;
     [SerializeField] private float _straightWayMaxError;
     private Vector2Int _startPositionInGrid, _endPositionInGrid;
     private SmartPath _smartPath;
     private BlockGridSettings _blockGridSettings;
 
-    
-
     public void Generate()
     {
         InitPositionsFromBeacons();
         GetBlockGridSettings();
-
-        if (_pathType == PathType.Smart)
-        {
-            GenerateSmartWay();
-        }
+        GenerateSmartWay();
     }
 
     private void GenerateSmartWay()
