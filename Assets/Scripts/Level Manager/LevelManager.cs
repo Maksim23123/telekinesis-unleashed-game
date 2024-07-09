@@ -96,7 +96,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Trying to and block in a filled cell.");
+            Debug.LogWarning("Trying to add block in a filled cell.");
         }
     }
 
@@ -109,7 +109,6 @@ public class LevelManager : MonoBehaviour
         InstantiateBlock(position, newBlockPrefab);
     }
     
-
     // Info and tests
 
     public bool TryGetSuitableBlock(bool up, bool down, bool right, bool left, out BlockInfoHolder blockInfoHolder, bool deadEnd = false)

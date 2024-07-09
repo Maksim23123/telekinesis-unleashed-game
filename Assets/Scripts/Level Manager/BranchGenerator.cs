@@ -7,24 +7,16 @@ public class BranchGenerator : MonoBehaviour
 {
     [SerializeField] LevelManager _levelManager;
     [Range(0, 1)][SerializeField] private float _horizontalGenerationStartPosition;
-
     [SerializeField] private int _minGenerationIterationsCount;
-
     [SerializeField] private int _maxGenerationIterationsCount;
-
     [SerializeField] private int _minBlocksCount;
-
     [SerializeField] int _maxLadderHeight = 4;
-
     [SerializeField] int _minLadderHeight = 2;
 
     [Header("Info")]
 
     [ReadOnly][SerializeField] private int _blocksCount;
     [ReadOnly][SerializeField] private int _blocksGenerationSize;
-
-
-
 
     private int _currentGeneration;
 
@@ -46,8 +38,6 @@ public class BranchGenerator : MonoBehaviour
 
     public void Generate()
     {
-        //ClearLevel();
-
         Vector2Int startPosition = new Vector2Int((int)(BlockGridSettings.MapDimensions.x * _horizontalGenerationStartPosition - _horizontalGenerationStartPosition), 0);
 
         if (_levelManager.TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder corridorPrefab))
@@ -245,6 +235,7 @@ public class BranchGenerator : MonoBehaviour
         return freeCells;
     }
 
+    // TODO: Consider to transfer functions for finalizing to separate class
     public void SealHolesInCorridors()
     {
         Vector2Int rightBias = new Vector2Int(1 * BlockGridSettings.HorizontalExpandDirectionFactor, 0);

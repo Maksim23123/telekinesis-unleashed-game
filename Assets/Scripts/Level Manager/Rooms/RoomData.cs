@@ -28,7 +28,7 @@ public class RoomData : MonoBehaviour
     public void InitRoomParams()
     {
 #if UNITY_EDITOR
-        if (_startRoomPointer != null && _endRoomPointer != null)
+        if (!Application.isPlaying && _startRoomPointer != null && _endRoomPointer != null)
         {
             _relativeRoomStartPosition = _startRoomPointer.position - transform.position - (Vector3)_standartCenterBias;
             _relativeRoomEndPosition = _endRoomPointer.position - transform.position - (Vector3)_standartCenterBias;
@@ -37,6 +37,10 @@ public class RoomData : MonoBehaviour
             {
                 _connections.Add(connectionPointer.position);
             }
+        }
+        else if (Application.isPlaying)
+        {
+            Debug.LogError("Can't initialize room parameters while application is runing.");
         }
         else
         {

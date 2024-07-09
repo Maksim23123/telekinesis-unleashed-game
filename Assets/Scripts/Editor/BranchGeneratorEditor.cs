@@ -10,7 +10,7 @@ public class BranchGeneratorEditor : Editor
 
         BranchGenerator myScript = (BranchGenerator)target;
 
-        if (GUILayout.Button("Generate branches"))
+        if (GUILayout.Button("Generate Branches"))
         {
             myScript.Generate();
         } 
