@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class ProjectileDamageHandler : DamageHandler
 {
+    [SerializeField] private LayerMask _projectilesLayers;
     private EntityHealthManager _healthManager;
-    [SerializeField]
-    private LayerMask _projectilesLayers;
 
     private void Start()
     {
