@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(EntityHealthManager))]
-public class DamageHandler : MonoBehaviour
+public abstract class DamageHandler : MonoBehaviour
 {
     private float _resistance;
 
