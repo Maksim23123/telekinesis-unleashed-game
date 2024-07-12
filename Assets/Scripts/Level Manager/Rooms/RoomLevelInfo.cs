@@ -23,8 +23,6 @@ public class RoomLevelInfo
     public int CapturedVerticalPlace { get => _capturedVerticalPlace; }
     public RoomInfo[] RoomInfos { get => _roomInfos.ToArray(); }
 
-
-    // TODO: Make code in that function prety
     public void GenerateRooms(GameObject[] roomsPrefabs, int verticalPos)
     {
         _roomInfos = new RoomInfo[_minRoomCount + (int)(((_maxRoomCount - _minRoomCount) + 1) * UnityEngine.Random.value)];

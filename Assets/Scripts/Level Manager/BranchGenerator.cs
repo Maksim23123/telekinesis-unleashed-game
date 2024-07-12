@@ -235,7 +235,6 @@ public class BranchGenerator : MonoBehaviour
         return freeCells;
     }
 
-    // TODO: Consider to transfer functions for finalizing to separate class
     public void SealHolesInCorridors()
     {
         Vector2Int rightBias = new Vector2Int(1 * BlockGridSettings.HorizontalExpandDirectionFactor, 0);

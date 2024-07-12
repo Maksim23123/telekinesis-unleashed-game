@@ -9,11 +9,8 @@ using UnityEngine.Assertions.Must;
 
 public class PathGenerator : MonoBehaviour
 {
-    //TODO: Remove debug functions after they aren't needed anymore 
-    //----------
     [SerializeField] private Transform _startPositionBeacon, _endPositionBeacon;
     [SerializeField] private GameObject _pathPlaceholder;
-    //----------
     [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField] private LevelManager _levelManager;
     [SerializeField] private float _straightWayMaxError;
