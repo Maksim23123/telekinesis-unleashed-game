@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PlayerPossessableObjectManager : MonoBehaviour
 {
-    [SerializeField]
-    private LayerMask _capturableObjectsLayers;
+    [SerializeField] private LayerMask _capturableObjectsLayers;
 
     private PossessableObjectStatsStorage _objectStatsStorage = new PossessableObjectStatsStorage();
     private PossessableObjectStatsStorage _defaultObjectStatsStorage = new PossessableObjectStatsStorage();
