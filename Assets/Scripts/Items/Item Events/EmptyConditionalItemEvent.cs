@@ -1,13 +1,11 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item events/Empty conditional event")]
+[CreateAssetMenu(menuName = "Item events/Empty conditional event")] 
 public class EmptyConditionalItemEvent : ItemEvent
 {
-    [SerializeField]
-    private string output;
-    [SerializeField]
-    private float height = -9;
+    [SerializeField] private string output;
+    [SerializeField] private float height = -9;
 
     public override void ExecuteItemEvent()
     {
