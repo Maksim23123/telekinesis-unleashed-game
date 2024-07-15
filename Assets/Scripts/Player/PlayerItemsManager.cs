@@ -3,10 +3,8 @@ using UnityEngine;
 
 public class PlayerItemsManager : MonoBehaviour, IRecordable
 {
-    [SerializeField]
-    private PlayerStatsHandler _playerStatsHandler;
-    [SerializeField]
-    private LayerMask _itemLayers;
+    [SerializeField] private PlayerStatsHandler _playerStatsHandler;
+    [SerializeField] private LayerMask _itemLayers;
 
     private readonly float _pickUpZoneRadius = 2.7f;
     private bool _pickUpAllowed = true;
