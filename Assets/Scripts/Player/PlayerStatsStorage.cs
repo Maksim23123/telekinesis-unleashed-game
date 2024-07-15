@@ -1,29 +1,19 @@
 using System;
 using UnityEngine;
 
-[Serializable]
+[Serializable] 
 public class PlayerStatsStorage : IRecordable
 {
-    [SerializeField]
-    private float _damageMultiplier;
-    [SerializeField]
-    private float _objectManipulationCooldown;
-    [SerializeField]
-    private float _captureZoneRadius;
-    [SerializeField]
-    private float _movementSpeed;
-    [SerializeField]
-    private float _jumpStrength;
-    [SerializeField]
-    private float _criticalHitMultiplier;
-    [SerializeField]
-    private float _criticalHitChance;
-    [SerializeField]
-    private int _healthCount;
-    [SerializeField]
-    private float _resistance;
-    [SerializeField]
-    private float _regeneration;
+    [SerializeField] private float _damageMultiplier;
+    [SerializeField] private float _objectManipulationCooldown;
+    [SerializeField] private float _captureZoneRadius;
+    [SerializeField] private float _movementSpeed;
+    [SerializeField] private float _jumpStrength;
+    [SerializeField] private float _criticalHitMultiplier;
+    [SerializeField] private float _criticalHitChance;
+    [SerializeField] private int _healthCount;
+    [SerializeField] private float _resistance;
+    [SerializeField] private float _regeneration;
 
     public float DamageMultiplier { get => _damageMultiplier; set => _damageMultiplier = value; }
     public float ObjectManipulationCooldown { get => _objectManipulationCooldown; set => _objectManipulationCooldown = value; }
