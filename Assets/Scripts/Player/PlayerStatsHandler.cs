@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerStatsHandler : MonoBehaviour, IRecordable
 {
-    [SerializeField]
-    private PlayerStatsStorage _defaultPlayerStats;
+    [SerializeField] private PlayerStatsStorage _defaultPlayerStats;
 
     private PlayerStatsStorage _modifiedStats;
     private List<StatsModifierSlot> _statsModifierSlots = new List<StatsModifierSlot>();
