@@ -186,8 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7615f12c149c2c4ca5cff0eac2def57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _relativeRayPossition: {x: 0.7, y: 1.41}
-  _vectorSize: 2.82
+  _relativeHorizontalRayPossition: 0.7
+  _objectHeight: 2
   _characterController: {fileID: 8421312373836556325}
   _groundLayers:
     serializedVersion: 2
