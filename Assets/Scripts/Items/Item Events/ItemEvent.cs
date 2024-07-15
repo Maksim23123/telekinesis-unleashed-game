@@ -1,20 +1,14 @@
 using System;
 using UnityEngine;
 
-[Serializable]
+[Serializable] 
 public abstract class ItemEvent : ScriptableObject, IRecordable
 {
-    [NonSerialized]
-    private int _eventsCount;
-    [NonSerialized]
-    private bool _eventExecuted;
-    [SerializeField]
-    private bool _unionPermission = false;
-    [AssetPath(typeof(ItemEvent))]
-    [SerializeField]
-    private string _itemEventPath;
-    [SerializeField]
-    protected ItemEventType _eventType;
+    [NonSerialized] private int _eventsCount;
+    [NonSerialized] private bool _eventExecuted;
+    [SerializeField] private bool _unionPermission = false;
+    [SerializeField][AssetPath(typeof(ItemEvent))] private string _itemEventPath;
+    [SerializeField] protected ItemEventType _eventType;
 
     public int eventsCount { get => _eventsCount; set => _eventsCount = value; }
     internal ItemEventType EventType { get => _eventType; set => _eventType = value; }
