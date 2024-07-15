@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class TransformRecordableAddapter : MonoBehaviour, IRecordable
 {
-    [SerializeField]
-    private bool _savePossition = true;
-    [SerializeField]
-    private bool _saveRotation = true;
+    [SerializeField] private bool _savePossition = true;
+    [SerializeField] private bool _saveRotation = true;
 
     public ObjectData GetObjectData()
     {
