@@ -9,13 +9,6 @@ public class GravityScaleRequestManager
     public float Value { get => _value; set => _value = value; }
     public int Priority { get => _priority; set => _priority = value; }
 
-    public GravityScaleRequestManager(GravityScaleManager gravityScaleManager, float value, int priority)
-    {
-        _gravityScaleManager = gravityScaleManager;
-        Value = value;
-        Priority = priority;
-    }
-
     public bool RequestIsActive
     {
         get => _requestIsActive;
@@ -34,5 +27,12 @@ public class GravityScaleRequestManager
                 }
 
         }
+    }
+
+    public GravityScaleRequestManager(GravityScaleManager gravityScaleManager, float value, int priority)
+    {
+        _gravityScaleManager = gravityScaleManager;
+        Value = value;
+        Priority = priority;
     }
 }
