@@ -16,7 +16,7 @@ public class HealthDisplayManager : MonoBehaviour
         _textMesh = GetComponent<TextMeshProUGUI>();
         if (_healthManager != null)
         {
-            _healthManager.healthChanged += OnHealthChanged;
+            _healthManager.HealthChanged += OnHealthChanged;
             UpdateHealthText();
         }
     }

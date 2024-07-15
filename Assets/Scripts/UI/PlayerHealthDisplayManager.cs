@@ -29,7 +29,7 @@ public class PlayerHealthDisplayManager : HealthDisplayManager
     {
         if (_healthManager != null)
         {
-            _healthManager.healthChanged += OnHealthChanged;
+            _healthManager.HealthChanged += OnHealthChanged;
             UpdateHealthText();
         }
     }
