@@ -1,11 +1,12 @@
+using System;
 using UnityEngine;
 
 public class AssetPathAttribute : PropertyAttribute
 {
-    public System.Type assetType;
+    public Type AssetType { get; set; }
 
-    public AssetPathAttribute(System.Type assetType)
+    public AssetPathAttribute(Type assetType)
     {
-        this.assetType = assetType;
+        AssetType = assetType;
     }
 }

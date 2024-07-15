@@ -23,7 +23,7 @@ public class AssetPathDrawer : PropertyDrawer
         if (Event.current.commandName == "ObjectSelectorClosed")
         {
             UnityEngine.Object selectedObject = EditorGUIUtility.GetObjectPickerObject();
-            if (selectedObject != null && assetPathAttribute.assetType.IsAssignableFrom(selectedObject.GetType()))
+            if (selectedObject != null && assetPathAttribute.AssetType.IsAssignableFrom(selectedObject.GetType()))
             {
                 string assetPath = AssetDatabase.GetAssetPath(selectedObject);
                 property.stringValue = assetPath;
