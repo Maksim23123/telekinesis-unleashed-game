@@ -1,13 +1,10 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item events/Empty Cinditional One Time Event")]
+[CreateAssetMenu(menuName = "Item events/Empty Cinditional One Time Event")] 
 public class EmptyConditionalOneTimeItemEvent : ItemEvent
 {
-    [SerializeField]
-    private string output;
-
-    [SerializeField]
-    private float height = 10;
+    [SerializeField] private string output;
+    [SerializeField] private float height = 10;
 
     public override void ExecuteItemEvent()
     {
