@@ -1,24 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class TargetSlot : IComparer<TargetSlot>
 {
-    public int targetPriority;
-    public TargetType targetType;
-    public GameObject target;
-    public bool targetIsVisible = true;
+    public int TargetPriority { get; set; }
+    public TargetType TargetType { get; set; }
+    public GameObject Target { get; set; }
+    public bool TargetIsVisible { get; set; }
 
     public TargetSlot(int targetPriority, TargetType targetType, GameObject target)
     {
-        this.targetPriority = targetPriority;
-        this.targetType = targetType;
-        this.target = target;
+        TargetPriority = targetPriority;
+        TargetType = targetType;
+        Target = target;
     }
 
     public int Compare(TargetSlot x, TargetSlot y)
     {
-        int comparisonResult = x.targetPriority.CompareTo(y.targetPriority);
+        int comparisonResult = x.TargetPriority.CompareTo(y.TargetPriority);
         if (comparisonResult == 0)
             return 1;
         else
