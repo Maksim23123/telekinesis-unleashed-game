@@ -33,7 +33,7 @@ public class SaveLoadManager : MonoBehaviour
     private void CheckDataStackLoad()
     {
         int dataSourcesCount = _gatherDataFromDataSources?.GetInvocationList().Length ?? 0;
-        if (_dataStack.objectDataUnits.Count >= dataSourcesCount)
+        if (_dataStack.ObjectDataUnits.Count >= dataSourcesCount)
             OnDataStackFull();
     }
 
@@ -41,18 +41,18 @@ public class SaveLoadManager : MonoBehaviour
     {
         WriteSaveToFile();
 
-        _dataStack.objectDataUnits.Clear();
+        _dataStack.ObjectDataUnits.Clear();
     }
 
     // DEBUG
     private void UnpackObjectData(ObjectData objectData)
     {
-        foreach (var key in objectData.variableValues.Keys)
+        foreach (var key in objectData.VariableValues.Keys)
         {
-            Debug.Log(key + " | " + objectData.variableValues[key]);
+            Debug.Log(key + " | " + objectData.VariableValues[key]);
         }
 
-        foreach (var extractedObjectData in objectData.objectDataUnits.Values)
+        foreach (var extractedObjectData in objectData.ObjectDataUnits.Values)
         {
             UnpackObjectData(extractedObjectData);
         }
@@ -124,8 +124,8 @@ public class SaveLoadManager : MonoBehaviour
     public int EnrollToDataStack(ObjectData objectData)
     {
         int stackPositionId;
-        stackPositionId = StaticTools.GetFreeId(_dataStack.objectDataUnits.Keys.ToArray(), x => int.Parse(x));
-        _dataStack.objectDataUnits.Add(stackPositionId.ToString(), objectData);
+        stackPositionId = StaticTools.GetFreeId(_dataStack.ObjectDataUnits.Keys.ToArray(), x => int.Parse(x));
+        _dataStack.ObjectDataUnits.Add(stackPositionId.ToString(), objectData);
         CheckDataStackLoad();
         return stackPositionId;
     }

@@ -9,17 +9,17 @@ public class TransformRecordableAddapter : MonoBehaviour, IRecordable
     {
         ObjectData objectData = new ObjectData();
         if (_savePossition)
-            objectData.objectDataUnits.Add(nameof(transform.position), transform.position.ToObjectData());
+            objectData.ObjectDataUnits.Add(nameof(transform.position), transform.position.ToObjectData());
         if (_saveRotation)
-            objectData.objectDataUnits.Add(nameof(transform.rotation), transform.rotation.ToObjectData());
+            objectData.ObjectDataUnits.Add(nameof(transform.rotation), transform.rotation.ToObjectData());
         return objectData;
     }
 
     public void SetObjectData(ObjectData objectData)
     {
         if (_savePossition)
-            transform.position = Vector3Extension.ObjectDataToVector3(objectData.objectDataUnits[nameof(transform.position)]);
+            transform.position = Vector3Extension.ObjectDataToVector3(objectData.ObjectDataUnits[nameof(transform.position)]);
         if (_saveRotation)
-            transform.rotation = QuaternionExtension.ObjectDataToVector3(objectData.objectDataUnits[nameof(transform.rotation)]);
+            transform.rotation = QuaternionExtension.ObjectDataToVector3(objectData.ObjectDataUnits[nameof(transform.rotation)]);
     }
 }

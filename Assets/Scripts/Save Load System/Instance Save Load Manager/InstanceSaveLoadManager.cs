@@ -69,15 +69,15 @@ public class InstanceSaveLoadManager : MonoBehaviour
         ObjectData gObjectRecord = new ObjectData();
 
         if (_onLoadDataDestributionType == GameObjectIdentificatorType.PrefabPath)
-            gObjectRecord.variableValues.Add(GAME_OBJECT_PREFAB_PATH_KEY, _gameObjectPrefabPath);
+            gObjectRecord.VariableValues.Add(GAME_OBJECT_PREFAB_PATH_KEY, _gameObjectPrefabPath);
         else
-            gObjectRecord.variableValues.Add(GAME_OBJECT_STATIC_ADDRESS_KEY, StaticAddress);
+            gObjectRecord.VariableValues.Add(GAME_OBJECT_STATIC_ADDRESS_KEY, StaticAddress);
 
         IRecordable[] components = GetRecordables();
 
         foreach (var component in components)
         {
-            gObjectRecord.objectDataUnits.Add(component.GetType().Name, component.GetObjectData());
+            gObjectRecord.ObjectDataUnits.Add(component.GetType().Name, component.GetObjectData());
         }
 
         return gObjectRecord;
@@ -92,7 +92,7 @@ public class InstanceSaveLoadManager : MonoBehaviour
 
         foreach (var component in components)
         {
-            if (data.objectDataUnits.TryGetValue(component.GetType().Name, out ObjectData componentData))
+            if (data.ObjectDataUnits.TryGetValue(component.GetType().Name, out ObjectData componentData))
             {
                 component.SetObjectData(componentData);
             }

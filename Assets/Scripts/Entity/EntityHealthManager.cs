@@ -110,7 +110,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
     public ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
+        objectData.VariableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
         return objectData;
     }
 
@@ -133,7 +133,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
 
     public void UnpackObjectData(ObjectData objectData)
     {
-        int.TryParse(objectData.variableValues[nameof(_currentHealth)], out _currentHealth);
+        int.TryParse(objectData.VariableValues[nameof(_currentHealth)], out _currentHealth);
         HealthChanged?.Invoke(_currentHealth);
     }
 }

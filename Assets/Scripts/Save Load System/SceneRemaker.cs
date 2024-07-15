@@ -7,9 +7,9 @@ public static class SceneRemaker
 
     private static void UnpackGameObjectData(ObjectData gameObjectsData)
     {
-        foreach (ObjectData obj in gameObjectsData.objectDataUnits.Values)
+        foreach (ObjectData obj in gameObjectsData.ObjectDataUnits.Values)
         {
-            if (obj.variableValues.TryGetValue(InstanceSaveLoadManager.GAME_OBJECT_PREFAB_PATH_KEY, out string prefabPath))
+            if (obj.VariableValues.TryGetValue(InstanceSaveLoadManager.GAME_OBJECT_PREFAB_PATH_KEY, out string prefabPath))
             {
                 string resourcePath = StaticTools.GetResourcePath(prefabPath);
                 GameObject prefab = Resources.Load<GameObject>(resourcePath);
@@ -22,7 +22,7 @@ public static class SceneRemaker
                     }
                 }
             }
-            else if (obj.variableValues.TryGetValue(InstanceSaveLoadManager.GAME_OBJECT_STATIC_ADDRESS_KEY, out string staticAddress)
+            else if (obj.VariableValues.TryGetValue(InstanceSaveLoadManager.GAME_OBJECT_STATIC_ADDRESS_KEY, out string staticAddress)
                     && InstanceSaveLoadManager.TryGetInstanceSaveLoadManager(staticAddress, out InstanceSaveLoadManager instanceSaveLoadManager))
             {
                 instanceSaveLoadManager.SetGObjectData(obj);

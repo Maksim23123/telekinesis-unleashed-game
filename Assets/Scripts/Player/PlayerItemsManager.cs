@@ -62,7 +62,7 @@ public class PlayerItemsManager : MonoBehaviour, IRecordable
 
         for (int i = 0; i < _itemInfluenceReferenceSlots.Count; i++)
         {
-            objectData.objectDataUnits.Add(nameof(_itemInfluenceReferenceSlots) + i, _itemInfluenceReferenceSlots[i].GetObjectData());
+            objectData.ObjectDataUnits.Add(nameof(_itemInfluenceReferenceSlots) + i, _itemInfluenceReferenceSlots[i].GetObjectData());
         }
 
         return objectData;
@@ -72,7 +72,7 @@ public class PlayerItemsManager : MonoBehaviour, IRecordable
     {
         _itemInfluenceReferenceSlots = new List<ItemInfluenceReferenceSlot>();
         int itemInfIndex = 0;
-        while (objectData.objectDataUnits.TryGetValue(nameof(_itemInfluenceReferenceSlots) + itemInfIndex, out ObjectData slotData))
+        while (objectData.ObjectDataUnits.TryGetValue(nameof(_itemInfluenceReferenceSlots) + itemInfIndex, out ObjectData slotData))
         {
             _itemInfluenceReferenceSlots.Add(ItemInfluenceReferenceSlot.RemakeItemInfluenceReferenceSlot(slotData));
             itemInfIndex++;

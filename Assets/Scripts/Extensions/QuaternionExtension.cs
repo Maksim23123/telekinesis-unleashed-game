@@ -5,20 +5,20 @@ public static class QuaternionExtension
     public static ObjectData ToObjectData(this Quaternion quaternion)
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(quaternion.x), quaternion.x.ToString());
-        objectData.variableValues.Add(nameof(quaternion.y), quaternion.y.ToString());
-        objectData.variableValues.Add(nameof(quaternion.z), quaternion.z.ToString());
-        objectData.variableValues.Add(nameof(quaternion.w), quaternion.w.ToString());
+        objectData.VariableValues.Add(nameof(quaternion.x), quaternion.x.ToString());
+        objectData.VariableValues.Add(nameof(quaternion.y), quaternion.y.ToString());
+        objectData.VariableValues.Add(nameof(quaternion.z), quaternion.z.ToString());
+        objectData.VariableValues.Add(nameof(quaternion.w), quaternion.w.ToString());
         return objectData;
     }
 
     public static Quaternion ObjectDataToVector3(ObjectData objectData)
     {
         float x, y, z, w;
-        if (float.TryParse(objectData.variableValues[nameof(x)], out x)
-                && float.TryParse(objectData.variableValues[nameof(y)], out y)
-                && float.TryParse(objectData.variableValues[nameof(z)], out z)
-                && float.TryParse(objectData.variableValues[nameof(w)], out w))
+        if (float.TryParse(objectData.VariableValues[nameof(x)], out x)
+                && float.TryParse(objectData.VariableValues[nameof(y)], out y)
+                && float.TryParse(objectData.VariableValues[nameof(z)], out z)
+                && float.TryParse(objectData.VariableValues[nameof(w)], out w))
         {
             return new Quaternion(x, y, z, w);
         }

@@ -16,15 +16,15 @@ public class ItemEventSlot : IRecordable
     public ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(_id), _id.ToString());
-        objectData.objectDataUnits.Add(nameof(_itemEvent), _itemEvent.GetObjectData());
+        objectData.VariableValues.Add(nameof(_id), _id.ToString());
+        objectData.ObjectDataUnits.Add(nameof(_itemEvent), _itemEvent.GetObjectData());
         return objectData;
     }
 
     public void SetObjectData(ObjectData objectData)
     {
-        int.TryParse(objectData.variableValues[nameof(_id)], out _id);
-        _itemEvent = ItemEvent.RemakeItemEvent(objectData.objectDataUnits[nameof(_itemEvent)]);
+        int.TryParse(objectData.VariableValues[nameof(_id)], out _id);
+        _itemEvent = ItemEvent.RemakeItemEvent(objectData.ObjectDataUnits[nameof(_itemEvent)]);
     }
 
     public static ItemEventSlot RemakeItemEventSlot(ObjectData objectData)
