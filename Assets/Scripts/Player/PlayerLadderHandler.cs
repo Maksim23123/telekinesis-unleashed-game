@@ -1,16 +1,12 @@
 using UnityEngine;
 
-[RequireComponent(typeof(GravityScaleManager))]
+[RequireComponent(typeof(GravityScaleManager))] 
 public class PlayerLadderHandler : MonoBehaviour
 {
-    [SerializeField]
-    private CharacterControllerScript _characterController;
-    [SerializeField]
-    private float _ladderRequestLifetime = 0.5f;
-    [SerializeField]
-    private float _ladderMovementSpeed;
-    [SerializeField]
-    private LayerMask _ladderLayers;
+    [SerializeField] private CharacterControllerScript _characterController;
+    [SerializeField] private float _ladderRequestLifetime = 0.5f;
+    [SerializeField] private float _ladderMovementSpeed;
+    [SerializeField] private LayerMask _ladderLayers;
 
     private bool _stepOnLadderRequested = false;
     private bool _playerOnLadder = false;
@@ -46,6 +42,11 @@ public class PlayerLadderHandler : MonoBehaviour
         _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, 0, 1);
     }
 
+    private void Start()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (_ladderLayers.Contains(collision.gameObject.layer) && !_playerOnLadder && _stepOnLadderRequested)
@@ -78,11 +79,6 @@ public class PlayerLadderHandler : MonoBehaviour
 
         _stepOnLadderRequested = false;
         _playerOnLadder = true;
-    }
-
-    private void Start()
-    {
-        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
