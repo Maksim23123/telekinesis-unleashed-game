@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private CharacterControllerScript _characterControllerScript;
+    [SerializeField] private CharacterControllerScript _characterControllerScript;
 
     private static PlayerController _instance;
 
