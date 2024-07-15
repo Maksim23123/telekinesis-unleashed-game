@@ -23,10 +23,10 @@ public class DefaultPossessableObject : PossessableObject
     {
         float aditionalMultiplier = 1;
 
-        if (Random.value < StatsStorage._criticalHitChance)
+        if (Random.value < StatsStorage.CriticalHitChance)
         {
-            aditionalMultiplier = StatsStorage._criticalMultiplier;
+            aditionalMultiplier = StatsStorage.CriticalMultiplier;
         }
-        return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * StatsStorage._damageMultiplier * aditionalMultiplier;
+        return Vector2.Distance(Vector2.zero, _rigidbody.velocity) * _rigidbody.mass * StatsStorage.DamageMultiplier * aditionalMultiplier;
     }
 }
