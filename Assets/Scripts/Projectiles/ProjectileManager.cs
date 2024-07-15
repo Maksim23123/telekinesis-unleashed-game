@@ -10,7 +10,7 @@ public class ProjectileManager : MonoBehaviour
     {
         if (_projectileProperties != null)
         {
-            Invoke(nameof(PerformSelfDestroy), _projectileProperties._lifeTime);
+            Invoke(nameof(PerformSelfDestroy), _projectileProperties.LifeTime);
         }
     }
 
@@ -28,7 +28,7 @@ public class ProjectileManager : MonoBehaviour
             else
                 transform.rotation = Quaternion.Euler(Vector2.Angle(Vector2.left, direction) * new Vector3(0, 0, 1));
 
-            rigidbody.AddForce(direction * _projectileProperties._impulsPower, ForceMode2D.Impulse);
+            rigidbody.AddForce(direction * _projectileProperties.ImpulsPower, ForceMode2D.Impulse);
         }
     }
 }

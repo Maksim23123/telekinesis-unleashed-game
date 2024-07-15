@@ -16,7 +16,7 @@ public class ProjectileDamageHandler : DamageHandler
         if (_projectilesLayers.Contains(contactedObject.layer)
                 && contactedObject.TryGetComponent(out ProjectileManager projectileManager))
         {
-            _healthManager.ProcessDamage((int)Mathf.Clamp(projectileManager.ProjectileProperties._damage - GetCurrentResistanceAmount(), 0, int.MaxValue));
+            _healthManager.ProcessDamage((int)Mathf.Clamp(projectileManager.ProjectileProperties.Damage - GetCurrentResistanceAmount(), 0, int.MaxValue));
             projectileManager.PerformSelfDestroy();
         }
     }
