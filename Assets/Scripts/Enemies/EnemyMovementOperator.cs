@@ -9,7 +9,7 @@ public class EnemyMovementOperator : MonoBehaviour
     [SerializeField] private LayerMask _groundLayers;
     [SerializeField] private float _maxStairSize;
 
-    private const float SafeNarrownessOffset = 0.01f;
+    private const float SAFE_NARROWNESS_OFFSET = 0.01f;
 
     private Vector2 _relativeRayPosition;
     float _finalVectorSize;
@@ -35,7 +35,7 @@ public class EnemyMovementOperator : MonoBehaviour
     private void InitRayParameters()
     {
         float positionWithObstacleTolerance = _objectHeight / 2 + _maxStairSize;
-        float finalHorizontalRayPosition = positionWithObstacleTolerance + SafeNarrownessOffset;
+        float finalHorizontalRayPosition = positionWithObstacleTolerance + SAFE_NARROWNESS_OFFSET;
         _relativeRayPosition = new Vector2(_relativeHorizontalRayPossition, finalHorizontalRayPosition);
 
         _finalVectorSize = _objectHeight + _maxStairSize * 2; // Add Obstacle tolerance and fall tolerance at the same time
@@ -86,7 +86,7 @@ public class EnemyMovementOperator : MonoBehaviour
         RaycastHit2D raycastHit2D = Physics2D.Raycast(worldRayPosition, Vector2.down, _finalVectorSize, GroundLayers);
         bool anyObjectHited = raycastHit2D.transform != null;
         float freePlace = Mathf.Abs(raycastHit2D.point.y - worldRayPosition.y);
-        float requiredFreePlace = _objectHeight + SafeNarrownessOffset;
+        float requiredFreePlace = _objectHeight + SAFE_NARROWNESS_OFFSET;
         bool bigObstacleNotFound = freePlace >= requiredFreePlace;
         
         if (anyObjectHited && bigObstacleNotFound)
