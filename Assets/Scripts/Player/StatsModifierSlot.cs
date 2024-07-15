@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class StatsModifierSlot : IRecordable
 {
-    [SerializeField]
-    private PlayerStatsStorage _statsModifier;
+    [SerializeField] private PlayerStatsStorage _statsModifier;
     
     private int _modifierSlotId;
     private int _count;
