@@ -3,29 +3,24 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField]
-    private float _lerpFactorScalar;
-    [Range(0, 1)]
-    [SerializeField]
-    private float _minorObjectFocus;
-    [SerializeField]
-    private Transform _mainObject;
-    [SerializeField]
-    private Transform _minorObject;
-    [SerializeField]
-    private Camera _camera;
-    [SerializeField]
-    private float _distanceToCameraSizeFactor;
-    [SerializeField]
-    private float _cameraSizingTrasholdDistance;
-    [SerializeField]
-    private Vector2 _distanceAxisWeights = Vector2.one;
-    [SerializeField]
-    private float _maxDistFromMainObjectForPositioning;
-    [SerializeField]
-    private float _maxDistFromMainObjectForSizing;
+    [SerializeField] private float _lerpFactorScalar;
+    [SerializeField][Range(0, 1)] private float _minorObjectFocus;
+    [SerializeField] private Transform _mainObject;
+    [SerializeField] private Transform _minorObject;
+    [SerializeField] private Camera _camera;
+    [SerializeField] private float _distanceToCameraSizeFactor;
+    [SerializeField] private float _cameraSizingTrasholdDistance;
+    [SerializeField] private Vector2 _distanceAxisWeights = Vector2.one;
+    [SerializeField] private float _maxDistFromMainObjectForPositioning;
+    [SerializeField] private float _maxDistFromMainObjectForSizing;
 
     private float _defaultCameraSize;
+
+    private void Awake()
+    {
+        PlayerStatusInformer.NewPlayerAssigned += OnNewTargetAssigned;
+        _defaultCameraSize = _camera.orthographicSize;
+    }
 
     private void FixedUpdate()
     {
@@ -48,12 +43,6 @@ public class CameraController : MonoBehaviour
                 UpdateCameraSizeByDistance(0);
             transform.position = Vector2.Lerp(transform.position, targetPossition, _lerpFactorScalar);
         }
-    }
-
-    private void Awake()
-    {
-        PlayerStatusInformer.NewPlayerAssigned += OnNewTargetAssigned;
-        _defaultCameraSize = _camera.orthographicSize;
     }
 
     private void OnNewTargetAssigned(GameObject target)
