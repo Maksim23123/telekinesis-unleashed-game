@@ -5,8 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterControllerScript))]
 public class PlayerJumpHandler : MonoBehaviour
 {
-    [SerializeField]
-    private float _jumpStrength, _ungroundedJumpPermDuration;
+    [SerializeField] private float _jumpStrength;
+    [SerializeField] private float _ungroundedJumpPermDuration;
 
     private static PlayerJumpHandler _instance;
     private bool _jumpInCooldown = false;
