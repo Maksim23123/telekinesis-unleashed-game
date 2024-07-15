@@ -13,7 +13,7 @@ public class RoomLevelInfo
     [SerializeField][Range(1, _maxRoomCountOnLevel)] private int _maxRoomCount = 1;
     [SerializeField][Min(0)] private int _betweenRoomSpaceSize = 5;
 
-    private RoomInfo[] _roomInfos;
+    private RoomInfo[] _levelRoomsContainer;
 
     private int _horizontalPos = 0;
 
@@ -21,27 +21,54 @@ public class RoomLevelInfo
 
     public int HorizontalPos { get => _horizontalPos; }
     public int CapturedVerticalPlace { get => _capturedVerticalPlace; }
-    public RoomInfo[] RoomInfos { get => _roomInfos.ToArray(); }
+    public RoomInfo[] LevelRoomsContainer { get => _levelRoomsContainer.ToArray(); }
 
     public void GenerateRooms(GameObject[] roomsPrefabs, int verticalPos)
     {
-        _roomInfos = new RoomInfo[_minRoomCount + (int)(((_maxRoomCount - _minRoomCount) + 1) * UnityEngine.Random.value)];
+        _levelRoomsContainer = new RoomInfo[_minRoomCount + (int)((_maxRoomCount - _minRoomCount + 1) * UnityEngine.Random.value)];
+        List<GameObject> roomObjects = FillRoomObjects(roomsPrefabs);
+        
+        int maxCapturedPlaceBelow = FindMaxCapturedVerticalPlaceBelow(roomObjects);
+        verticalPos = verticalPos + maxCapturedPlaceBelow;
+
+        _horizontalPos = 0;
+
+        for (int i = 0; i < _levelRoomsContainer.Length; i++)
+        {
+            if (roomObjects[i].TryGetComponent(out RoomData roomData))
+            {
+                int bigestSpaceOnLeft = Math.Abs(roomData.CapturedZoneInBlockGridStart.x < roomData.CapturedZoneInBlockGridEnd.x
+                        ? roomData.CapturedZoneInBlockGridStart.x : roomData.CapturedZoneInBlockGridEnd.x);
+                int bigestSpaceOnRight = Math.Abs(roomData.CapturedZoneInBlockGridStart.x > roomData.CapturedZoneInBlockGridEnd.x
+                        ? roomData.CapturedZoneInBlockGridStart.x : roomData.CapturedZoneInBlockGridEnd.x);
+                _horizontalPos += bigestSpaceOnLeft + 1;
+
+                _levelRoomsContainer[i] = new RoomInfo(roomObjects[i], new Vector2Int(_horizontalPos, verticalPos));
+                _horizontalPos += bigestSpaceOnRight;
+            }
+            else
+            {
+                _levelRoomsContainer[i] = null;
+            }
+            _horizontalPos += _betweenRoomSpaceSize;
+        }
+
+        _capturedVerticalPlace = FindMaxCapturedVerticalPlaceAbove(roomObjects) + maxCapturedPlaceBelow + 1;
+    }
+
+    private List<GameObject> FillRoomObjects(GameObject[] roomsPrefabs)
+    {
         List<GameObject> roomObjects = new();
-        for (int i = 0; i < _roomInfos.Length; i++)
+        for (int i = 0; i < _levelRoomsContainer.Length; i++)
         {
             roomObjects.Add(roomsPrefabs[UnityEngine.Random.Range(0, roomsPrefabs.Length)]);
         }
-        _capturedVerticalPlace = roomObjects.Max(g =>
-        {
-            if (g.TryGetComponent(out RoomData roomData))
-            {
-                return roomData.CapturedZoneInBlockGridStart.y > roomData.CapturedZoneInBlockGridEnd.y
-                    ? roomData.CapturedZoneInBlockGridStart.y : roomData.CapturedZoneInBlockGridEnd.y;
-            }
-            return 0;
-        });
+        return roomObjects;
+    }
 
-        int verticalPosOffset = (int)MathF.Abs(roomObjects.Min(
+    private int FindMaxCapturedVerticalPlaceBelow(List<GameObject> roomObjects)
+    {
+        return (int)MathF.Abs(roomObjects.Min(
             g =>
             {
                 if (g.TryGetComponent(out RoomData roomData))
@@ -52,30 +79,19 @@ public class RoomLevelInfo
                 }
                 return 0;
             }));
-        verticalPos = verticalPos + verticalPosOffset;
+    }
 
-        _horizontalPos = 0;
-
-        for (int i = 0; i < _roomInfos.Length; i++)
+    private int FindMaxCapturedVerticalPlaceAbove(List<GameObject> roomObjects)
+    {
+        return roomObjects.Max(g =>
         {
-            if (roomObjects[i].TryGetComponent(out RoomData roomData))
+            if (g.TryGetComponent(out RoomData roomData))
             {
-                int bigestSpaceOnLeft = Math.Abs(roomData.CapturedZoneInBlockGridStart.x < roomData.CapturedZoneInBlockGridEnd.x
-                        ? roomData.CapturedZoneInBlockGridStart.x : roomData.CapturedZoneInBlockGridEnd.x);
-                int bigestSpaceOnRight = Math.Abs(roomData.CapturedZoneInBlockGridStart.x > roomData.CapturedZoneInBlockGridEnd.x
-                        ? roomData.CapturedZoneInBlockGridStart.x : roomData.CapturedZoneInBlockGridEnd.x);
-                _horizontalPos += bigestSpaceOnLeft + 1;
-
-                _roomInfos[i] = new RoomInfo(roomObjects[i], new Vector2Int(_horizontalPos, verticalPos));
-                _horizontalPos += bigestSpaceOnRight;
+                bool startHasBigestY = roomData.CapturedZoneInBlockGridStart.y > roomData.CapturedZoneInBlockGridEnd.y;
+                return startHasBigestY
+                    ? roomData.CapturedZoneInBlockGridStart.y : roomData.CapturedZoneInBlockGridEnd.y;
             }
-            else
-            {
-                _roomInfos[i] = null;
-            }
-            _horizontalPos += _betweenRoomSpaceSize;
-        }
-
-        _capturedVerticalPlace += verticalPosOffset + 1;
+            return 0;
+        });
     }
 }
