@@ -25,7 +25,7 @@ public class InstanceSaveLoadManager : MonoBehaviour
         }
         if (_onLoadDataDestributionType == GameObjectIdentificatorType.PrefabPath)
         {
-            SceneRemaker._preRemakeActivity += DestroyItself;
+            SceneRemaker.PreRemakeActivity += DestroyItself;
         }
     }
 
@@ -36,7 +36,7 @@ public class InstanceSaveLoadManager : MonoBehaviour
                 && _staticAddresses[StaticAddress] == this)
             _staticAddresses.Remove(StaticAddress);
         else 
-            SceneRemaker._preRemakeActivity -= DestroyItself;
+            SceneRemaker.PreRemakeActivity -= DestroyItself;
         PlayerStatusInformer.InformPlayerDestroyed();
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class SceneRemaker
 {
-    public static event Action _preRemakeActivity;
+    public static event Action PreRemakeActivity;
 
     private static void UnpackGameObjectData(ObjectData gameObjectsData)
     {
@@ -32,7 +32,7 @@ public static class SceneRemaker
 
     public static void RequestRemakeScene(ObjectData gameObjectsData)
     {
-        _preRemakeActivity?.Invoke();
+        PreRemakeActivity?.Invoke();
         UnpackGameObjectData(gameObjectsData);
     }
 }
