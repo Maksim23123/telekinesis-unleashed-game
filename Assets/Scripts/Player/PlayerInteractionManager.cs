@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerInteractionManager : MonoBehaviour
 {
-    [SerializeField]
-    private LayerMask _raycastTestLayers;
+    [SerializeField] private LayerMask _raycastTestLayers;
     
     private static PlayerInteractionManager _instance;
 
