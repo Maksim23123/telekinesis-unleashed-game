@@ -1,10 +1,9 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item events/Empty Event")]
+[CreateAssetMenu(menuName = "Item events/Empty Event")] 
 public class EmptyItemEvent : ItemEvent
 {
-    [SerializeField]
-    private string output;
+    [SerializeField] private string output;
 
     public override void ExecuteItemEvent()
     {
