@@ -2,13 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D))] 
 public class GravityScaleManager : MonoBehaviour
 {
-    [SerializeField]
-    private bool _clampFallingSpeed = false;
-    [SerializeField]
-    private float _maxFallingSpeed = -20;
+    [SerializeField] private bool _clampFallingSpeed = false;
+    [SerializeField] private float _maxFallingSpeed = -20;
 
     private Rigidbody2D _rigidbody;
     private float _defaultGravityScale;
