@@ -5,6 +5,9 @@ public static class PlayerStatusInformer
 {
     private static GameObject _playerGameObject;
 
+    public static event Action PlayerDestroyed;
+    public static event Action<GameObject> NewPlayerAssigned;
+
     public static GameObject PlayerGameObject
     {
         get => _playerGameObject;
@@ -12,15 +15,12 @@ public static class PlayerStatusInformer
         set
         {
             _playerGameObject = value;
-            newPlayerAssigned?.Invoke(_playerGameObject);
+            NewPlayerAssigned?.Invoke(_playerGameObject);
         }
     }
 
-    public static event Action playerDestroyed;
-    public static event Action<GameObject> newPlayerAssigned;
-
-    public static void PlayerDestroyed()
+    public static void InformPlayerDestroyed()
     {
-        playerDestroyed?.Invoke();
+        PlayerDestroyed?.Invoke();
     }
 }

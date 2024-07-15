@@ -16,7 +16,7 @@ public class EnemyTargetManager : MonoBehaviour
 
     private void Start()
     {
-        PlayerStatusInformer.newPlayerAssigned += UpdateTargets;
+        PlayerStatusInformer.NewPlayerAssigned += UpdateTargets;
     }
 
     private void FixedUpdate()
@@ -144,6 +144,6 @@ public class EnemyTargetManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        PlayerStatusInformer.newPlayerAssigned -= UpdateTargets;
+        PlayerStatusInformer.NewPlayerAssigned -= UpdateTargets;
     }
 }

@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        PlayerStatusInformer.newPlayerAssigned += OnNewTargetAssigned;
+        PlayerStatusInformer.NewPlayerAssigned += OnNewTargetAssigned;
         _defaultCameraSize = _camera.orthographicSize;
     }
 

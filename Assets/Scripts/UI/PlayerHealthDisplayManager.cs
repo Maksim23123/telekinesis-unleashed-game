@@ -6,7 +6,7 @@ public class PlayerHealthDisplayManager : HealthDisplayManager
     private void Start()
     {
         GetPlayerHealthManager(PlayerStatusInformer.PlayerGameObject);
-        PlayerStatusInformer.newPlayerAssigned += OnNewPlayerAssigned;
+        PlayerStatusInformer.NewPlayerAssigned += OnNewPlayerAssigned;
         _textMesh = GetComponent<TextMeshProUGUI>();
         ConnectToHealthManager();
     }

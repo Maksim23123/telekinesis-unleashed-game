@@ -56,7 +56,7 @@ public class InstanceSaveLoadManager : MonoBehaviour
             _staticAddresses.Remove(_staticAddress);
         else 
             SceneRemaker._preRemakeActivity -= DestroyItself;
-        PlayerStatusInformer.PlayerDestroyed();
+        PlayerStatusInformer.InformPlayerDestroyed();
     }
 
     private void DestroyItself()
