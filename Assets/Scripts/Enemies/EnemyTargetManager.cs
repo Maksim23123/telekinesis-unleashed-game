@@ -5,17 +5,14 @@ using UnityEngine;
 
 public class EnemyTargetManager : MonoBehaviour
 {
+    [SerializeField] private LayerMask _notTransparentLayers;
+    [SerializeField] private float switchToMinorDistance;
 
-    [SerializeField]
-    private LayerMask _notTransparentLayers;
-
-    [SerializeField]
-    private float switchToMinorDistance;
     private EnemyProjectileLauncher _launcher;
     private SortedSet<TargetSlot> _targetSlots = new SortedSet<TargetSlot>(new TargetSlot(0, TargetType.Main, null));
     private TargetSlot previousMostPriorSlot;
 
-    public event Action<GameObject, bool> activeTargetReAssigned;
+    public event Action<GameObject, bool> ActiveTargetReAssigned;
 
     private void Start()
     {
@@ -42,7 +39,7 @@ public class EnemyTargetManager : MonoBehaviour
                 || previousMostPriorSlot.targetIsVisible != mostPriorSlot.targetIsVisible))
         {
             previousMostPriorSlot = mostPriorSlot;
-            activeTargetReAssigned?.Invoke(mostPriorSlot.target, mostPriorSlot.targetIsVisible);
+            ActiveTargetReAssigned?.Invoke(mostPriorSlot.target, mostPriorSlot.targetIsVisible);
         }
     }
 

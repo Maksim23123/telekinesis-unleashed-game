@@ -34,7 +34,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
     private void Start()
     {
         EnemyTargetManager enemyTargetManager = GetComponent<EnemyTargetManager>();
-        enemyTargetManager.activeTargetReAssigned += AssignTarget;
+        enemyTargetManager.ActiveTargetReAssigned += AssignTarget;
     }
 
     private void AssignTarget(GameObject target, bool isVisible)
