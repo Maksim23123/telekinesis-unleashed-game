@@ -1,21 +1,18 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyTargetManager))]
+[RequireComponent(typeof(EnemyTargetManager))] 
 public class EnemyProjectileLauncher : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _projectile;
-    [SerializeField]
-    private GameObject _target;
-    [SerializeField]
-    private float _shootingCooldownTime;
-    [SerializeField]
-    private float _maxSpread;
+    [SerializeField] private GameObject _projectile;
+    [SerializeField] private GameObject _target;
+    [SerializeField] private float _shootingCooldownTime;
+    [SerializeField] private float _maxSpread;
+
     private bool _shootingAllowed = true;
     private bool _targetIsVisible;
 
-    public event Action<bool> _targetVisibilityChanged;
+    public event Action<bool> TargetVisibilityChanged;
 
     public bool TargetIsVisible
     {
@@ -29,7 +26,7 @@ public class EnemyProjectileLauncher : MonoBehaviour
             if (_targetIsVisible != value)
             {
                 _targetIsVisible = value;
-                _targetVisibilityChanged?.Invoke(_targetIsVisible);
+                TargetVisibilityChanged?.Invoke(_targetIsVisible);
             }
         }
     }

@@ -9,7 +9,7 @@ public class EnemyInstanceManager : MonoBehaviour
 
     private void Start()
     {
-        _enemyProjectileLauncher._targetVisibilityChanged += SincShootingAndMovement;
+        _enemyProjectileLauncher.TargetVisibilityChanged += SincShootingAndMovement;
     }
 
     private void SincShootingAndMovement(bool targetIsVisible)
