@@ -50,12 +50,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _relativeRoomStartPosition: {x: -12.800003, y: 12.200001}
   _relativeRoomEndPosition: {x: 10.5, y: -10.200001}
-  _connections: []
+  _relativeEnterancePosition: {x: 0, y: 0}
+  _relativeExitPosition: {x: 0, y: 0}
   _startRoomPointer: {fileID: 8574846463356658882}
   _endRoomPointer: {fileID: 5535940418199516127}
-  _connectionPointers:
-  - {fileID: 8352537083332113788}
-  - {fileID: 4426914715880212066}
+  _enterencePointer: {fileID: 4426914715880212066}
+  _exitPointer: {fileID: 8352537083332113788}
 --- !u!1 &773534194187549731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1670,7 +1670,7 @@ GameObject:
   - component: {fileID: 8352537083332113788}
   - component: {fileID: 8871554575799350262}
   m_Layer: 0
-  m_Name: Connection
+  m_Name: Exit pointer
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1754,7 +1754,7 @@ GameObject:
   - component: {fileID: 4426914715880212066}
   - component: {fileID: 6109491136867956488}
   m_Layer: 0
-  m_Name: Connection (1)
+  m_Name: Enterance pointer
   m_TagString: Untagged
   m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

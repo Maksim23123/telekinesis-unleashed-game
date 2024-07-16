@@ -1,12 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 
 public class PathPlanner : MonoBehaviour
 {
-
     HashSet<PathUnit> _idRegister = new HashSet<PathUnit>();
 
     public HashSet<PathUnit> GeneratePathPlan(List<List<PathUnit>[]> roomStructure)
@@ -73,18 +70,18 @@ public class PathPlanner : MonoBehaviour
                 if (sCurrentPoint != null)
                 {
                     Triplet currentTriplet = new Triplet();
-                    TripletOrientation tripletOrientation;
+                    Orientation tripletOrientation;
                     if (i + 1 > unionCandidatsCopy.Count / 2)
                     {
-                        tripletOrientation = TripletOrientation.Left;
+                        tripletOrientation = Orientation.Left;
                     }
                     else
                     {
-                        tripletOrientation = TripletOrientation.Right;
+                        tripletOrientation = Orientation.Right;
                     }
                     currentTriplet.Orientation = tripletOrientation;
                     currentTriplet.placement = tripletPlacement;
-                    if (currentTriplet.Orientation == TripletOrientation.Right != (currentTriplet.placement == TripletPlacement.Bellow))
+                    if (currentTriplet.Orientation == Orientation.Right != (currentTriplet.placement == TripletPlacement.Bellow))
                     {
                         currentTriplet.BackConnections[0] = fCurrentPoint.Id;
                         currentTriplet.BackConnections[1] = sCurrentPoint.Id;

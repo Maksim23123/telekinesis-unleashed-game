@@ -23,7 +23,7 @@ public class RoomLevelInfo
     public int CapturedVerticalPlace { get => _capturedVerticalPlace; }
     public RoomInfo[] LevelRoomsContainer { get => _levelRoomsContainer.ToArray(); }
 
-    public void GenerateRooms(GameObject[] roomsPrefabs, int verticalPos)
+    public void GenerateRoomLevel(GameObject[] roomsPrefabs, int verticalPos)
     {
         _levelRoomsContainer = new RoomInfo[_minRoomCount + (int)((_maxRoomCount - _minRoomCount + 1) * UnityEngine.Random.value)];
         List<GameObject> roomObjects = FillRoomObjects(roomsPrefabs);

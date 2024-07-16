@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PathEnd : PathUnit
 {
-    public GameObject GameObject { get; set; }
+    public Connection Connection { get; set; }
 }

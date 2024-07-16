@@ -78,7 +78,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void InstantiateBlock(Vector2Int position, BlockInfoHolder blockInfo, bool ladderNeighbor = false, int generation = 0)
+    public GameObject InstantiateBlock(Vector2Int position, BlockInfoHolder blockInfo, bool ladderNeighbor = false, int generation = 0)
     {
         if (!TryGetBlockInfoByPosition(position, out var _))
         {
@@ -93,10 +93,12 @@ public class LevelManager : MonoBehaviour
             newBlockInfoHolder.Generation = generation;
 
             _levelElements.Add(newBlockInfoHolder);
+            return currentBlock;
         }
         else
         {
             Debug.LogWarning("Trying to add block in a filled cell.");
+            return null;
         }
     }
 
