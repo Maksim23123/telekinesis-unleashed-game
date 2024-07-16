@@ -23,9 +23,16 @@ public class RoomGeneratorTest
 
             //Assert
 
-            foreach (var pathUnit in roomStructure)
+
+            for (int i = 0; i < roomStructure.Count; i++)
             {
-                Assert.IsFalse(pathUnit == null);
+                for (int j = 0;j < roomStructure[i].Length; j++)
+                {
+                    for (int k = 0; k < roomStructure[i][j].Count; k++)
+                    {
+                        Assert.IsFalse(roomStructure[i][j][k] == null);
+                    }
+                }
             }
         }
         catch (System.Exception ex)
