@@ -3,17 +3,12 @@ using UnityEngine;
 
 public class EntityHealthManager : MonoBehaviour, IRecordable
 {
-    [SerializeField]
-    private int _maxHealth;
-    [SerializeField]
-    private int _currentHealth;
-    [SerializeField]
-    private bool _afterDamageImortalityFrames;
-    [SerializeField]
-    private float _afterDamageImortalityTime = 0.5f;
+    [SerializeField] private int _maxHealth;
+    [SerializeField] private int _currentHealth;
+    [SerializeField] private bool _afterDamageImortalityFrames;
+    [SerializeField] private float _afterDamageImortalityTime = 0.5f;
     [Header("Save Load System related")]
-    [SerializeField]
-    private bool _triggerObjectDataUnpack = false;
+    [SerializeField] private bool _triggerObjectDataUnpack = false;
 
     private bool _damageTakingOnCooldown = false;
     private bool _performRegenerationIteration = true;
@@ -21,8 +16,8 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
     private float _regenerationPool;
     private ObjectData _waitingObjectData;
 
-    public event Action runOutOfHealth;
-    public event Action<int> healthChanged;
+    public event Action RunOutOfHealth;
+    public event Action<int> HealthChanged;
 
     public int CurrentHealth
     {
@@ -38,7 +33,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
         set
         {
             _maxHealth = Mathf.Clamp(value, 1, int.MaxValue);
-            healthChanged?.Invoke(_currentHealth);
+            HealthChanged?.Invoke(_currentHealth);
         }
     }
 
@@ -87,10 +82,10 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
             if (_currentHealth < 1)
             {
                 _currentHealth = 0;
-                runOutOfHealth?.Invoke();
+                RunOutOfHealth?.Invoke();
             }
 
-            healthChanged?.Invoke(_currentHealth);
+            HealthChanged?.Invoke(_currentHealth);
 
             if (_afterDamageImortalityFrames)
             {
@@ -103,19 +98,19 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
     public void ProcessHeal(int amount)
     {
         _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
-        healthChanged?.Invoke(_currentHealth);
+        HealthChanged?.Invoke(_currentHealth);
     }
 
     public void ProcessFullHeal()
     {
         _currentHealth = _maxHealth;
-        healthChanged?.Invoke(_currentHealth);
+        HealthChanged?.Invoke(_currentHealth);
     }
 
     public ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
+        objectData.VariableValues.Add(nameof(_currentHealth), _currentHealth.ToString());
         return objectData;
     }
 
@@ -138,7 +133,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
 
     public void UnpackObjectData(ObjectData objectData)
     {
-        int.TryParse(objectData.variableValues[nameof(_currentHealth)], out _currentHealth);
-        healthChanged?.Invoke(_currentHealth);
+        int.TryParse(objectData.VariableValues[nameof(_currentHealth)], out _currentHealth);
+        HealthChanged?.Invoke(_currentHealth);
     }
 }

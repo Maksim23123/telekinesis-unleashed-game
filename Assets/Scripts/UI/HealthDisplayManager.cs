@@ -1,22 +1,20 @@
 using TMPro;
 using UnityEngine;
 
-[RequireComponent(typeof(TextMeshProUGUI))]
+[RequireComponent(typeof(TextMeshProUGUI))] 
 public class HealthDisplayManager : MonoBehaviour
 {
-    protected TextMeshProUGUI _textMesh;
+    [SerializeField] protected string _prefix;
+    [SerializeField] protected EntityHealthManager _healthManager;
 
-    [SerializeField]
-    protected string _prefix;
-    [SerializeField]
-    protected EntityHealthManager _healthManager;
+    protected TextMeshProUGUI _textMesh;
 
     private void Start()
     {
         _textMesh = GetComponent<TextMeshProUGUI>();
         if (_healthManager != null)
         {
-            _healthManager.healthChanged += OnHealthChanged;
+            _healthManager.HealthChanged += OnHealthChanged;
             UpdateHealthText();
         }
     }

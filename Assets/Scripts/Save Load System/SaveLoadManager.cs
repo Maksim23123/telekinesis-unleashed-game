@@ -6,7 +6,15 @@ using UnityEngine;
 
 public class SaveLoadManager : MonoBehaviour
 {
+    static readonly string FILE_EXTENSION = "save";
+
     private static SaveLoadManager _instance;
+    private ObjectData _dataStack = new ObjectData();
+    private int _objectDataSourceCount = 0;
+
+    public event Action GatherDataFromDataSources;
+
+    public string CurrentSaveName { get; set; } = "defaultSave";
 
     public static SaveLoadManager Instance
     {
@@ -21,19 +29,10 @@ public class SaveLoadManager : MonoBehaviour
         }
     }
 
-    public event Action _gatherDataFromDataSources;
-
-    private ObjectData _dataStack = new ObjectData();
-    static readonly string FILE_EXTENSION = "save";
-    private string _currentSaveName = "defaultSave";
-    private int _objectDataSourceCount = 0;
-
-    public string CurrentSaveName { get => _currentSaveName; set => _currentSaveName = value; }
-
     private void CheckDataStackLoad()
     {
-        int dataSourcesCount = _gatherDataFromDataSources?.GetInvocationList().Length ?? 0;
-        if (_dataStack.objectDataUnits.Count >= dataSourcesCount)
+        int dataSourcesCount = GatherDataFromDataSources?.GetInvocationList().Length ?? 0;
+        if (_dataStack.ObjectDataUnits.Count >= dataSourcesCount)
             OnDataStackFull();
     }
 
@@ -41,27 +40,13 @@ public class SaveLoadManager : MonoBehaviour
     {
         WriteSaveToFile();
 
-        _dataStack.objectDataUnits.Clear();
-    }
-
-    // DEBUG
-    private void UnpackObjectData(ObjectData objectData)
-    {
-        foreach (var key in objectData.variableValues.Keys)
-        {
-            Debug.Log(key + " | " + objectData.variableValues[key]);
-        }
-
-        foreach (var extractedObjectData in objectData.objectDataUnits.Values)
-        {
-            UnpackObjectData(extractedObjectData);
-        }
+        _dataStack.ObjectDataUnits.Clear();
     }
 
     private void WriteSaveToFile()
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = Path.Combine(Application.persistentDataPath, _currentSaveName + "." + FILE_EXTENSION);
+        string path = Path.Combine(Application.persistentDataPath, CurrentSaveName + "." + FILE_EXTENSION);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         formatter.Serialize(stream, _dataStack);
@@ -70,7 +55,7 @@ public class SaveLoadManager : MonoBehaviour
 
     private ObjectData ReadDataFromFile()
     {
-        string path = Path.Combine(Application.persistentDataPath, _currentSaveName + "." + FILE_EXTENSION);
+        string path = Path.Combine(Application.persistentDataPath, CurrentSaveName + "." + FILE_EXTENSION);
         if (File.Exists(path))
         {
             try
@@ -97,14 +82,14 @@ public class SaveLoadManager : MonoBehaviour
 
     public void SaveGame()
     {
-        _gatherDataFromDataSources?.Invoke();
+        GatherDataFromDataSources?.Invoke();
     }
 
     public void LoadGame()
     {
         ObjectData loadedData = ReadDataFromFile();
 
-        _gatherDataFromDataSources = null;
+        GatherDataFromDataSources = null;
         _objectDataSourceCount = 0;
 
         SceneRemaker.RequestRemakeScene(loadedData);
@@ -112,20 +97,20 @@ public class SaveLoadManager : MonoBehaviour
 
     public void RegisterObjectDataSource(Action action)
     {
-        _gatherDataFromDataSources += action;
+        GatherDataFromDataSources += action;
         _objectDataSourceCount++;
     }
 
     public void UnregisterObjectDataSource(Action action)
     {
-        _gatherDataFromDataSources -= action;
+        GatherDataFromDataSources -= action;
     }
 
     public int EnrollToDataStack(ObjectData objectData)
     {
         int stackPositionId;
-        stackPositionId = StaticTools.GetFreeId(_dataStack.objectDataUnits.Keys.ToArray(), x => int.Parse(x));
-        _dataStack.objectDataUnits.Add(stackPositionId.ToString(), objectData);
+        stackPositionId = StaticTools.GetFreeId(_dataStack.ObjectDataUnits.Keys.ToArray(), x => int.Parse(x));
+        _dataStack.ObjectDataUnits.Add(stackPositionId.ToString(), objectData);
         CheckDataStackLoad();
         return stackPositionId;
     }

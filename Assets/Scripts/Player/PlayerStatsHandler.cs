@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerStatsHandler : MonoBehaviour, IRecordable
 {
-    [SerializeField]
-    private PlayerStatsStorage _defaultPlayerStats;
+    [SerializeField] private PlayerStatsStorage _defaultPlayerStats;
 
     private PlayerStatsStorage _modifiedStats;
     private List<StatsModifierSlot> _statsModifierSlots = new List<StatsModifierSlot>();
@@ -111,11 +110,11 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
     public ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.objectDataUnits.Add(nameof(_defaultPlayerStats), _defaultPlayerStats.GetObjectData());
+        objectData.ObjectDataUnits.Add(nameof(_defaultPlayerStats), _defaultPlayerStats.GetObjectData());
 
         for (int i = 0; i < _statsModifierSlots.Count; i++)
         {
-            objectData.objectDataUnits.Add(nameof(_statsModifierSlots) + i, _statsModifierSlots[i].GetObjectData());
+            objectData.ObjectDataUnits.Add(nameof(_statsModifierSlots) + i, _statsModifierSlots[i].GetObjectData());
         }
 
         return objectData;
@@ -123,11 +122,11 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
 
     public void SetObjectData(ObjectData objectData)
     {
-        _defaultPlayerStats.SetObjectData(objectData.objectDataUnits[nameof(_defaultPlayerStats)]);
+        _defaultPlayerStats.SetObjectData(objectData.ObjectDataUnits[nameof(_defaultPlayerStats)]);
 
         _statsModifierSlots = new List<StatsModifierSlot>();
         int statsModifierSlotIndex = 0;
-        while (objectData.objectDataUnits.TryGetValue(nameof(_statsModifierSlots) + statsModifierSlotIndex, out ObjectData slotData))
+        while (objectData.ObjectDataUnits.TryGetValue(nameof(_statsModifierSlots) + statsModifierSlotIndex, out ObjectData slotData))
         {
             _statsModifierSlots.Add(StatsModifierSlot.RemakeStatsModifierSlot(slotData));
             statsModifierSlotIndex++;

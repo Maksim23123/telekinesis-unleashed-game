@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 
 public class PathGenerator : MonoBehaviour
@@ -14,6 +8,7 @@ public class PathGenerator : MonoBehaviour
     [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField] private LevelManager _levelManager;
     [SerializeField] private float _straightWayMaxError;
+
     private Vector2Int _startPositionInGrid, _endPositionInGrid;
     private SmartPath _smartPath;
     private BlockGridSettings _blockGridSettings;
@@ -88,28 +83,6 @@ public class PathGenerator : MonoBehaviour
         _startPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_startPosition);
         _endPositionInGrid = _levelManager.BlockGridSettings.WorldToGridPosition(_endPosition);
     }
-
-    /*
-    private void GenerateOneTurnManhattanWay()
-    {
-        UpdateStartEndPositionsInGrid();
-        Vector2Int endPositionInGridForHorizWay = _endPositionInGrid;
-
-        if (_startPositionInGrid.x != _endPositionInGrid.x)
-            endPositionInGridForHorizWay.x = _endPositionInGrid.x
-                + (_endPositionInGrid.x < _startPositionInGrid.x ? 1 : -1);
-
-        _levelManager.BuildHorizontalPath(_startPositionInGrid.x, endPositionInGridForHorizWay.x
-            , _levelManager.BlockGridSettings.WorldToGridPosition(_startPosition).y);
-
-        int horizExpandDirectionFactor = _blockGridSettings.HorizontalExpandDirectionFactor;
-
-        if (_startPositionInGrid.y != _endPositionInGrid.y)
-        {
-            _levelManager.BuildVerticalPath(_startPositionInGrid.y, _endPositionInGrid.y, _endPositionInGrid.x
-                , horizExpandDirectionFactor > 0 ? _startPositionInGrid.x > _endPositionInGrid.x : _startPositionInGrid.x < _endPositionInGrid.x);
-        }
-    }*/
 
     private void InitPositionsFromBeacons()
     {

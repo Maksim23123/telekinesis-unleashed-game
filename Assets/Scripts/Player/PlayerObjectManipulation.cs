@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class PlayerObjectManipulation : MonoBehaviour
 {
-    [SerializeField]
-    private float _impulsPower;
+    [SerializeField] private float _impulsPower;
 
     private float _manipulationCooldown;
     private bool _manipulationAllowed = true;
     private static PlayerObjectManipulation _instance;
 
     public float ManipulationCooldown { get => _manipulationCooldown; set => _manipulationCooldown = value; }
+
     public static PlayerObjectManipulation Instance
     {
         get

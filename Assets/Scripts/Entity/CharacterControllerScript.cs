@@ -14,7 +14,7 @@ public class CharacterControllerScript : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private GravityScaleRequestManager _gravityScaleRequestManager;
 
-    public event Action<bool> _groundedChanged;
+    public event Action<bool> GroundedChanged;
 
     public bool BlockHorizontalMovement { get; set; } = false;
     public float Speed { get => _speed; set => _speed = value; }
@@ -39,7 +39,7 @@ public class CharacterControllerScript : MonoBehaviour
             if (value != _grounded)
             {
                 _grounded = value;
-                _groundedChanged?.Invoke(_grounded);
+                GroundedChanged?.Invoke(_grounded);
             }
         }
     }

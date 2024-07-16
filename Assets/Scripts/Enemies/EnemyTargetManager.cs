@@ -5,21 +5,18 @@ using UnityEngine;
 
 public class EnemyTargetManager : MonoBehaviour
 {
+    [SerializeField] private LayerMask _notTransparentLayers;
+    [SerializeField] private float switchToMinorDistance;
 
-    [SerializeField]
-    private LayerMask _notTransparentLayers;
-
-    [SerializeField]
-    private float switchToMinorDistance;
     private EnemyProjectileLauncher _launcher;
     private SortedSet<TargetSlot> _targetSlots = new SortedSet<TargetSlot>(new TargetSlot(0, TargetType.Main, null));
     private TargetSlot previousMostPriorSlot;
 
-    public event Action<GameObject, bool> activeTargetReAssigned;
+    public event Action<GameObject, bool> ActiveTargetReAssigned;
 
     private void Start()
     {
-        PlayerStatusInformer.newPlayerAssigned += UpdateTargets;
+        PlayerStatusInformer.NewPlayerAssigned += UpdateTargets;
     }
 
     private void FixedUpdate()
@@ -38,11 +35,11 @@ public class EnemyTargetManager : MonoBehaviour
         TargetSlot mostPriorSlot = _targetSlots.Max; 
 
         if (mostPriorSlot != null && (previousMostPriorSlot == null
-                || previousMostPriorSlot.target != mostPriorSlot.target
-                || previousMostPriorSlot.targetIsVisible != mostPriorSlot.targetIsVisible))
+                || previousMostPriorSlot.Target != mostPriorSlot.Target
+                || previousMostPriorSlot.TargetIsVisible != mostPriorSlot.TargetIsVisible))
         {
             previousMostPriorSlot = mostPriorSlot;
-            activeTargetReAssigned?.Invoke(mostPriorSlot.target, mostPriorSlot.targetIsVisible);
+            ActiveTargetReAssigned?.Invoke(mostPriorSlot.Target, mostPriorSlot.TargetIsVisible);
         }
     }
 
@@ -67,19 +64,19 @@ public class EnemyTargetManager : MonoBehaviour
 
     private TargetSlot CalculatePriorityForTarget(TargetSlot targetSlot)
     {
-        targetSlot.targetIsVisible = true;
-        if (targetSlot.targetType == TargetType.Main && TestIfTargetIsVisible(targetSlot))
+        targetSlot.TargetIsVisible = true;
+        if (targetSlot.TargetType == TargetType.Main && TestIfTargetIsVisible(targetSlot))
         {
-            targetSlot.targetPriority = 1;
+            targetSlot.TargetPriority = 1;
         }
-        else if (targetSlot.targetType == TargetType.Minor && TestIfTargetIsVisible(targetSlot))
+        else if (targetSlot.TargetType == TargetType.Minor && TestIfTargetIsVisible(targetSlot))
         {
-            targetSlot.targetPriority = 2;
+            targetSlot.TargetPriority = 2;
         }
         else
         {
-            targetSlot.targetPriority = 0;
-            targetSlot.targetIsVisible = false;
+            targetSlot.TargetPriority = 0;
+            targetSlot.TargetIsVisible = false;
         }
 
         return targetSlot;
@@ -88,11 +85,11 @@ public class EnemyTargetManager : MonoBehaviour
     private bool TestIfTargetIsVisible(TargetSlot targetSlot)
     {
         bool isVisible = false;
-        GameObject target = targetSlot.target;
+        GameObject target = targetSlot.Target;
         Vector2 objectPosition = gameObject.transform.position;
         Vector2 direction = (target.transform.position - transform.position).normalized;
         float raySize = 20;
-        if (targetSlot.targetType == TargetType.Minor)
+        if (targetSlot.TargetType == TargetType.Minor)
         {
             raySize = switchToMinorDistance;
         }
@@ -147,6 +144,6 @@ public class EnemyTargetManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        PlayerStatusInformer.newPlayerAssigned -= UpdateTargets;
+        PlayerStatusInformer.NewPlayerAssigned -= UpdateTargets;
     }
 }

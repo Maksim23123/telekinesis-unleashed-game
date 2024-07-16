@@ -2,18 +2,12 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-    [SerializeField]
-    private KeyCode _captureObjectButton;
-    [SerializeField]
-    private KeyCode _quitCapturingButton;
-    [SerializeField]
-    private KeyCode _performManipulationButton;
-    [SerializeField]
-    private KeyCode _fallThroughOneWayPlatform;
-    [SerializeField]
-    private KeyCode _stepOnLadder;
-    [SerializeField]
-    private KeyCode _pickUpItem;
+    [SerializeField] private KeyCode _captureObjectButton;
+    [SerializeField] private KeyCode _quitCapturingButton;
+    [SerializeField] private KeyCode _performManipulationButton;
+    [SerializeField] private KeyCode _fallThroughOneWayPlatform;
+    [SerializeField] private KeyCode _stepOnLadder;
+    [SerializeField] private KeyCode _pickUpItem;
 
     private bool _captureObjectButtonPressed;
     private bool _pickUpItemPressed;

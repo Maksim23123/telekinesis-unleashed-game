@@ -2,9 +2,9 @@ using UnityEngine;
 
 public abstract class PossessableObject : MonoBehaviour
 {
-    private PossessableObjectStatsStorage statsStorage = new PossessableObjectStatsStorage();
+    private PossessableObjectStatsStorage _statsStorage = new PossessableObjectStatsStorage();
 
-    public PossessableObjectStatsStorage StatsStorage { get => statsStorage; set => statsStorage = value; }
+    public PossessableObjectStatsStorage StatsStorage { get => _statsStorage; set => _statsStorage = value; }
 
     public abstract void ProcessManipulation(Vector3 direction, float power);
 

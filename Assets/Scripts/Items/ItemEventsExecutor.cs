@@ -76,7 +76,7 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
         ObjectData objectData = new ObjectData();
         for (int i = 0; i < _itemEventSlots.Count; i++)
         {
-            objectData.objectDataUnits.Add(nameof(_itemEventSlots) + i, _itemEventSlots[i].GetObjectData());
+            objectData.ObjectDataUnits.Add(nameof(_itemEventSlots) + i, _itemEventSlots[i].GetObjectData());
         }
         return objectData;
     }
@@ -85,7 +85,7 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
     {
         _itemEventSlots.Clear(); // ATTENTION: Here additional actions may be needed in the future
         int index = 0;
-        while (objectData.objectDataUnits.TryGetValue(nameof(_itemEventSlots) + index, out ObjectData slotData))
+        while (objectData.ObjectDataUnits.TryGetValue(nameof(_itemEventSlots) + index, out ObjectData slotData))
         {
             _itemEventSlots.Add(ItemEventSlot.RemakeItemEventSlot(slotData));
             index++;

@@ -21,19 +21,19 @@ public class ItemInfluenceReferenceSlot : IRecordable
     public ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(_slotId), _slotId.ToString());
-        objectData.variableValues.Add(nameof(_itemId), _itemId.ToString());
-        objectData.variableValues.Add(nameof(_statsModifierId), _statsModifierId.ToString());
-        objectData.variableValues.Add(nameof(_itemEventId), _itemEventId.ToString());
+        objectData.VariableValues.Add(nameof(_slotId), _slotId.ToString());
+        objectData.VariableValues.Add(nameof(_itemId), _itemId.ToString());
+        objectData.VariableValues.Add(nameof(_statsModifierId), _statsModifierId.ToString());
+        objectData.VariableValues.Add(nameof(_itemEventId), _itemEventId.ToString());
         return objectData;
     }
 
     public void SetObjectData(ObjectData objectData)
     {
-        int.TryParse(objectData.variableValues[nameof(_slotId)], out _slotId);
-        int.TryParse(objectData.variableValues[nameof(_itemId)], out _itemId);
-        int.TryParse(objectData.variableValues[nameof(_statsModifierId)], out _statsModifierId);
-        int.TryParse(objectData.variableValues[nameof(_itemEventId)], out _itemEventId);
+        int.TryParse(objectData.VariableValues[nameof(_slotId)], out _slotId);
+        int.TryParse(objectData.VariableValues[nameof(_itemId)], out _itemId);
+        int.TryParse(objectData.VariableValues[nameof(_statsModifierId)], out _statsModifierId);
+        int.TryParse(objectData.VariableValues[nameof(_itemEventId)], out _itemEventId);
     }
 
     public static ItemInfluenceReferenceSlot RemakeItemInfluenceReferenceSlot(ObjectData objectData)

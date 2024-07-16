@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class StatsModifierSlot : IRecordable
 {
-    [SerializeField]
-    private PlayerStatsStorage _statsModifier;
+    [SerializeField] private PlayerStatsStorage _statsModifier;
     
     private int _modifierSlotId;
     private int _count;
@@ -34,19 +33,19 @@ public class StatsModifierSlot : IRecordable
     public ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(_modifierSlotId), _modifierSlotId.ToString());
-        objectData.variableValues.Add(nameof(_count), _count.ToString());
-        objectData.objectDataUnits.Add(nameof(_statsModifier), _statsModifier.GetObjectData());
+        objectData.VariableValues.Add(nameof(_modifierSlotId), _modifierSlotId.ToString());
+        objectData.VariableValues.Add(nameof(_count), _count.ToString());
+        objectData.ObjectDataUnits.Add(nameof(_statsModifier), _statsModifier.GetObjectData());
         return objectData;
     }
 
     public void SetObjectData(ObjectData objectData)
     {
-        int.TryParse(objectData.variableValues[nameof(_modifierSlotId)], out _modifierSlotId);
-        int.TryParse(objectData.variableValues[nameof(_count)], out _count);
+        int.TryParse(objectData.VariableValues[nameof(_modifierSlotId)], out _modifierSlotId);
+        int.TryParse(objectData.VariableValues[nameof(_count)], out _count);
 
         PlayerStatsStorage playerStatsStorage = new PlayerStatsStorage();
-        playerStatsStorage.SetObjectData(objectData.objectDataUnits[nameof(_statsModifier)]);
+        playerStatsStorage.SetObjectData(objectData.ObjectDataUnits[nameof(_statsModifier)]);
         _statsModifier = playerStatsStorage;
     }
 }

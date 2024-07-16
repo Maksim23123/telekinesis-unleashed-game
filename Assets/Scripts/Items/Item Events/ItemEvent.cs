@@ -1,20 +1,14 @@
 using System;
 using UnityEngine;
 
-[Serializable]
+[Serializable] 
 public abstract class ItemEvent : ScriptableObject, IRecordable
 {
-    [NonSerialized]
-    private int _eventsCount;
-    [NonSerialized]
-    private bool _eventExecuted;
-    [SerializeField]
-    private bool _unionPermission = false;
-    [AssetPath(typeof(ItemEvent))]
-    [SerializeField]
-    private string _itemEventPath;
-    [SerializeField]
-    protected ItemEventType _eventType;
+    [NonSerialized] private int _eventsCount;
+    [NonSerialized] private bool _eventExecuted;
+    [SerializeField] private bool _unionPermission = false;
+    [SerializeField][AssetPath(typeof(ItemEvent))] private string _itemEventPath;
+    [SerializeField] protected ItemEventType _eventType;
 
     public int eventsCount { get => _eventsCount; set => _eventsCount = value; }
     internal ItemEventType EventType { get => _eventType; set => _eventType = value; }
@@ -37,7 +31,7 @@ public abstract class ItemEvent : ScriptableObject, IRecordable
 
     public static ItemEvent RemakeItemEvent(ObjectData objectData)
     {
-        string resourcePath = StaticTools.GetResourcePath(objectData.variableValues[nameof(_itemEventPath)]);
+        string resourcePath = StaticTools.GetResourcePath(objectData.VariableValues[nameof(_itemEventPath)]);
         ItemEvent itemEvent = Resources.Load<ItemEvent>(resourcePath);
         itemEvent.SetObjectData(objectData);
         return itemEvent;
@@ -46,16 +40,16 @@ public abstract class ItemEvent : ScriptableObject, IRecordable
     public virtual ObjectData GetObjectData()
     {
         ObjectData objectData = new ObjectData();
-        objectData.variableValues.Add(nameof(_eventsCount), _eventsCount.ToString());
-        objectData.variableValues.Add(nameof(_eventExecuted), _eventExecuted.ToString());
-        objectData.variableValues.Add(nameof(_itemEventPath), _itemEventPath);
+        objectData.VariableValues.Add(nameof(_eventsCount), _eventsCount.ToString());
+        objectData.VariableValues.Add(nameof(_eventExecuted), _eventExecuted.ToString());
+        objectData.VariableValues.Add(nameof(_itemEventPath), _itemEventPath);
         return objectData;
     }
 
     public virtual void SetObjectData(ObjectData objectData)
     {
-        int.TryParse(objectData.variableValues[nameof(_eventsCount)], out _eventsCount);
-        bool.TryParse(objectData.variableValues[nameof(_eventExecuted)], out _eventExecuted);
+        int.TryParse(objectData.VariableValues[nameof(_eventsCount)], out _eventsCount);
+        bool.TryParse(objectData.VariableValues[nameof(_eventExecuted)], out _eventExecuted);
     }
 
 

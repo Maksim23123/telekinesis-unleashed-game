@@ -5,58 +5,39 @@ using UnityEngine;
 
 public class InstanceSaveLoadManager : MonoBehaviour
 {
-    [AssetPath(typeof(GameObject))]
-    [SerializeField]
-    private string _gameObjectPrefabPath;
-    [SerializeField]
-    private GameObjectIdentificatorType _onLoadDataDestributionType;
+    [SerializeField][AssetPath(typeof(GameObject))] private string _gameObjectPrefabPath;
+    [SerializeField] private GameObjectIdentificatorType _onLoadDataDestributionType;
+    [SerializeField][HideInInspector] public string _staticAddress; // It's public because need to be found from editor derived class
 
     public static readonly string GAME_OBJECT_PREFAB_PATH_KEY = "GAME_OBJECT_PREFAB_PATH";
     public static readonly string GAME_OBJECT_STATIC_ADDRESS_KEY = "GAME_OBJECT_STATIC_ADDRESS";
-    //private GameObjectIdentificator _objectIdentificator;
-    [HideInInspector]
-    public string _staticAddress;
     private static Dictionary<string, InstanceSaveLoadManager> _staticAddresses = new Dictionary<string, InstanceSaveLoadManager>();
 
     public GameObjectIdentificatorType OnLoadDataDestributionType { get => _onLoadDataDestributionType; set => _onLoadDataDestributionType = value; }
     public string StaticAddress { get => _staticAddress; set => _staticAddress = value; }
 
-    private IRecordable[] GetRecordables()
-    {
-        return GetComponents(typeof(MonoBehaviour))
-            .Where(x => x is IRecordable)
-            .Select(x => (IRecordable)x)
-            .ToArray();
-    }
-
     private void Awake()
     {
-        //_objectIdentificator = GetComponent<GameObjectIdentificator>();
         SaveLoadManager.Instance.RegisterObjectDataSource(OnSaveGame);
         if (OnLoadDataDestributionType == GameObjectIdentificatorType.StaticAddress)
         {
-            _staticAddresses[_staticAddress] = this;
+            _staticAddresses[StaticAddress] = this;
         }
         if (_onLoadDataDestributionType == GameObjectIdentificatorType.PrefabPath)
         {
-            SceneRemaker._preRemakeActivity += DestroyItself;
+            SceneRemaker.PreRemakeActivity += DestroyItself;
         }
-    }
-
-    private void OnSaveGame()
-    {
-        SaveLoadManager.Instance.EnrollToDataStack(GetGObjectRecords());
     }
 
     private void OnDestroy()
     {
         SaveLoadManager.Instance?.UnregisterObjectDataSource(OnSaveGame);
         if (OnLoadDataDestributionType == GameObjectIdentificatorType.StaticAddress
-                && _staticAddresses[_staticAddress] == this)
-            _staticAddresses.Remove(_staticAddress);
+                && _staticAddresses[StaticAddress] == this)
+            _staticAddresses.Remove(StaticAddress);
         else 
-            SceneRemaker._preRemakeActivity -= DestroyItself;
-        PlayerStatusInformer.PlayerDestroyed();
+            SceneRemaker.PreRemakeActivity -= DestroyItself;
+        PlayerStatusInformer.InformPlayerDestroyed();
     }
 
     private void DestroyItself()
@@ -70,20 +51,33 @@ public class InstanceSaveLoadManager : MonoBehaviour
         return _staticAddresses.TryGetValue(staticAddress, out instanceSaveLoadManager);
     }
 
+    private void OnSaveGame()
+    {
+        SaveLoadManager.Instance.EnrollToDataStack(GetGObjectRecords());
+    }
+
+    private IRecordable[] GetRecordables()
+    {
+        return GetComponents(typeof(MonoBehaviour))
+            .Where(x => x is IRecordable)
+            .Select(x => (IRecordable)x)
+            .ToArray();
+    }
+
     public ObjectData GetGObjectRecords()
     {
         ObjectData gObjectRecord = new ObjectData();
 
         if (_onLoadDataDestributionType == GameObjectIdentificatorType.PrefabPath)
-            gObjectRecord.variableValues.Add(GAME_OBJECT_PREFAB_PATH_KEY, _gameObjectPrefabPath);
+            gObjectRecord.VariableValues.Add(GAME_OBJECT_PREFAB_PATH_KEY, _gameObjectPrefabPath);
         else
-            gObjectRecord.variableValues.Add(GAME_OBJECT_STATIC_ADDRESS_KEY, _staticAddress);
+            gObjectRecord.VariableValues.Add(GAME_OBJECT_STATIC_ADDRESS_KEY, StaticAddress);
 
         IRecordable[] components = GetRecordables();
 
         foreach (var component in components)
         {
-            gObjectRecord.objectDataUnits.Add(component.GetType().Name, component.GetObjectData());
+            gObjectRecord.ObjectDataUnits.Add(component.GetType().Name, component.GetObjectData());
         }
 
         return gObjectRecord;
@@ -98,7 +92,7 @@ public class InstanceSaveLoadManager : MonoBehaviour
 
         foreach (var component in components)
         {
-            if (data.objectDataUnits.TryGetValue(component.GetType().Name, out ObjectData componentData))
+            if (data.ObjectDataUnits.TryGetValue(component.GetType().Name, out ObjectData componentData))
             {
                 component.SetObjectData(componentData);
             }

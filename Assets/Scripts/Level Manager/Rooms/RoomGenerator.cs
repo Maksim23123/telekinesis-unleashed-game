@@ -41,7 +41,7 @@ public class RoomGenerator : MonoBehaviour
 
         foreach (RoomLevelInfo roomLevelInfo in _roomLevels)
         {
-            foreach (RoomInfo roomInfo in roomLevelInfo.RoomInfos)
+            foreach (RoomInfo roomInfo in roomLevelInfo.LevelRoomsContainer)
             {
                 CreateRoom(roomInfo.PositionInGrid - new Vector2Int(roomLevelInfo.HorizontalPos / 2, 0) 
                     + new Vector2Int(_horizontalOffset, 0), roomInfo.RoomObjectPrefab);
