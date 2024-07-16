@@ -56,7 +56,7 @@ public class PathPlanner : MonoBehaviour
     private PathUnit CreateTriplet(TripletPlacement tripletPlacement, ref List<PathUnit> unionCandidats)
     {
         PathUnit knotPoint = null;
-        while (unionCandidats.Count > 1)
+        do
         {
             List<PathUnit> unionCandidatsCopy = unionCandidats.ToList();
             for (int i = 0; i < unionCandidats.Count; i += 2)
@@ -83,6 +83,10 @@ public class PathPlanner : MonoBehaviour
                     currentTriplet.placement = tripletPlacement;
                     if (currentTriplet.Orientation == Orientation.Right != (currentTriplet.placement == TripletPlacement.Bellow))
                     {
+                        if (fCurrentPoint == null)
+                        {
+                            Debug.Log("Check");
+                        }
                         currentTriplet.BackConnections[0] = fCurrentPoint.Id;
                         currentTriplet.BackConnections[1] = sCurrentPoint.Id;
                     }
@@ -102,7 +106,8 @@ public class PathPlanner : MonoBehaviour
                     knotPoint = fCurrentPoint;
                 }
             }
-        }
+        } 
+        while (unionCandidats.Count > 1);
         return knotPoint;
     }
 }

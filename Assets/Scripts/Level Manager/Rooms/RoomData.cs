@@ -116,6 +116,7 @@ public class RoomData : MonoBehaviour
             roomData.InstantiateConnetion(ref roomData._exitConnection, roomCenterGridPosition, levelManager);
             return roomBlock.Block;
         }
+        Debug.Log("Unexpected room prefab was given");
         return null;
     }
 }

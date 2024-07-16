@@ -7,7 +7,6 @@ public class RoomGenerator : MonoBehaviour
 {
     [SerializeField] LevelManager _levelManager;
     [SerializeField] GameObject[] _roomPrefabs = new GameObject[0];
-    [SerializeField][Min(2)] int _roomLevelsCount = 5;
     [SerializeField] int _betweenRoomLevelSpaceSize = 10;
     [SerializeField] int _horizontalOffset;
     [SerializeField] List<RoomLevelInfo> _roomLevels = new();
