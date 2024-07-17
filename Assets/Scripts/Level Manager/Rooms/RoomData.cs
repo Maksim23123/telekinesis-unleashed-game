@@ -12,12 +12,12 @@ public class RoomData : MonoBehaviour
     [SerializeField] private Transform _enterencePointer;
     [SerializeField] private Transform _exitPointer;
 
-    private readonly Vector2 STANDART_CENTER_BIAS = new Vector2(0.5f, 0.5f);
+    [SerializeField] private Vector2 _relativeRoomStartPosition;
+    [SerializeField] private Vector2 _relativeRoomEndPosition;
+    [SerializeField] private Vector2 _relativeEnterancePosition;
+    [SerializeField] private Vector2 _relativeExitPosition;
 
-    private Vector2 _relativeRoomStartPosition;
-    private Vector2 _relativeRoomEndPosition;
-    private Vector2 _relativeEnterancePosition;
-    private Vector2 _relativeExitPosition;
+    private readonly Vector2 STANDART_CENTER_BIAS = new Vector2(0.5f, 0.5f);
 
     private Vector2Int _capturedZoneInBlockGridStart;
     private Vector2Int _capturedZoneInBlockGridEnd;

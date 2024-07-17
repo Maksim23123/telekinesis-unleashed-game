@@ -102,13 +102,13 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void InstantiateOrReplaceBlock(Vector2Int position, BlockInfoHolder newBlockPrefab)
+    public GameObject InstantiateOrReplaceBlock(Vector2Int position, BlockInfoHolder newBlockPrefab)
     {
         if (TryGetBlockInfoByPosition(position, out BlockInfoHolder blockToReplace))
         {
             DestroyBlock(blockToReplace);
         }
-        InstantiateBlock(position, newBlockPrefab);
+        return InstantiateBlock(position, newBlockPrefab);
     }
     
     // Info and tests
