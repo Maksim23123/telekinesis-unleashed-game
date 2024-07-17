@@ -7,11 +7,12 @@ using UnityEngine;
 [Serializable]
 public class RoomLevelInfo
 {
-    private const int _maxRoomCountOnLevel = 10;
-
-    [SerializeField][Range(1, _maxRoomCountOnLevel)] private int _minRoomCount = 1;
-    [SerializeField][Range(1, _maxRoomCountOnLevel)] private int _maxRoomCount = 1;
+    [SerializeField][Range(1, MAX_ROOM_COUNT_ON_LEVEL)] private int _minRoomCount = 1;
+    [SerializeField][Range(1, MAX_ROOM_COUNT_ON_LEVEL)] private int _maxRoomCount = 1;
     [SerializeField][Min(0)] private int _betweenRoomSpaceSize = 5;
+
+    private const int MAX_ROOM_COUNT_ON_LEVEL = 10;
+    private const int CENTER_CAPTURED_SPACE_BIAS = 1;
 
     private RoomInfo[] _levelRoomsContainer;
 
@@ -54,7 +55,7 @@ public class RoomLevelInfo
             _horizontalPos += _betweenRoomSpaceSize;
         }
 
-        _capturedVerticalPlace = FindMaxCapturedVerticalPlaceAbove(roomObjects) + maxCapturedPlaceBelow + 1;
+        _capturedVerticalPlace = FindMaxCapturedVerticalPlaceAbove(roomObjects) + maxCapturedPlaceBelow + CENTER_CAPTURED_SPACE_BIAS;
     }
 
     private List<GameObject> FillRoomObjects(GameObject[] roomsPrefabs)
@@ -72,7 +73,7 @@ public class RoomLevelInfo
         return (int)MathF.Abs(roomObjects.Min(
             g =>
             {
-                if (g.TryGetComponent(out RoomData roomData))
+                if (g.TryGetComponent(out BlockStructure roomData))
                 {
                     int bigestCapturedPlaceUnderneath = roomData.CapturedZoneInBlockGridStart.y < roomData.CapturedZoneInBlockGridEnd.y
                         ? roomData.CapturedZoneInBlockGridStart.y : roomData.CapturedZoneInBlockGridEnd.y;
@@ -86,7 +87,7 @@ public class RoomLevelInfo
     {
         return roomObjects.Max(g =>
         {
-            if (g.TryGetComponent(out RoomData roomData))
+            if (g.TryGetComponent(out BlockStructure roomData))
             {
                 bool startHasBigestY = roomData.CapturedZoneInBlockGridStart.y > roomData.CapturedZoneInBlockGridEnd.y;
                 return startHasBigestY
