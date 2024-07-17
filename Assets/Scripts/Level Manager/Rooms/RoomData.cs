@@ -4,18 +4,24 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+// Make class that will replace this one (name it BlockStructure)
+// Transfer all features of this class to BlockStructure
+// Refactor names of transfered to BlockStructure elements
 public class RoomData : MonoBehaviour
 {
     [Header("Initialization")]
     [SerializeField] private Transform _startRoomPointer;
-    [SerializeField] private Transform _endRoomPointer;
-    [SerializeField] private Transform _enterencePointer;
+    [SerializeField] private Transform _endRoomPointer; 
+    [SerializeField] private Transform _enterencePointer; // Make collection within BlockStructure for enterances pointers
     [SerializeField] private Transform _exitPointer;
+    
 
     [SerializeField] private Vector2 _relativeRoomStartPosition;
     [SerializeField] private Vector2 _relativeRoomEndPosition;
     [SerializeField] private Vector2 _relativeEnterancePosition;
     [SerializeField] private Vector2 _relativeExitPosition;
+    
 
     private readonly Vector2 STANDART_CENTER_BIAS = new Vector2(0.5f, 0.5f);
 
@@ -28,9 +34,9 @@ public class RoomData : MonoBehaviour
     public Vector2Int CapturedZoneInBlockGridEnd { get; private set; }
     public Connection EnteranceConnection { get => _enteranceConnection; }
     public Connection ExitConnection { get => _exitConnection; }
-
+    
     /// <summary>
-    /// Function for initializing and recording room data. Supposed to be called only in edit mod
+    /// Function for initializing and recording room data. Supposed to be called only in Unity Edit Mod
     /// </summary>
     public void InitRoomParams()
     {
@@ -54,6 +60,7 @@ public class RoomData : MonoBehaviour
 #endif
     }
 
+
     public void InitInGridParams(BlockGridSettings blockGridSettings)
     {
         CapturedZoneInBlockGridStart = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeRoomStartPosition);
@@ -75,6 +82,7 @@ public class RoomData : MonoBehaviour
 
         return new Vector2Int((int)blockGridSize.x, (int)blockGridSize.y);
     }
+
 
     private void InitRoomConnections(BlockGridSettings blockGridSettings)
     {
