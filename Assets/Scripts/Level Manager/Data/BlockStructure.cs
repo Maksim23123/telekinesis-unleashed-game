@@ -8,13 +8,13 @@ public class BlockStructure : MonoBehaviour
     [Header("Initialization")]
     [SerializeField] private Transform _startStructurePointer;
     [SerializeField] private Transform _endStructurePointer;
-    [SerializeField] private List<Transform> _enterencePointers; // Make collection within BlockStructure for enterances pointers
+    [SerializeField] private List<Transform> _enterencePointers;
     [SerializeField] private Transform _exitPointer;
 
 
     [SerializeField] private Vector2 _relativeStructureStartPosition;
     [SerializeField] private Vector2 _relativeStructureEndPosition;
-    [SerializeField] private List<Vector2> _relativeEnterancePositions; // Make collection within BlockStructure for enterance positions
+    [SerializeField] private List<Vector2> _relativeEnterancePositions;
     [SerializeField] private Vector2 _relativeExitPosition;
 
 
@@ -22,7 +22,7 @@ public class BlockStructure : MonoBehaviour
 
     private Vector2Int _capturedZoneInBlockGridStart;
     private Vector2Int _capturedZoneInBlockGridEnd;
-    private List<Connection> _enteranceConnections; // Make collection within BlockStructure for enterances
+    private List<Connection> _enteranceConnections = new();
     private Connection _exitConnection;
 
     public Vector2Int CapturedZoneInBlockGridStart { get; private set; }

@@ -35,7 +35,7 @@ public class RoomLevelInfo
 
         for (int i = 0; i < _levelRoomsContainer.Length; i++)
         {
-            if (roomObjects[i].TryGetComponent(out RoomData roomData))
+            if (roomObjects[i].TryGetComponent(out BlockStructure roomData))
             {
                 int bigestSpaceOnLeft = Math.Abs(roomData.CapturedZoneInBlockGridStart.x < roomData.CapturedZoneInBlockGridEnd.x
                         ? roomData.CapturedZoneInBlockGridStart.x : roomData.CapturedZoneInBlockGridEnd.x);
@@ -48,7 +48,8 @@ public class RoomLevelInfo
             }
             else
             {
-                _levelRoomsContainer[i] = null;
+                Debug.Log("Unacceptable room configuration");
+                return;
             }
             _horizontalPos += _betweenRoomSpaceSize;
         }

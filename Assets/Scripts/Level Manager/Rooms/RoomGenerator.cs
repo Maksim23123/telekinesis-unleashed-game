@@ -41,7 +41,7 @@ public class RoomGenerator : MonoBehaviour
         {
             foreach (RoomInfo roomInfo in _roomLevels[i].LevelRoomsContainer)
             {
-                RoomData currentRoomData = CreateRoom(roomInfo.PositionInGrid - new Vector2Int(_roomLevels[i].HorizontalPos / 2, 0)
+                BlockStructure currentRoomData = CreateRoom(roomInfo.PositionInGrid - new Vector2Int(_roomLevels[i].HorizontalPos / 2, 0)
                     + new Vector2Int(_horizontalOffset, 0), roomInfo.RoomObjectPrefab);
                 if (i > 0 && i < _roomLevels.Count - 1)
                 {
@@ -89,23 +89,23 @@ public class RoomGenerator : MonoBehaviour
         return newConnectionLayer;
     }
 
-    private static PathEnd ExtractExit(RoomData currentRoomData)
+    private static PathEnd ExtractExit(BlockStructure currentRoomData)
     {
         PathEnd exit = new PathEnd();
         exit.Connection = currentRoomData.ExitConnection;
         return exit;
     }
 
-    private static PathEnd ExtractEnterance(RoomData currentRoomData)
+    private static PathEnd ExtractEnterance(BlockStructure currentRoomData)
     {
         PathEnd enterance = new PathEnd();
-        enterance.Connection = currentRoomData.EnteranceConnection;
+        enterance.Connection = currentRoomData.EnteranceConnections[0];
         return enterance;
     }
 
-    public RoomData CreateRoom(Vector2Int roomCenterGridPosition, GameObject currentRoom)
+    public BlockStructure CreateRoom(Vector2Int roomCenterGridPosition, GameObject currentRoom)
     {
-        GameObject roomInstance = RoomData.InstantiateRoom(currentRoom, roomCenterGridPosition, _levelManager);
-        return roomInstance.GetComponent<RoomData>();
+        GameObject roomInstance = BlockStructure.InstantiateStructure(currentRoom, roomCenterGridPosition, _levelManager);
+        return roomInstance.GetComponent<BlockStructure>();
     }
 }
