@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 [Serializable]
@@ -31,8 +32,11 @@ public class BlockGridSettings
 
     public Vector2Int WorldToGridPosition(Vector2 worldPosition)
     {
+        // horizontalCorrectionBias will become Vector(0, 0) if HorizontalExpandDirectionFactor is greater than 0
+        Vector2 horizontalCorrectionBias = Vector2.left * Mathf.Clamp(HorizontalExpandDirectionFactor * -1, 0, 1); 
+
         Vector2 blockGridPosition = worldPosition - (PossitionBias - BlocksSize / 2
-            * new Vector2(HorizontalExpandDirectionFactor, 1));
+            * new Vector2(HorizontalExpandDirectionFactor, 1)) + horizontalCorrectionBias;
 
         Vector2Int gridPosition = new Vector2Int((int)Mathf.Floor(blockGridPosition.x / BlocksSize.x
                 * HorizontalExpandDirectionFactor)
