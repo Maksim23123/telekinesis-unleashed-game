@@ -40,8 +40,8 @@ public class BlockStructure : MonoBehaviour
         {
             _relativeStructureStartPosition = _startStructurePointer.position - transform.position - (Vector3)STANDART_CENTER_BIAS;
             _relativeStructureEndPosition = _endStructurePointer.position - transform.position - (Vector3)STANDART_CENTER_BIAS;
-            
 
+            _relativeEnterancePositions.Clear();
             foreach (Transform enteranceTransform in _enterencePointers)
             {
                 _relativeEnterancePositions.Add(enteranceTransform.position - transform.position - (Vector3)STANDART_CENTER_BIAS);

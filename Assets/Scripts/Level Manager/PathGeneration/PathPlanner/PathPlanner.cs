@@ -25,7 +25,7 @@ public class PathPlanner : MonoBehaviour
                 unionCandidats.Clear();
                 for (int k = 0; k < connectionLayer[j].Count; k++)
                 {
-                    connectionLayer[j][k] = registerId(connectionLayer[j][k]);
+                    connectionLayer[j][k] = RegisterId(connectionLayer[j][k]);
                 }
                 unionCandidats.AddRange(connectionLayer[j]);
                 if (j == 0)
@@ -34,7 +34,7 @@ public class PathPlanner : MonoBehaviour
                 }
                 else
                 {
-                    exitsKnot = CreateTriplet(TripletPlacement.Above, ref unionCandidats);
+                    exitsKnot = CreateTriplet(TripletPlacement.Bellow, ref unionCandidats);
                 }
             }
             unionCandidats.Clear();
@@ -45,7 +45,7 @@ public class PathPlanner : MonoBehaviour
         return _idRegister;
     }
 
-    private PathUnit registerId(PathUnit pathUnit)
+    private PathUnit RegisterId(PathUnit pathUnit)
     {
         int freeId = StaticTools.GetFreeId(_idRegister, x => x.Id);
         pathUnit.Id = freeId;
@@ -95,7 +95,7 @@ public class PathPlanner : MonoBehaviour
                         currentTriplet.BackConnections[0] = sCurrentPoint.Id;
                         currentTriplet.BackConnections[1] = fCurrentPoint.Id;
                     }
-                    currentTriplet = (Triplet)registerId(currentTriplet);
+                    currentTriplet = (Triplet)RegisterId(currentTriplet);
                     unionCandidats.Remove(fCurrentPoint);
                     unionCandidats.Remove(sCurrentPoint);
                     unionCandidats.Add(currentTriplet);

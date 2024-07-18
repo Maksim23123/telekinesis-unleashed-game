@@ -12,7 +12,7 @@ public class PathGeneratorEditor : Editor
 
         if (GUILayout.Button("Build Path"))
         {
-            myScript.Generate();
+            Debug.LogError("Removed feature use request");
         }
     }
 }

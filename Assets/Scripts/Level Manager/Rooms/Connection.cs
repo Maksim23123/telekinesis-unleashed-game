@@ -16,9 +16,11 @@ public class Connection
     {
         if (Orientation == Orientation.Left)
         {
-            return RelativePositionInBlockGrid + Vector2Int.left * blockGridSettings.HorizontalExpandDirectionFactor;
+            return blockGridSettings.WorldToGridPosition(GameObject.transform.position) 
+                + Vector2Int.left * blockGridSettings.HorizontalExpandDirectionFactor;
         }
-        return RelativePositionInBlockGrid + Vector2Int.right * blockGridSettings.HorizontalExpandDirectionFactor;
+        return blockGridSettings.WorldToGridPosition(GameObject.transform.position) 
+            + Vector2Int.right * blockGridSettings.HorizontalExpandDirectionFactor;
     }
 }
 
