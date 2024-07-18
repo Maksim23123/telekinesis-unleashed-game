@@ -9,6 +9,8 @@ public class BlockGridEditorWindow : EditorWindow
     private int _brushIndex = 0;
     private List<BlockGridBrush> _brushes = new();
 
+    private string _mousePositionInGrid = string.Empty;
+
     [MenuItem("Window/Block Grid Editor")]
     public static void ShowWindow()
     {
@@ -23,6 +25,10 @@ public class BlockGridEditorWindow : EditorWindow
         {
             _brushes[_brushIndex].OnGUI();
         }
+
+        GUILayout.Label("Info", EditorStyles.boldLabel);
+        GUILayout.Label(_mousePositionInGrid);
+
     }
 
     private void OnEnable()
@@ -60,6 +66,12 @@ public class BlockGridEditorWindow : EditorWindow
             Event.current.Use();
         }
 
+        if (_brushes.Count > 0)
+        {
+            _mousePositionInGrid = "Mouse Grid Position: " + _brushes[_brushIndex].MousePosition;
+        }
+
+        Repaint();
     }
 
     private void InitBrushes()

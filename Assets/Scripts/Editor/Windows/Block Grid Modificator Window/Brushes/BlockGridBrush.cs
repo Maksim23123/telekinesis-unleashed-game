@@ -4,7 +4,18 @@ using UnityEngine;
 
 public abstract class BlockGridBrush
 {
+    protected LevelManager _levelManager;
+
     public abstract string PreatyName { get; }
+
+    public string MousePosition { 
+        get
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+
+            return $"{_levelManager.BlockGridSettings.WorldToGridPosition(ray.GetPoint(0))}";
+        } 
+    }
 
     public abstract void OnGUI();
 
@@ -22,9 +33,12 @@ public abstract class BlockGridBrush
         GUILayout.Space(10);
     }
 
-    protected void DefaultErase(LevelManager levelManager)
+    protected void DefaultErase()
     {
-        Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-        levelManager.TryDestroyBlockByPosition(levelManager.BlockGridSettings.WorldToGridPosition(ray.GetPoint(0)));
+        if (_levelManager != null)
+        {
+            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+            _levelManager.TryDestroyBlockByPosition(_levelManager.BlockGridSettings.WorldToGridPosition(ray.GetPoint(0)));
+        }
     }
 }
