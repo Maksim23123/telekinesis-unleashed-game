@@ -30,17 +30,17 @@ public class PathPlanner : MonoBehaviour
                 unionCandidats.AddRange(connectionLayer[j]);
                 if (j == 0)
                 {
-                    enterancesKnot = CreateTriplet(TripletPlacement.Above, ref unionCandidats);
+                    enterancesKnot = CreateTriplets(TripletPlacement.Above, ref unionCandidats);
                 }
                 else
                 {
-                    exitsKnot = CreateTriplet(TripletPlacement.Bellow, ref unionCandidats);
+                    exitsKnot = CreateTriplets(TripletPlacement.Bellow, ref unionCandidats);
                 }
             }
             unionCandidats.Clear();
             unionCandidats.Add(enterancesKnot);
             unionCandidats.Add(exitsKnot);
-            CreateTriplet(TripletPlacement.Above, ref unionCandidats);
+            CreateTriplets(TripletPlacement.Above, ref unionCandidats);
         }
         return _idRegister;
     }
@@ -53,7 +53,7 @@ public class PathPlanner : MonoBehaviour
         return pathUnit;
     }
 
-    private PathUnit CreateTriplet(TripletPlacement tripletPlacement, ref List<PathUnit> unionCandidats)
+    private PathUnit CreateTriplets(TripletPlacement tripletPlacement, ref List<PathUnit> unionCandidats)
     {
         PathUnit knotPoint = null;
         do
@@ -71,7 +71,7 @@ public class PathPlanner : MonoBehaviour
                 {
                     Triplet currentTriplet = new Triplet();
                     Orientation tripletOrientation;
-                    if (i + 1 > unionCandidatsCopy.Count / 2)
+                    if (0.5 > Random.value)
                     {
                         tripletOrientation = Orientation.Left;
                     }

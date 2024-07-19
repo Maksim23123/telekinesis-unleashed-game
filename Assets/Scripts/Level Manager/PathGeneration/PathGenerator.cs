@@ -79,7 +79,7 @@ public class PathGenerator : MonoBehaviour
 
                 InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
 
-                // Suposed to be removed before commit
+                // Suposed to be removed before final commit
                 /**/
 
                 string resume = string.Empty;
