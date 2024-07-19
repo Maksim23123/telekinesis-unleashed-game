@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-
-// TODO: finish updating
 public class BlockStructure : MonoBehaviour
 {
     [Header("Initialization")]
@@ -19,11 +15,8 @@ public class BlockStructure : MonoBehaviour
     [SerializeField] private List<Vector2> _relativeEnterancePositions;
     [SerializeField] private Vector2 _relativeExitPosition;
 
-
     private readonly Vector2 STANDART_CENTER_BIAS = new Vector2(0.5f, 0.5f);
 
-    private Vector2Int _capturedZoneInBlockGridStart;
-    private Vector2Int _capturedZoneInBlockGridEnd;
     private List<Connection> _enteranceConnections = new();
     private Connection _exitConnection;
 
@@ -60,7 +53,6 @@ public class BlockStructure : MonoBehaviour
         }
 #endif
     }
-
 
     public void InitInGridParams(BlockGridSettings blockGridSettings)
     {
@@ -133,6 +125,7 @@ public class BlockStructure : MonoBehaviour
 
         if (structureGameObjectInstance.TryGetComponent(out BlockStructure blockStructure))
         {
+            blockStructure.InitInGridParams(levelManager.BlockGridSettings);
 
             levelManager.FillRectWithPlaceholders(structureCenterGridPosition + blockStructure.CapturedZoneInBlockGridStart
                 , structureCenterGridPosition + blockStructure.CapturedZoneInBlockGridEnd);

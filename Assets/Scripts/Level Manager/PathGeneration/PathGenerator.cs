@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-// TODO: finish updating
 [RequireComponent(typeof(LevelManager))]
 public class PathGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject _tripletRightOut;
     [SerializeField] private GameObject _tripletLeftOut;
-    [SerializeField] private Vector2 _startPosition, _endPosition; // Make local if it suitable solution
+    [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField][HideInInspector] private List<Triplet> _instantiatedTriplets = new();
 
     private LevelManager _levelManager;
@@ -79,8 +78,7 @@ public class PathGenerator : MonoBehaviour
 
                 InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
 
-                // Suposed to be removed before final commit
-                /**/
+
 
                 string resume = string.Empty;
 
@@ -88,23 +86,14 @@ public class PathGenerator : MonoBehaviour
                 resume += "Position: " + _levelManager.BlockGridSettings
                     .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
 
-                // resume += "First connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])) + " | ";
-                // resume += "Second connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])) + " | ";
+                resume += "First connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])) + " | ";
+                resume += "Second connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])) + " | ";
 
-                resume += "First connection id: " + currentTriplet.BackConnections[0] + " | ";
-                resume += "Second connection id: " + currentTriplet.BackConnections[1] + " | ";
+
 
                 Debug.Log(resume);
 
-                /*/
-                if (emergencyStopCounter == 13)
-                {
-                    Debug.Log(currentTripletIsBackConnection);
-                    Debug.Log(ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])));
-                    Debug.Log(ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])));
-                    Debug.Log(_levelManager.BlockGridSettings.WorldToGridPosition(currentTriplet.GameObject.transform.position));
-                }
-                /**/
+
             }
 
             if (emergencyStopCounter >= 10000)
@@ -114,10 +103,6 @@ public class PathGenerator : MonoBehaviour
             }
         }
         while (currentTriplet != null);
-        
-        
-
-        // build paths between Triplets
     }
 
     private void InstantiateTriplet(ref Triplet triplet, Vector2Int position)
@@ -184,11 +169,8 @@ public class PathGenerator : MonoBehaviour
             .FirstOrDefault();
     }
 
-
-    // Update method so it uses parameters of start/end position instead of fields
     private void GenerateSmartWay(Vector2Int startPositionInGrid, Vector2Int endPositionInGrid)
     {
-        
         if (_smartPath == null)
         {
             _smartPath = new SmartPath(_levelManager);
