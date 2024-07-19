@@ -78,6 +78,33 @@ public class PathGenerator : MonoBehaviour
                 }
 
                 InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
+
+                // Suposed to be removed before commit
+                /**/
+
+                string resume = string.Empty;
+
+                resume += "ID: " + currentTriplet.Id + " | ";
+                resume += "Position: " + _levelManager.BlockGridSettings
+                    .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
+
+                // resume += "First connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])) + " | ";
+                // resume += "Second connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])) + " | ";
+
+                resume += "First connection id: " + currentTriplet.BackConnections[0] + " | ";
+                resume += "Second connection id: " + currentTriplet.BackConnections[1] + " | ";
+
+                Debug.Log(resume);
+
+                /*/
+                if (emergencyStopCounter == 13)
+                {
+                    Debug.Log(currentTripletIsBackConnection);
+                    Debug.Log(ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])));
+                    Debug.Log(ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])));
+                    Debug.Log(_levelManager.BlockGridSettings.WorldToGridPosition(currentTriplet.GameObject.transform.position));
+                }
+                /**/
             }
 
             if (emergencyStopCounter >= 10000)

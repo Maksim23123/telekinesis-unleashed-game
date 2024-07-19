@@ -45,17 +45,17 @@ public class RoomGenerator : MonoBehaviour
                     + new Vector2Int(_horizontalOffset, 0), roomInfo.RoomObjectPrefab);
                 if (i > 0 && i < _roomLevels.Count - 1)
                 {
-                    currentConnectionLayer[1].Add(ExtractEnterance(currentRoomData));
-                    nextConnectionLayer[0].Add(ExtractExit(currentRoomData));
+                    currentConnectionLayer[0].Add(ExtractEnterance(currentRoomData));
+                    nextConnectionLayer[1].Add(ExtractExit(currentRoomData));
                 }
                 else if (i == 0)
                 {
                     currentConnectionLayer = null;
-                    nextConnectionLayer[0].Add(ExtractExit(currentRoomData));
+                    nextConnectionLayer[1].Add(ExtractExit(currentRoomData));
                 }
                 else if (i == _roomLevels.Count - 1) 
                 {
-                    currentConnectionLayer[1].Add(ExtractEnterance(currentRoomData));
+                    currentConnectionLayer[0].Add(ExtractEnterance(currentRoomData));
                 }
             }
             if (currentConnectionLayer != null)
