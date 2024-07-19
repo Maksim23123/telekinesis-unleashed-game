@@ -104,7 +104,14 @@ public class BlockStructure : MonoBehaviour
         _exitConnection = new Connection();
         _exitConnection.RelativePositionInBlockGrid
             = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeExitPosition);
-        _exitConnection.Orientation = Orientation.Left;
+        if (_exitConnection.RelativePositionInBlockGrid.x > 0)
+        {
+            _exitConnection.Orientation = Orientation.Right;
+        }
+        else
+        {
+            _exitConnection.Orientation = Orientation.Left;
+        }
         _exitConnection.ConnectionType = ConnectionType.Exit;
     }
 

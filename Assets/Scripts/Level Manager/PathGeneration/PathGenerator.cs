@@ -89,11 +89,7 @@ public class PathGenerator : MonoBehaviour
                 resume += "First connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])) + " | ";
                 resume += "Second connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])) + " | ";
 
-
-
                 Debug.Log(resume);
-
-
             }
 
             if (emergencyStopCounter >= 10000)
