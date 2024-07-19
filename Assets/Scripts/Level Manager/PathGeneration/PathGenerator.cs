@@ -77,7 +77,7 @@ public class PathGenerator : MonoBehaviour
                     verticalPosition = lowestBackConnectionPosition - verticalPositionBelowOffset - verticalPositionOffset;
                 }
 
-                InstantiateTriplet(currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
+                InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
             }
 
             if (emergencyStopCounter >= 10000)
@@ -93,7 +93,7 @@ public class PathGenerator : MonoBehaviour
         // build paths between Triplets
     }
 
-    private void InstantiateTriplet(Triplet triplet, Vector2Int position)
+    private void InstantiateTriplet(ref Triplet triplet, Vector2Int position)
     {
         GameObject tripletPrefab = null;
         if (triplet.Orientation == Orientation.Right)
@@ -102,7 +102,7 @@ public class PathGenerator : MonoBehaviour
         }
         else if (triplet.Orientation == Orientation.Left)
         {
-            tripletPrefab = _tripletRightOut;
+            tripletPrefab = _tripletLeftOut;
         }
 
         if (tripletPrefab != null)
@@ -121,12 +121,8 @@ public class PathGenerator : MonoBehaviour
         }
         else if (x is Triplet)
         {
-            GameObject currentTripletObject = ((Triplet)x).GameObject;
-            if (currentTripletObject == null)
-            {
-                Debug.Log("Excuse me what?");
-            }
-            BlockStructure blockStructure = currentTripletObject.GetComponent<BlockStructure>();
+            Triplet currentTriplet = (Triplet)GetById(_instantiatedTriplets, x.Id);
+            BlockStructure blockStructure = currentTriplet.GameObject.GetComponent<BlockStructure>();
             return blockStructure.ExitConnection.GetConnectionPoint(BlockGridSettings);
         }
         else
@@ -142,9 +138,9 @@ public class PathGenerator : MonoBehaviour
             Triplet tempTriplet = (Triplet)pathUnit;
             foreach (int connectionId in tempTriplet.BackConnections)
             {
-                bool currentBackConnectionIsntPathEnd = !(GetById(pathPlan, connectionId) is PathEnd);
+                bool currentBackConnectionIsPathEnd = (GetById(pathPlan, connectionId) is PathEnd);
                 bool currentBackConnectionWasntInstantiated = GetById(_instantiatedTriplets, connectionId) == null;
-                if (currentBackConnectionIsntPathEnd && currentBackConnectionWasntInstantiated)
+                if (!currentBackConnectionIsPathEnd && currentBackConnectionWasntInstantiated)
                 {
                     return false;
                 }

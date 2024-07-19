@@ -38,15 +38,15 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void InstantiateCustomBlock(BlockInfoHolder blockInfoHolder, Vector2Int position, bool force = false)
+    public GameObject InstantiateCustomBlock(BlockInfoHolder blockInfoHolder, Vector2Int position, bool force = false)
     {
         if (force)
         {
-            InstantiateOrReplaceBlock(position, blockInfoHolder);
+            return InstantiateOrReplaceBlock(position, blockInfoHolder);
         }
         else
         {
-            InstantiateBlock(position, blockInfoHolder);
+            return InstantiateBlock(position, blockInfoHolder);
         }
     }
 
@@ -97,7 +97,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Trying to add block in a filled cell.");
+            Debug.LogWarning("Trying to add block in a filled cell: " + position);
             return null;
         }
     }
