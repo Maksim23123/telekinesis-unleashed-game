@@ -23,6 +23,7 @@ public class PathGenerator : MonoBehaviour
     {
         Initialize();
         InstantiateTriplets(pathPlan);
+        ShowTripletsResume(pathPlan);
     }
 
     private void InstantiateTriplets(HashSet<PathUnit> pathPlan)
@@ -83,19 +84,6 @@ public class PathGenerator : MonoBehaviour
                 }
 
                 InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
-
-
-
-                string resume = string.Empty;
-
-                resume += "ID: " + currentTriplet.Id + " | ";
-                resume += "Position: " + _levelManager.BlockGridSettings
-                    .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
-
-                resume += "First connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])) + " | ";
-                resume += "Second connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])) + " | ";
-
-                Debug.Log(resume);
             }
 
             if (emergencyStopCounter >= 10000)
@@ -105,6 +93,24 @@ public class PathGenerator : MonoBehaviour
             }
         }
         while (currentTriplet != null);
+    }
+
+    private void ShowTripletsResume(HashSet<PathUnit> pathPlan)
+    {
+        foreach (PathUnit triplet in _instantiatedTriplets)
+        {
+            Triplet currentTriplet = triplet as Triplet;
+            string resume = string.Empty;
+
+            resume += "ID: " + currentTriplet.Id + " | ";
+            resume += "Position: " + _levelManager.BlockGridSettings
+                .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
+
+            resume += "First connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[0])) + " | ";
+            resume += "Second connection point: " + ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[1])) + " | ";
+
+            Debug.Log(resume);
+        }
     }
 
     private void InstantiateTriplet(ref Triplet triplet, Vector2Int position)
