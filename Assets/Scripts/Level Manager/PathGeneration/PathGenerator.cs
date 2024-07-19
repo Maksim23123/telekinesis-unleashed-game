@@ -10,6 +10,10 @@ public class PathGenerator : MonoBehaviour
     [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField][HideInInspector] private List<Triplet> _instantiatedTriplets = new();
 
+    const int VERTICAL_POSITION_OFFSET = 3;
+    const int VERTICAL_POSITION_ABOVE_OFFSET = 0;
+    const int VERTICAL_POSITION_BELOW_OFFSET = 1;
+
     private LevelManager _levelManager;
     private SmartPath _smartPath;
 
@@ -18,7 +22,11 @@ public class PathGenerator : MonoBehaviour
     public void GeneratePaths(HashSet<PathUnit> pathPlan)
     {
         Initialize();
+        InstantiateTriplets(pathPlan);
+    }
 
+    private void InstantiateTriplets(HashSet<PathUnit> pathPlan)
+    {
         if (_tripletRightOut == null || _tripletLeftOut == null)
         {
             Debug.LogError("Triplet prefabs weren't assigned.");
@@ -32,8 +40,8 @@ public class PathGenerator : MonoBehaviour
         do
         {
             emergencyStopCounter++;
-            currentTriplet = pathPlan.Where(x => 
-                    CheckIfTripletHasAllBackConnectionsInstantiated(pathPlan, x) && !_instantiatedTriplets.Any(g => g.Id ==  x.Id)) 
+            currentTriplet = pathPlan.Where(x =>
+                    CheckIfTripletHasAllBackConnectionsInstantiated(pathPlan, x) && !_instantiatedTriplets.Any(g => g.Id == x.Id))
                 .Select(x => (Triplet)x)
                 .FirstOrDefault();
 
@@ -46,20 +54,18 @@ public class PathGenerator : MonoBehaviour
 
                 int horizontalPosition = backConnectionPositions.Sum(g => g.x) / backConnectionPositions.Length;
 
-                const int verticalPositionOffset = 3;
-                const int verticalPositionAboveOffset = 0;
-                const int verticalPositionBelowOffset = 1;
+
                 int verticalPosition;
 
                 bool currentTripletIsBackConnection = pathPlan.Any(x =>
+                {
+                    if (x is Triplet)
                     {
-                        if (x is Triplet)
-                        {
-                            Triplet tempTriplet = (Triplet)x;
-                            return tempTriplet.BackConnections.Contains(currentTriplet.Id);
-                        }
-                        return false;
-                    });
+                        Triplet tempTriplet = (Triplet)x;
+                        return tempTriplet.BackConnections.Contains(currentTriplet.Id);
+                    }
+                    return false;
+                });
 
                 if (!currentTripletIsBackConnection)
                 {
@@ -68,12 +74,12 @@ public class PathGenerator : MonoBehaviour
                 else if (currentTriplet.placement == TripletPlacement.Above)
                 {
                     int highestBackConnectionPosition = backConnectionPositions.Max(g => g.y);
-                    verticalPosition = highestBackConnectionPosition + verticalPositionAboveOffset + verticalPositionOffset;
+                    verticalPosition = highestBackConnectionPosition + VERTICAL_POSITION_ABOVE_OFFSET + VERTICAL_POSITION_OFFSET;
                 }
                 else
                 {
                     int lowestBackConnectionPosition = backConnectionPositions.Min(g => g.y);
-                    verticalPosition = lowestBackConnectionPosition - verticalPositionBelowOffset - verticalPositionOffset;
+                    verticalPosition = lowestBackConnectionPosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
                 }
 
                 InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
