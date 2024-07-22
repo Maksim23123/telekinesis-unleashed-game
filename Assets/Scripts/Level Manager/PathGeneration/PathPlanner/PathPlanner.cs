@@ -59,14 +59,15 @@ public class PathPlanner : MonoBehaviour
         do
         {
             List<PathUnit> unionCandidatsCopy = unionCandidats.ToList();
-            for (int i = 0; i < unionCandidats.Count; i += 2)
+            for (int i = 0; i < unionCandidatsCopy.Count; i += 2)
             {
-                PathUnit fCurrentPoint = unionCandidats[i];
+                PathUnit fCurrentPoint = unionCandidatsCopy[i];
                 PathUnit sCurrentPoint = null;
-                if (i + 1 < unionCandidats.Count)
+                if (i + 1 < unionCandidatsCopy.Count)
                 {
-                    sCurrentPoint = unionCandidats[i + 1];
+                    sCurrentPoint = unionCandidatsCopy[i + 1];
                 }
+
                 if (sCurrentPoint != null)
                 {
                     Triplet currentTriplet = new Triplet();
@@ -103,6 +104,8 @@ public class PathPlanner : MonoBehaviour
                 }
                 else
                 {
+                    unionCandidats.Remove(fCurrentPoint);
+                    unionCandidats.Add(fCurrentPoint);
                     knotPoint = fCurrentPoint;
                 }
             }

@@ -22,7 +22,7 @@ public class PathPlannerTest
             List<PathEnd> enterances = new List<PathEnd>();
             List<PathEnd> exits = new List<PathEnd>();
             FillWithPathEnds(ref exits);
-            FillWithPathEnds(ref enterances);
+            FillWithPathEnds(ref enterances, 7);
             List<List<PathUnit>[]> connectionLayers = new();
             List<PathUnit>[] connectionLayer = { exits.ToList<PathUnit>(), enterances.ToList<PathUnit>() };
             connectionLayers.Add(connectionLayer);
@@ -43,12 +43,10 @@ public class PathPlannerTest
         }
     }
 
-    public void FillWithPathEnds(ref List<PathEnd> pathEnds)
+    public void FillWithPathEnds(ref List<PathEnd> pathEnds, int pathEndsCount = 3)
     {
-        const int basePathEndsCount = 3;
-
         pathEnds.Clear();
-        for (int i = 0; i < basePathEndsCount; i++)
+        for (int i = 0; i < pathEndsCount; i++)
         {
             pathEnds.Add(new PathEnd());
         }
