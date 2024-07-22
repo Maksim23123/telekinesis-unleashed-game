@@ -50,27 +50,32 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void FillRect(Vector2Int startGridPosition, Vector2Int endGridPosition, BlockInfoHolder blockInfoHolder, bool force = false)
+    {
+        Vector2Int fillAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
+        Vector2Int signs = new Vector2Int(fillAreaSizes.x < 0 ? -1 : 1, fillAreaSizes.y < 0 ? -1 : 1); // Extract vector direction. Values on both axis from 1 to -1
+        fillAreaSizes += signs; // Corect each axis of vector by 1 or -1
+        for (int i = 0; i < Mathf.Abs(fillAreaSizes.x); i++)
+        {
+            for (int j = 0; j < Mathf.Abs(fillAreaSizes.y); j++)
+            {
+                Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
+                if (force)
+                {
+                    InstantiateOrReplaceBlock(currentBlockPossition, blockInfoHolder);
+                }
+                else if (!TryGetBlockInfoByPosition(currentBlockPossition, out var _))
+                {
+                    InstantiateBlock(currentBlockPossition, blockInfoHolder);
+                }
+            }
+        }
+    }
+
     public void FillRectWithPlaceholders(Vector2Int startGridPosition, Vector2Int endGridPosition, bool force = false)
     {
         if (TryGetSuitableBlock(false, false, false, false, out BlockInfoHolder placeholder)) {
-            Vector2Int fillAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
-            Vector2Int signs = new Vector2Int(fillAreaSizes.x < 0 ? -1 : 1, fillAreaSizes.y < 0 ? -1 : 1); // Extract vector direction. Values on both axis from 1 to -1
-            fillAreaSizes += signs; // Corect each axis of vector by 1 or -1
-            for (int i = 0; i < Mathf.Abs(fillAreaSizes.x); i++)
-            {
-                for (int j = 0; j < Mathf.Abs(fillAreaSizes.y); j++)
-                {
-                    Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
-                    if (force)
-                    {
-                        InstantiateOrReplaceBlock(currentBlockPossition, placeholder);
-                    }
-                    else if (!TryGetBlockInfoByPosition(currentBlockPossition, out var _))
-                    {
-                        InstantiateBlock(currentBlockPossition, placeholder);
-                    }
-                }
-            }
+            FillRect(startGridPosition, endGridPosition, placeholder, force);
         }
         else
         {
@@ -88,6 +93,7 @@ public class LevelManager : MonoBehaviour
 
             BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(currentBlock, position);
             newBlockInfoHolder.SetConnections(blockInfo.GetConnections());
+            newBlockInfoHolder.Tags = blockInfo.Tags;
             newBlockInfoHolder.IsLadderNeighbor = ladderNeighbor;
 
             newBlockInfoHolder.Generation = generation;
@@ -118,6 +124,18 @@ public class LevelManager : MonoBehaviour
         blockInfoHolder = null;
         List<BlockInfoHolder> suitableBlocks = _blocksInfo.Where(x => x.UpConnected == up
             && x.DownConnected == down && x.LeftConnected == left && x.RightConnected == right && x.DeadEnd == deadEnd).ToList();
+        if (suitableBlocks.Count > 0)
+        {
+            blockInfoHolder = suitableBlocks.First();
+            return true;
+        }
+        return false;
+    }
+
+    public bool TryGetSuitableBlock(string tag, out BlockInfoHolder blockInfoHolder, bool deadEnd = false)
+    {
+        blockInfoHolder = null;
+        List<BlockInfoHolder> suitableBlocks = _blocksInfo.Where(x => x.Tags.Contains(tag)).ToList();
         if (suitableBlocks.Count > 0)
         {
             blockInfoHolder = suitableBlocks.First();

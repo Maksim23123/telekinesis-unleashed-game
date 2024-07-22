@@ -10,7 +10,7 @@ public class PathGenerator : MonoBehaviour
     [SerializeField] private Vector2 _startPosition, _endPosition;
     [SerializeField][HideInInspector] private List<Triplet> _instantiatedTriplets = new();
 
-    const int VERTICAL_POSITION_OFFSET = 3;
+    const int VERTICAL_POSITION_OFFSET = 4;
     const int VERTICAL_POSITION_ABOVE_OFFSET = 0;
     const int VERTICAL_POSITION_BELOW_OFFSET = 1;
 
@@ -19,11 +19,137 @@ public class PathGenerator : MonoBehaviour
 
     public BlockGridSettings BlockGridSettings { get => _levelManager.BlockGridSettings; }
 
-    public void GeneratePaths(HashSet<PathUnit> pathPlan)
+    public void GeneratePaths(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
     {
         Initialize();
         InstantiateTriplets(pathPlan);
-        ShowTripletsResume(pathPlan);
+        List<List<PathUnit>> roomConnectionLayers = GetRoomConnectionLayers(roomStructure);
+        List<PathUnit[]> pairedRoomConnections = PairRoomConnections(roomConnectionLayers);
+        for (int i = 0; i < pairedRoomConnections.Count; i++)
+        {
+            BuildRestraintsBetweenRoomConnectionPair(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray());
+        }
+    }
+
+    private List<PathUnit[]> PairRoomConnections(List<List<PathUnit>> roomConnectionLayers)
+    {
+        List<PathUnit[]> pairedRoomConnections = new();
+
+        foreach (List<PathUnit> roomConnectionLayer in roomConnectionLayers)
+        {
+            if (roomConnectionLayer.Count > 2)
+            {
+                List<PathEnd> orderedRoomConnections = roomConnectionLayer
+                    .OrderBy(g =>
+                    {
+                        if (g is PathEnd pathEnd)
+                        {
+                            return pathEnd.Connection.GetConnectionPoint(BlockGridSettings).x;
+                        }
+                        return 0;
+                    })
+                    .Select(g => g as PathEnd)
+                    .ToList();
+
+                List<PathUnit[]> roomConnectionPairs = new();
+
+                for (int i = 1; i < orderedRoomConnections.Count - 1; i += 2)
+                {
+                    PathUnit[] roomConnectionPair = new PathUnit[2];
+
+                    roomConnectionPair[0] = orderedRoomConnections[i];
+
+                    if (i + 1 < orderedRoomConnections.Count)
+                    {
+                        roomConnectionPair[1] = orderedRoomConnections[i + 1];
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                    roomConnectionPairs.Add(roomConnectionPair);
+                }
+
+                pairedRoomConnections.AddRange(roomConnectionPairs);
+            }
+        }
+
+        return pairedRoomConnections;
+    }
+
+    private void BuildRestraintsBetweenRoomConnectionPair(PathEnd[] pathEndsPair)
+    {
+        if (pathEndsPair.Length == 2 
+                && _levelManager.TryGetSuitableBlock("Restreint", out BlockInfoHolder restraint))
+        {
+            Vector2Int firstPoint = pathEndsPair[0].Connection.GetConnectionPoint(BlockGridSettings);
+            Vector2Int secondPoint = pathEndsPair[1].Connection.GetConnectionPoint(BlockGridSettings);
+
+            int horizontalPosition = (firstPoint.x + secondPoint.x) / 2;
+            BuildVerticalRestreint(restraint, firstPoint, secondPoint, horizontalPosition);
+            BuildHorizontalRestreints(pathEndsPair, restraint, horizontalPosition);
+        }
+    }
+
+    private void BuildHorizontalRestreints(PathEnd[] pathEndsPair, BlockInfoHolder restraint, int horizontalPosition)
+    {
+        foreach (Connection connection in pathEndsPair.Select(g => g.Connection))
+        {
+            Vector2Int connectionPoint = connection.GetConnectionPoint(BlockGridSettings);
+            int verticalPosition = connectionPoint.y;
+            if (connection.ConnectionType == ConnectionType.Exit)
+            {
+                verticalPosition--;
+            }
+            else
+            {
+                verticalPosition++;
+            }
+
+            int horizontalStartPosition = connectionPoint.x;
+            int horizontalEndPosition = horizontalPosition;
+
+            _levelManager.FillRect(new Vector2Int(horizontalStartPosition, verticalPosition)
+                , new Vector2Int(horizontalEndPosition, verticalPosition), restraint);
+        }
+    }
+
+    private void BuildVerticalRestreint(BlockInfoHolder restraint, Vector2Int firstPoint
+            , Vector2Int secondPoint, int horizontalPosition)
+    {
+        int[] verticalPositions = new int[]
+            {
+                firstPoint.y,
+                secondPoint.y
+            };
+
+        int startVerticalPosition = verticalPositions.Max();
+        int endVerticalPosition = verticalPositions.Min();
+
+        _levelManager.FillRect(new Vector2Int(horizontalPosition, startVerticalPosition)
+            , new Vector2Int(horizontalPosition, endVerticalPosition), restraint);
+    }
+
+    private static List<List<PathUnit>> GetRoomConnectionLayers(List<List<PathUnit>[]> roomStructure)
+    {
+        List<List<PathUnit>> roomConnectionLayers = new();
+
+        for (int i = 0; i < roomStructure.Count - 1; i++)
+        {
+            List<PathUnit> connectionLayer = new();
+
+            connectionLayer.AddRange(roomStructure[i][0]);
+
+            if (i + 1 < roomStructure.Count)
+            {
+                connectionLayer.AddRange(roomStructure[i + 1][1]);
+            }
+
+            roomConnectionLayers.Add(connectionLayer);
+        }
+
+        return roomConnectionLayers;
     }
 
     private void InstantiateTriplets(HashSet<PathUnit> pathPlan)

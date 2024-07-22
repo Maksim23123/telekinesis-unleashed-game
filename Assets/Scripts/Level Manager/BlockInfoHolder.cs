@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
 public class BlockInfoHolder
 {
     [SerializeField]
-    string _name;
+    private string _name;
     [SerializeField]
     GameObject _block;
     [SerializeField]
-    bool _upConnected, _downConnected, _rightConnected, _leftConnected, _deadEnd;
+    private bool _upConnected, _downConnected, _rightConnected, _leftConnected, _deadEnd;
+    [SerializeField]
+    private List<string> _tags;
 
     [HideInInspector]
     [SerializeField]
@@ -44,6 +47,7 @@ public class BlockInfoHolder
     public int Generation { get => _generation; set => _generation = value; }
     public bool DeadEnd { get => _deadEnd; set => _deadEnd = value; }
     public string Name { get => _name;}
+    public List<string> Tags { get => _tags; set => _tags = value; }
 
     /// <summary>
     /// Returns information about connections of a block in form of 
