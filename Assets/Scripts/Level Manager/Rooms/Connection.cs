@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using UnityEditor;
 using UnityEngine;
 
 public class Connection
@@ -12,6 +14,10 @@ public class Connection
 
     public GameObject GameObject { get; set; }
 
+    public Vector2Int SealedZoneStart { get; private set; }
+
+    public Vector2Int SealedZoneEnd { get; private set; }
+
     public Vector2Int GetConnectionPoint(BlockGridSettings blockGridSettings)
     {
         if (Orientation == Orientation.Left)
@@ -21,6 +27,31 @@ public class Connection
         }
         return blockGridSettings.WorldToGridPosition(GameObject.transform.position) 
             + Vector2Int.right * blockGridSettings.HorizontalExpandDirectionFactor * -1;
+    }
+
+    public void InitSealedAreaParameters(BlockGridSettings blockGridSettings, Placement expandDirection)
+    {
+        SealedZoneStart = GetConnectionPoint(blockGridSettings);
+        
+        Vector2Int sealedZoneEndOffset = Vector2Int.zero;
+        if (Orientation == Orientation.Right)
+        {
+            sealedZoneEndOffset += Vector2Int.left * blockGridSettings.HorizontalExpandDirectionFactor;
+        }
+        else
+        {
+            sealedZoneEndOffset += Vector2Int.right * blockGridSettings.HorizontalExpandDirectionFactor;
+        }
+
+        if (expandDirection == Placement.Above)
+        {
+            sealedZoneEndOffset += Vector2Int.up;
+        }
+        else
+        {
+            sealedZoneEndOffset += Vector2Int.down;
+        }
+        SealedZoneEnd = SealedZoneStart + sealedZoneEndOffset;
     }
 }
 

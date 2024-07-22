@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(LevelManager))]
 public class PathGenerator : MonoBehaviour
@@ -8,12 +9,12 @@ public class PathGenerator : MonoBehaviour
     [SerializeField] private GameObject _tripletRightOut;
     [SerializeField] private GameObject _tripletLeftOut;
     [SerializeField] private Vector2 _startPosition, _endPosition;
-    [SerializeField][HideInInspector] private List<Triplet> _instantiatedTriplets = new();
 
     const int VERTICAL_POSITION_OFFSET = 4;
     const int VERTICAL_POSITION_ABOVE_OFFSET = 0;
     const int VERTICAL_POSITION_BELOW_OFFSET = 1;
 
+    private List<Triplet> _instantiatedTriplets = new();
     private LevelManager _levelManager;
     private SmartPath _smartPath;
 
@@ -28,6 +29,25 @@ public class PathGenerator : MonoBehaviour
         for (int i = 0; i < pairedRoomConnections.Count; i++)
         {
             BuildRestraintsBetweenRoomConnectionPair(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray());
+        }
+        SealTripletsEnterences(_instantiatedTriplets);
+    }
+
+    private void SealTripletsEnterences(List<Triplet> triplets)
+    {
+        foreach (Triplet triplet in triplets)
+        {
+            if (triplet.GameObject.TryGetComponent(out BlockStructure tripletBlockStructure) 
+                    && _levelManager.TryGetSuitableBlock(/* Make const of it -> */"Restreint", out BlockInfoHolder restreint))
+            {
+                Connection firstConnection = tripletBlockStructure.EnteranceConnections[0];
+                firstConnection.InitSealedAreaParameters(BlockGridSettings, Placement.Bellow);
+                _levelManager.FillRect(firstConnection.SealedZoneStart, firstConnection.SealedZoneEnd, restreint);
+
+                Connection secondConnection = tripletBlockStructure.EnteranceConnections[1];
+                secondConnection.InitSealedAreaParameters(BlockGridSettings, Placement.Above);
+                _levelManager.FillRect(secondConnection.SealedZoneStart, secondConnection.SealedZoneEnd, restreint);
+            }
         }
     }
 
@@ -198,7 +218,7 @@ public class PathGenerator : MonoBehaviour
                 {
                     verticalPosition = backConnectionPositions.Sum(g => g.y) / backConnectionPositions.Length;
                 }
-                else if (currentTriplet.placement == TripletPlacement.Above)
+                else if (currentTriplet.placement == Placement.Above)
                 {
                     int highestBackConnectionPosition = backConnectionPositions.Max(g => g.y);
                     verticalPosition = highestBackConnectionPosition + VERTICAL_POSITION_ABOVE_OFFSET + VERTICAL_POSITION_OFFSET;
