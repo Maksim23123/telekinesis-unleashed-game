@@ -16,7 +16,9 @@ public class Connection
 
     public Vector2Int SealedZoneStart { get; private set; }
 
-    public Vector2Int SealedZoneEnd { get; private set; }
+    public Vector2Int SealedZoneEnd { get; private set; } 
+
+    public bool SealedZoneParametersInitialized { get; private set; } = false;
 
     public Vector2Int GetConnectionPoint(BlockGridSettings blockGridSettings)
     {
@@ -31,6 +33,8 @@ public class Connection
 
     public void InitSealedAreaParameters(BlockGridSettings blockGridSettings, Placement expandDirection)
     {
+        SealedZoneParametersInitialized = true;
+
         SealedZoneStart = GetConnectionPoint(blockGridSettings);
         
         Vector2Int sealedZoneEndOffset = Vector2Int.zero;

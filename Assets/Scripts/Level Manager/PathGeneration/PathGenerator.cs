@@ -24,6 +24,7 @@ public class PathGenerator : MonoBehaviour
     {
         Initialize();
         InstantiateTriplets(pathPlan);
+        ShowTripletsResume(pathPlan);
         List<List<PathUnit>> roomConnectionLayers = GetRoomConnectionLayers(roomStructure);
         List<PathUnit[]> pairedRoomConnections = PairRoomConnections(roomConnectionLayers);
         for (int i = 0; i < pairedRoomConnections.Count; i++)
@@ -31,6 +32,27 @@ public class PathGenerator : MonoBehaviour
             BuildRestraintsBetweenRoomConnectionPair(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray());
         }
         SealTripletsEnterences(_instantiatedTriplets);
+        BuildPathsBetweenConnectionPoints(_instantiatedTriplets, pathPlan);
+    }
+
+    private void BuildPathsBetweenConnectionPoints(List<Triplet> triplets, HashSet<PathUnit> pathPlan)
+    {
+        foreach (Triplet currentTriplet in triplets)
+        {
+            if (currentTriplet.GameObject.TryGetComponent(out BlockStructure tripletBlockStructure))
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Connection currentConnection = tripletBlockStructure.EnteranceConnections[i];
+                    Vector2Int destinationPoint = ExtractConnectionPointPosition(GetById(pathPlan, currentTriplet.BackConnections[i]));
+                    if (currentConnection.SealedZoneParametersInitialized)
+                    {
+                        _levelManager.DestroyBlocksInArea(currentConnection.SealedZoneStart, currentConnection.SealedZoneEnd);
+                    }
+                    GenerateSmartWay(currentConnection.GetConnectionPoint(BlockGridSettings), destinationPoint);
+                }
+            }
+        }
     }
 
     private void SealTripletsEnterences(List<Triplet> triplets)

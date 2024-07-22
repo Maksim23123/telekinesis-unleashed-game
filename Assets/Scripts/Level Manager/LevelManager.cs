@@ -50,25 +50,41 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void FillRect(Vector2Int startGridPosition, Vector2Int endGridPosition, BlockInfoHolder blockInfoHolder, bool force = false)
+    public void ExecuteForArea(Vector2Int startGridPosition, Vector2Int endGridPosition, Action<Vector2Int> action)
     {
-        Vector2Int fillAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
-        Vector2Int signs = new Vector2Int(fillAreaSizes.x < 0 ? -1 : 1, fillAreaSizes.y < 0 ? -1 : 1); // Extract vector direction. Values on both axis from 1 to -1
-        fillAreaSizes += signs; // Corect each axis of vector by 1 or -1
-        for (int i = 0; i < Mathf.Abs(fillAreaSizes.x); i++)
+        Vector2Int affectedAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
+        Vector2Int signs = new Vector2Int(affectedAreaSizes.x < 0 ? -1 : 1, affectedAreaSizes.y < 0 ? -1 : 1); // Extract vector direction. Values on both axis from 1 to -1
+        affectedAreaSizes += signs; // Corect each axis of vector by 1 or -1
+        for (int i = 0; i < Mathf.Abs(affectedAreaSizes.x); i++)
         {
-            for (int j = 0; j < Mathf.Abs(fillAreaSizes.y); j++)
+            for (int j = 0; j < Mathf.Abs(affectedAreaSizes.y); j++)
             {
                 Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
-                if (force)
-                {
-                    InstantiateOrReplaceBlock(currentBlockPossition, blockInfoHolder);
-                }
-                else if (!TryGetBlockInfoByPosition(currentBlockPossition, out var _))
-                {
-                    InstantiateBlock(currentBlockPossition, blockInfoHolder);
-                }
+                action(currentBlockPossition);
             }
+        }
+    }
+
+    public void DestroyBlocksInArea(Vector2Int startGridPosition, Vector2Int endGridPosition)
+    {
+        ExecuteForArea(startGridPosition, endGridPosition, position => TryDestroyBlockByPosition(position));
+    }
+
+    public void FillRect(Vector2Int startGridPosition, Vector2Int endGridPosition, BlockInfoHolder blockInfoHolder, bool force = false)
+    {
+        if (force)
+        {
+            ExecuteForArea(startGridPosition, endGridPosition, position => InstantiateOrReplaceBlock(position, blockInfoHolder));
+        }
+        else
+        {
+            ExecuteForArea(startGridPosition, endGridPosition, position =>
+            {
+                if (!TryGetBlockInfoByPosition(position, out var _))
+                {
+                    InstantiateBlock(position, blockInfoHolder);
+                }
+            });
         }
     }
 
