@@ -38,9 +38,9 @@ public class PathPlanner : MonoBehaviour
                 }
             }
             unionCandidats.Clear();
-            unionCandidats.Add(enterancesKnot);
             unionCandidats.Add(exitsKnot);
-            CreateTriplets(Placement.Above, ref unionCandidats);
+            unionCandidats.Add(enterancesKnot);
+            CreateTriplets(Placement.Bellow, ref unionCandidats, isKnot:true);
         }
         return _idRegister;
     }
@@ -53,7 +53,7 @@ public class PathPlanner : MonoBehaviour
         return pathUnit;
     }
 
-    private PathUnit CreateTriplets(Placement tripletPlacement, ref List<PathUnit> unionCandidats)
+    private PathUnit CreateTriplets(Placement tripletPlacement, ref List<PathUnit> unionCandidats, bool isKnot = false)
     {
         PathUnit knotPoint = null;
         do
@@ -82,12 +82,9 @@ public class PathPlanner : MonoBehaviour
                     }
                     currentTriplet.Orientation = tripletOrientation;
                     currentTriplet.placement = tripletPlacement;
-                    if (currentTriplet.Orientation == Orientation.Right != (currentTriplet.placement == Placement.Bellow))
+                    if (currentTriplet.Orientation == Orientation.Right != (currentTriplet.placement == Placement.Bellow) 
+                            && !isKnot)
                     {
-                        if (fCurrentPoint == null)
-                        {
-                            Debug.Log("Check");
-                        }
                         currentTriplet.BackConnections[0] = fCurrentPoint.Id;
                         currentTriplet.BackConnections[1] = sCurrentPoint.Id;
                     }
