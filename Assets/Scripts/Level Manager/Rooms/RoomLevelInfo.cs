@@ -24,9 +24,21 @@ public class RoomLevelInfo
     public int CapturedVerticalPlace { get => _capturedVerticalPlace; }
     public RoomInfo[] LevelRoomsContainer { get => _levelRoomsContainer.ToArray(); }
 
-    public void GenerateRoomLevel(GameObject[] roomsPrefabs, int verticalPos)
+    public void GenerateRoomLevel(GameObject[] roomsPrefabs, int verticalPos, int oneConnectionLayerDedicatedSpace = 4)
     {
         _levelRoomsContainer = new RoomInfo[_minRoomCount + (int)((_maxRoomCount - _minRoomCount + 1) * UnityEngine.Random.value)];
+
+        int connectionsDedicatedSpaceMultiplier = 1;
+
+        while (Mathf.Pow(2, connectionsDedicatedSpaceMultiplier) <= _levelRoomsContainer.Length)
+        {
+            connectionsDedicatedSpaceMultiplier++;
+        }
+
+        int connectionsDedicatedSpace = oneConnectionLayerDedicatedSpace * connectionsDedicatedSpaceMultiplier;
+
+        verticalPos += connectionsDedicatedSpace;
+
         List<GameObject> roomObjects = FillRoomObjects(roomsPrefabs);
         
         int maxCapturedPlaceBelow = FindMaxCapturedVerticalPlaceBelow(roomObjects);
@@ -56,6 +68,7 @@ public class RoomLevelInfo
         }
 
         _capturedVerticalPlace = FindMaxCapturedVerticalPlaceAbove(roomObjects) + maxCapturedPlaceBelow + CENTER_CAPTURED_SPACE_BIAS;
+        _capturedVerticalPlace += connectionsDedicatedSpace * 2;
     }
 
     private List<GameObject> FillRoomObjects(GameObject[] roomsPrefabs)
