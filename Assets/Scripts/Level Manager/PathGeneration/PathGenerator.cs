@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,8 +11,8 @@ public class PathGenerator : MonoBehaviour
     [SerializeField] private GameObject _tripletLeftOut;
     [SerializeField] private Vector2 _startPosition, _endPosition;
 
-    const int VERTICAL_POSITION_OFFSET = 4;
-    const int VERTICAL_POSITION_ABOVE_OFFSET = 0;
+    const int VERTICAL_POSITION_OFFSET = 3;
+    const int VERTICAL_POSITION_ABOVE_OFFSET = 1;
     const int VERTICAL_POSITION_BELOW_OFFSET = 1;
 
     private List<Triplet> _instantiatedTriplets = new();
@@ -23,7 +24,7 @@ public class PathGenerator : MonoBehaviour
     public void GeneratePaths(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
     {
         Initialize();
-        InstantiateTriplets(pathPlan);
+        InstantiateTriplets(pathPlan, roomStructure);
         ShowTripletsResume(pathPlan);
         List<List<PathUnit>> roomConnectionLayers = GetRoomConnectionLayers(roomStructure);
         List<PathUnit[]> pairedRoomConnections = PairRoomConnections(roomConnectionLayers);
@@ -194,7 +195,7 @@ public class PathGenerator : MonoBehaviour
         return roomConnectionLayers;
     }
 
-    private void InstantiateTriplets(HashSet<PathUnit> pathPlan)
+    private void InstantiateTriplets(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
     {
         if (_tripletRightOut == null || _tripletLeftOut == null)
         {
@@ -220,7 +221,6 @@ public class PathGenerator : MonoBehaviour
                     .Where(x => currentTriplet.BackConnections.Any(g => g == x.Id))
                     .Select(x => ExtractConnectionPointPosition(x))
                     .ToArray();
-
                 int horizontalPosition = backConnectionPositions.Sum(g => g.x) / backConnectionPositions.Length;
 
 
@@ -236,19 +236,45 @@ public class PathGenerator : MonoBehaviour
                     return false;
                 });
 
+
+                bool currentTripletConnectsPathEnds = false;
+
+                currentTripletConnectsPathEnds = TryGetBasePositionFromRooms(pathPlan, roomStructure, currentTriplet
+                    , out int baseVerticalPositionAccordingRooms);
+
                 if (!currentTripletIsBackConnection)
                 {
                     verticalPosition = backConnectionPositions.Sum(g => g.y) / backConnectionPositions.Length;
                 }
                 else if (currentTriplet.placement == Placement.Above)
                 {
-                    int highestBackConnectionPosition = backConnectionPositions.Max(g => g.y);
-                    verticalPosition = highestBackConnectionPosition + VERTICAL_POSITION_ABOVE_OFFSET + VERTICAL_POSITION_OFFSET;
+                    int basePosition = 0;
+                    if (currentTripletConnectsPathEnds)
+                    {
+                        basePosition = baseVerticalPositionAccordingRooms;
+                    }
+                    else
+                    {
+                        int highestBackConnectionPosition = backConnectionPositions.Max(g => g.y);
+                        basePosition = highestBackConnectionPosition;
+                    }
+
+                    verticalPosition = basePosition + VERTICAL_POSITION_ABOVE_OFFSET + VERTICAL_POSITION_OFFSET;
                 }
                 else
                 {
-                    int lowestBackConnectionPosition = backConnectionPositions.Min(g => g.y);
-                    verticalPosition = lowestBackConnectionPosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
+                    int basePosition = 0;
+                    if (currentTripletConnectsPathEnds)
+                    {
+                        basePosition = baseVerticalPositionAccordingRooms;
+                    }
+                    else
+                    {
+                        int lowestBackConnectionPosition = backConnectionPositions.Min(g => g.y);
+                        basePosition = lowestBackConnectionPosition;
+                    }
+
+                    verticalPosition = basePosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
                 }
 
                 InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
@@ -261,6 +287,44 @@ public class PathGenerator : MonoBehaviour
             }
         }
         while (currentTriplet != null);
+    }
+
+    private bool TryGetBasePositionFromRooms(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure, Triplet currentTriplet, out int baseVerticalPosition)
+    {
+        bool extractionSuccesful = false;
+        baseVerticalPosition = 0;
+
+        if (GetById(pathPlan, currentTriplet.BackConnections[0]) is PathEnd firstPahtEnd
+                && GetById(pathPlan, currentTriplet.BackConnections[1]) is PathEnd secondPahtEnd)
+        {
+            List<List<PathUnit>> connectionLayers = GetRoomConnectionLayers(roomStructure);
+            List<PathEnd> currentConnectionLayer = connectionLayers
+                .Where(x => x
+                    .Where(g => g.Id == firstPahtEnd.Id || g.Id == secondPahtEnd.Id)
+                    .FirstOrDefault() != null)
+                .FirstOrDefault()
+                .Select(x => x as PathEnd)
+                .ToList();
+
+            if (currentConnectionLayer != null)
+            {
+                int roomLayerCenter = currentConnectionLayer.First().Connection.AttachedStructure.StructureCenterGridPosition.y;
+                if (currentTriplet.placement == Placement.Above)
+                {
+                    int offsetFromRoomLayerCenter = currentConnectionLayer
+                        .Max(x => x.Connection.AttachedStructure.CapturedPlaceAboveCenter);
+                    baseVerticalPosition = roomLayerCenter + offsetFromRoomLayerCenter;
+                }
+                else if (currentTriplet.placement == Placement.Bellow)
+                {
+                    int offsetFromRoomLayerCenter = currentConnectionLayer
+                        .Max(x => x.Connection.AttachedStructure.CapturedPlaceBelowCenter);
+                    baseVerticalPosition = roomLayerCenter - offsetFromRoomLayerCenter;
+                }
+                extractionSuccesful = true;
+            }
+        }
+        return extractionSuccesful;
     }
 
     private void ShowTripletsResume(HashSet<PathUnit> pathPlan)

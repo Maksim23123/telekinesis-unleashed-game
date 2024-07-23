@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BlockStructure : MonoBehaviour
@@ -24,6 +25,35 @@ public class BlockStructure : MonoBehaviour
     public Vector2Int CapturedZoneInBlockGridEnd { get; private set; }
     public List<Connection> EnteranceConnections { get => _enteranceConnections; }
     public Connection ExitConnection { get => _exitConnection; }
+    public Vector2Int StructureCenterGridPosition { get; private set; }
+
+    public int CapturedPlaceBelowCenter 
+    { 
+        get
+        {
+            int[] capturedVerticalPlace = 
+                { 
+                    CapturedZoneInBlockGridEnd.y, 
+                    CapturedZoneInBlockGridStart.y 
+                };
+
+            return Mathf.Abs(capturedVerticalPlace.Min());
+        } 
+    }
+
+    public int CapturedPlaceAboveCenter
+    {
+        get
+        {
+            int[] capturedVerticalPlace =
+                {
+                    CapturedZoneInBlockGridEnd.y,
+                    CapturedZoneInBlockGridStart.y
+                };
+
+            return Mathf.Abs(capturedVerticalPlace.Max());
+        }
+    }
 
     /// <summary>
     /// Function for initializing and recording Structure data. Supposed to be called only in Unity Edit Mod
@@ -95,12 +125,11 @@ public class BlockStructure : MonoBehaviour
             {
                 currentEnteranceConnection.Orientation = Orientation.Left;
             }
-
+            currentEnteranceConnection.AttachedStructure = this;
             currentEnteranceConnection.ConnectionType = ConnectionType.Enterance;
             _enteranceConnections.Add(currentEnteranceConnection);
         }
         
-
         _exitConnection = new Connection();
         _exitConnection.RelativePositionInBlockGrid
             = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeExitPosition);
@@ -112,6 +141,7 @@ public class BlockStructure : MonoBehaviour
         {
             _exitConnection.Orientation = Orientation.Left;
         }
+        _exitConnection.AttachedStructure = this;
         _exitConnection.ConnectionType = ConnectionType.Exit;
     }
 
@@ -146,6 +176,7 @@ public class BlockStructure : MonoBehaviour
             }
 
             blockStructure.InstantiateConnetion(ref blockStructure._exitConnection, structureCenterGridPosition, levelManager);
+            blockStructure.StructureCenterGridPosition = structureCenterGridPosition;
             return structureGameObjectInstance;
         }
         Debug.Log("Unexpected Structure prefab was given");

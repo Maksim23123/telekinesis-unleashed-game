@@ -20,6 +20,8 @@ public class Connection
 
     public bool SealedZoneParametersInitialized { get; private set; } = false;
 
+    public BlockStructure AttachedStructure { get; set; }
+
     public Vector2Int GetConnectionPoint(BlockGridSettings blockGridSettings)
     {
         if (Orientation == Orientation.Left)
