@@ -1,6 +1,4 @@
-using Codice.CM.Common;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,98 +43,97 @@ public class TripletGenerator
     public List<Triplet> InstantiateTriplets(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
     {
         _instantiatedTriplets.Clear();
+        if (CheckIfTripletPrefabsAssigned())
+        {
+            Triplet currentTriplet;
+
+            do
+            {
+                currentTriplet = GetTripletWithInstantiatedBackConnections(pathPlan);
+
+                if (currentTriplet != null)
+                {
+                    FindPositionForTriplet(pathPlan, roomStructure, currentTriplet
+                        , out int horizontalPosition, out int verticalPosition);
+
+                    InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
+                }
+            }
+            while (currentTriplet != null);
+        }
+        return _instantiatedTriplets;
+    }
+
+    private void FindPositionForTriplet(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure
+            , Triplet currentTriplet, out int horizontalPosition, out int verticalPosition)
+    {
+        Vector2Int[] backConnectionPositions = GetBackConnectionsPositions(pathPlan, currentTriplet);
+
+        horizontalPosition = (int)backConnectionPositions.Average(position => position.x);
+        bool currentTripletIsBackConnection = CheckIfTripletIsBackConnection(pathPlan, currentTriplet);
+        bool currentTripletConnectsPathEnds = TryGetBasePositionFromRooms(pathPlan, roomStructure, currentTriplet
+            , out int baseVerticalPositionAccordingRooms);
+
+        if (!currentTripletIsBackConnection)
+        {
+            verticalPosition = (int)backConnectionPositions.Average(position => position.y);
+        }
+        else if (currentTriplet.placement == Placement.Above)
+        {
+            int highestBackConnectionPosition = backConnectionPositions.Max(position => position.y);
+            int basePosition = currentTripletConnectsPathEnds ?
+                baseVerticalPositionAccordingRooms : highestBackConnectionPosition;
+
+            verticalPosition = basePosition + VERTICAL_POSITION_ABOVE_OFFSET + VERTICAL_POSITION_OFFSET;
+        }
+        else
+        {
+            int lowestBackConnectionPosition = backConnectionPositions.Min(position => position.y);
+            int basePosition = currentTripletConnectsPathEnds ?
+                baseVerticalPositionAccordingRooms : lowestBackConnectionPosition;
+
+            verticalPosition = basePosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
+        }
+    }
+
+    private static bool CheckIfTripletIsBackConnection(HashSet<PathUnit> pathPlan, Triplet currentTriplet)
+    {
+        return pathPlan.Any(x =>
+        {
+            if (x is Triplet)
+            {
+                Triplet tempTriplet = (Triplet)x;
+                return tempTriplet.BackConnections.Contains(currentTriplet.Id);
+            }
+            return false;
+        });
+    }
+
+    private Vector2Int[] GetBackConnectionsPositions(HashSet<PathUnit> pathPlan, Triplet currentTriplet)
+    {
+        return pathPlan
+            .Where(x => currentTriplet.BackConnections.Any(g => g == x.Id))
+            .Select(x => x.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets))
+            .ToArray();
+    }
+
+    private Triplet GetTripletWithInstantiatedBackConnections(HashSet<PathUnit> pathPlan)
+    {
+        return pathPlan.Where(pathUnit =>
+                CheckIfTripletHasAllBackConnectionsInstantiated(pathPlan, pathUnit) && !_instantiatedTriplets
+                    .Any(g => g.Id == pathUnit.Id))
+            .Select(x => (Triplet)x)
+            .FirstOrDefault();
+    }
+
+    private bool CheckIfTripletPrefabsAssigned()
+    {
         if (_tripletRightOut == null || _tripletLeftOut == null)
         {
             Debug.LogError("Triplet prefabs weren't assigned.");
-            return null;
+            return false;
         }
-
-        Triplet currentTriplet;
-
-        int emergencyStopCounter = 0;
-
-        do
-        {
-            emergencyStopCounter++;
-            currentTriplet = pathPlan.Where(x =>
-                    CheckIfTripletHasAllBackConnectionsInstantiated(pathPlan, x) && !_instantiatedTriplets.Any(g => g.Id == x.Id))
-                .Select(x => (Triplet)x)
-                .FirstOrDefault();
-
-            if (currentTriplet != null)
-            {
-                Vector2Int[] backConnectionPositions = pathPlan
-                    .Where(x => currentTriplet.BackConnections.Any(g => g == x.Id))
-                    .Select(x => x.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets))
-                    .ToArray();
-                int horizontalPosition = backConnectionPositions.Sum(g => g.x) / backConnectionPositions.Length;
-
-
-                int verticalPosition;
-
-                bool currentTripletIsBackConnection = pathPlan.Any(x =>
-                {
-                    if (x is Triplet)
-                    {
-                        Triplet tempTriplet = (Triplet)x;
-                        return tempTriplet.BackConnections.Contains(currentTriplet.Id);
-                    }
-                    return false;
-                });
-
-
-                bool currentTripletConnectsPathEnds = false;
-
-                currentTripletConnectsPathEnds = TryGetBasePositionFromRooms(pathPlan, roomStructure, currentTriplet
-                    , out int baseVerticalPositionAccordingRooms);
-
-                if (!currentTripletIsBackConnection)
-                {
-                    verticalPosition = backConnectionPositions.Sum(g => g.y) / backConnectionPositions.Length;
-                }
-                else if (currentTriplet.placement == Placement.Above)
-                {
-                    int basePosition = 0;
-                    if (currentTripletConnectsPathEnds)
-                    {
-                        basePosition = baseVerticalPositionAccordingRooms;
-                    }
-                    else
-                    {
-                        int highestBackConnectionPosition = backConnectionPositions.Max(g => g.y);
-                        basePosition = highestBackConnectionPosition;
-                    }
-
-                    verticalPosition = basePosition + VERTICAL_POSITION_ABOVE_OFFSET + VERTICAL_POSITION_OFFSET;
-                }
-                else
-                {
-                    int basePosition = 0;
-                    if (currentTripletConnectsPathEnds)
-                    {
-                        basePosition = baseVerticalPositionAccordingRooms;
-                    }
-                    else
-                    {
-                        int lowestBackConnectionPosition = backConnectionPositions.Min(g => g.y);
-                        basePosition = lowestBackConnectionPosition;
-                    }
-
-                    verticalPosition = basePosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
-                }
-
-                InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
-            }
-
-            if (emergencyStopCounter >= 10000)
-            {
-                Debug.LogWarning("Emergency infinit loop stop.");
-                break;
-            }
-        }
-        while (currentTriplet != null);
-
-        return _instantiatedTriplets;
+        return true;
     }
 
     private void InstantiateTriplet(ref Triplet triplet, Vector2Int position)
@@ -192,9 +189,11 @@ public class TripletGenerator
                     .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
 
                 PathUnit firstBackConnectionUnit = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[0]);
-                resume += "First connection point: " + firstBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets ) + " | ";
+                resume += "First connection point: " + firstBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings
+                    , _instantiatedTriplets ) + " | ";
                 PathUnit secondBackConnectionUnit = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[1]);
-                resume += "Second connection point: " + secondBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets) + " | ";
+                resume += "Second connection point: " + secondBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings
+                    , _instantiatedTriplets) + " | ";
 
                 Debug.Log(resume);
             }
@@ -202,7 +201,8 @@ public class TripletGenerator
         
     }
 
-    private bool TryGetBasePositionFromRooms(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure, Triplet currentTriplet, out int baseVerticalPosition)
+    private bool TryGetBasePositionFromRooms(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure
+            , Triplet currentTriplet, out int baseVerticalPosition)
     {
         bool extractionSuccesful = false;
         baseVerticalPosition = 0;
