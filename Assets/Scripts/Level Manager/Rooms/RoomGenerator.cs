@@ -72,6 +72,27 @@ public class RoomGenerator : MonoBehaviour
         return roomStructure;
     }
 
+    public static List<List<PathUnit>> GetRoomConnectionLayers(List<List<PathUnit>[]> roomStructure)
+    {
+        List<List<PathUnit>> roomConnectionLayers = new();
+
+        for (int i = 0; i < roomStructure.Count - 1; i++)
+        {
+            List<PathUnit> connectionLayer = new();
+
+            connectionLayer.AddRange(roomStructure[i][0]);
+
+            if (i + 1 < roomStructure.Count)
+            {
+                connectionLayer.AddRange(roomStructure[i + 1][1]);
+            }
+
+            roomConnectionLayers.Add(connectionLayer);
+        }
+
+        return roomConnectionLayers;
+    }
+
     private static bool ValidateConnectionLayer(List<PathEnd>[] connectionLayer)
     {
         if (connectionLayer[0] == null || connectionLayer[1] == null)
