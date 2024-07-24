@@ -9,4 +9,10 @@ public class Triplet : PathUnit
     public Orientation Orientation { get; set; }
     public Placement placement { get; set; }
     public GameObject GameObject { get; set; }
+
+    public override Vector2Int ExtractConnectionPointPosition(BlockGridSettings blockGridSettings, List<Triplet> instantiatedTriplets)
+    {
+        BlockStructure blockStructure = GameObject.GetComponent<BlockStructure>();
+        return blockStructure.ExitConnection.GetConnectionPoint(blockGridSettings);
+    }
 }

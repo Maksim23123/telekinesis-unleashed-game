@@ -67,7 +67,7 @@ public class TripletGenerator
             {
                 Vector2Int[] backConnectionPositions = pathPlan
                     .Where(x => currentTriplet.BackConnections.Any(g => g == x.Id))
-                    .Select(x => PathUnit.ExtractConnectionPointPosition(x, BlockGridSettings, _instantiatedTriplets))
+                    .Select(x => x.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets))
                     .ToArray();
                 int horizontalPosition = backConnectionPositions.Sum(g => g.x) / backConnectionPositions.Length;
 
@@ -192,9 +192,9 @@ public class TripletGenerator
                     .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
 
                 PathUnit firstBackConnectionUnit = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[0]);
-                resume += "First connection point: " + PathUnit.ExtractConnectionPointPosition(firstBackConnectionUnit, BlockGridSettings, _instantiatedTriplets ) + " | ";
+                resume += "First connection point: " + firstBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets ) + " | ";
                 PathUnit secondBackConnectionUnit = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[1]);
-                resume += "Second connection point: " + PathUnit.ExtractConnectionPointPosition(secondBackConnectionUnit, BlockGridSettings, _instantiatedTriplets) + " | ";
+                resume += "Second connection point: " + secondBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings, _instantiatedTriplets) + " | ";
 
                 Debug.Log(resume);
             }

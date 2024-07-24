@@ -44,7 +44,7 @@ public class PathGenerator : MonoBehaviour
                 {
                     Connection currentConnection = tripletBlockStructure.EnteranceConnections[i];
                     PathUnit currentBackConnection = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[i]);
-                    Vector2Int destinationPoint = PathUnit.ExtractConnectionPointPosition(currentBackConnection, BlockGridSettings
+                    Vector2Int destinationPoint = currentBackConnection.ExtractConnectionPointPosition(BlockGridSettings
                         , instantiatedTriplets);
                     if (currentConnection.SealedZoneParametersInitialized)
                     {

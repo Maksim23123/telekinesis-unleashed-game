@@ -12,23 +12,9 @@ public abstract class PathUnit
         return Id.GetHashCode();
     }
 
-    public static Vector2Int ExtractConnectionPointPosition(PathUnit x, BlockGridSettings blockGridSettings, List<Triplet> instantiatedTriplets)
-    {
-        if (x is PathEnd)
-        {
-            return ((PathEnd)x).Connection.GetConnectionPoint(blockGridSettings);
-        }
-        else if (x is Triplet)
-        {
-            Triplet currentTriplet = (Triplet)GetById(instantiatedTriplets, x.Id);
-            BlockStructure blockStructure = currentTriplet.GameObject.GetComponent<BlockStructure>();
-            return blockStructure.ExitConnection.GetConnectionPoint(blockGridSettings);
-        }
-        else
-        {
-            return Vector2Int.zero;
-        }
-    }
+    public abstract Vector2Int ExtractConnectionPointPosition(BlockGridSettings blockGridSettings
+        , List<Triplet> instantiatedTriplets);
+
 
     public static PathUnit GetById(IEnumerable<PathUnit> pathUnits, int id)
     {
