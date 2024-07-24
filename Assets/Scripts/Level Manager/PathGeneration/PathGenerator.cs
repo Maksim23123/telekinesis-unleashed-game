@@ -9,7 +9,6 @@ public class PathGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject _tripletRightOut;
     [SerializeField] private GameObject _tripletLeftOut;
-    [SerializeField] private Vector2 _startPosition, _endPosition;
 
     const int VERTICAL_POSITION_OFFSET = 3;
     const int VERTICAL_POSITION_ABOVE_OFFSET = 1;
