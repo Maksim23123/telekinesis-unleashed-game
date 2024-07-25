@@ -18,14 +18,11 @@ public class BlockStructure : MonoBehaviour
 
     private readonly Vector2 STANDART_CENTER_BIAS = new Vector2(0.5f, 0.5f);
 
-    private List<Connection> _enteranceConnections = new();
-    private Connection _exitConnection;
-
     public Vector2Int CapturedZoneInBlockGridStart { get; private set; }
     public Vector2Int CapturedZoneInBlockGridEnd { get; private set; }
-    public List<Connection> EnteranceConnections { get => _enteranceConnections; }
-    public Connection ExitConnection { get => _exitConnection; }
     public Vector2Int StructureCenterGridPosition { get; private set; }
+    public Connection ExitConnection { get; private set; }
+    public List<Connection> EnteranceConnections { get; private set; } = new();
 
     public int CapturedPlaceBelowCenter 
     { 
@@ -109,7 +106,7 @@ public class BlockStructure : MonoBehaviour
 
     private void InitStructureConnections(BlockGridSettings blockGridSettings)
     {
-        _enteranceConnections.Clear();
+        EnteranceConnections.Clear();
 
         foreach (Vector2 currentRelativeEnterancePosition in _relativeEnterancePositions)
         {
@@ -127,22 +124,22 @@ public class BlockStructure : MonoBehaviour
             }
             currentEnteranceConnection.AttachedStructure = this;
             currentEnteranceConnection.ConnectionType = ConnectionType.Enterance;
-            _enteranceConnections.Add(currentEnteranceConnection);
+            EnteranceConnections.Add(currentEnteranceConnection);
         }
         
-        _exitConnection = new Connection();
-        _exitConnection.RelativePositionInBlockGrid
+        ExitConnection = new Connection();
+        ExitConnection.RelativePositionInBlockGrid
             = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeExitPosition);
-        if (_exitConnection.RelativePositionInBlockGrid.x > 0)
+        if (ExitConnection.RelativePositionInBlockGrid.x > 0)
         {
-            _exitConnection.Orientation = Orientation.Right;
+            ExitConnection.Orientation = Orientation.Right;
         }
         else
         {
-            _exitConnection.Orientation = Orientation.Left;
+            ExitConnection.Orientation = Orientation.Left;
         }
-        _exitConnection.AttachedStructure = this;
-        _exitConnection.ConnectionType = ConnectionType.Exit;
+        ExitConnection.AttachedStructure = this;
+        ExitConnection.ConnectionType = ConnectionType.Exit;
     }
 
     private void InstantiateConnetion(ref Connection connection, Vector2Int centerPosition, LevelManager levelManager)
@@ -169,13 +166,14 @@ public class BlockStructure : MonoBehaviour
 
             blockStructure.InitStructureConnections(levelManager.BlockGridSettings);
 
-            for (int i = 0; i < blockStructure._enteranceConnections.Count; i++)
+            for (int i = 0; i < blockStructure.EnteranceConnections.Count; i++)
             {
-                Connection currentEnteranceConnection = blockStructure._enteranceConnections[i];
+                Connection currentEnteranceConnection = blockStructure.EnteranceConnections[i];
                 blockStructure.InstantiateConnetion(ref currentEnteranceConnection, structureCenterGridPosition, levelManager);
             }
 
-            blockStructure.InstantiateConnetion(ref blockStructure._exitConnection, structureCenterGridPosition, levelManager);
+            Connection currentExitConnection = blockStructure.ExitConnection;
+            blockStructure.InstantiateConnetion(ref currentExitConnection, structureCenterGridPosition, levelManager);
             blockStructure.StructureCenterGridPosition = structureCenterGridPosition;
             return structureGameObjectInstance;
         }
