@@ -72,7 +72,7 @@ public class PathGenerator : MonoBehaviour
         }
         else
         {
-            _smartPath.AStar(startPositionInGrid, endPositionInGrid, out Vector2Int[] path);
+            _smartPath.TryGeneratePath(startPositionInGrid, endPositionInGrid, out Vector2Int[] path);
 
             for (int i = 0; i < path.Length; i++)
             {

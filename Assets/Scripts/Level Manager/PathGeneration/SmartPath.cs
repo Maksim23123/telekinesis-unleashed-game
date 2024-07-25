@@ -14,7 +14,7 @@ public class SmartPath
         _levelManager = levelManager ?? throw new ArgumentNullException(nameof(levelManager));
     }
 
-    public bool AStar(Vector2Int startPosition, Vector2Int endPosition, out Vector2Int[] path)
+    public bool TryGeneratePath(Vector2Int startPosition, Vector2Int endPosition, out Vector2Int[] path)
     {
         path = new Vector2Int[0];
         List<PathCell> openList = new();
@@ -22,20 +22,21 @@ public class SmartPath
         bool goalFound = false;
         PathCell pathEnd = null;
 
-        int itters = 0;
+        int iterations = 0;
 
         openList.Add(new PathCell(startPosition, null));
 
-        while (openList.Count > 0 && !goalFound && itters < 10000)
+        while (openList.Count > 0 && !goalFound && iterations < 10000)
         {
-            itters++;
-            PathCell q = openList.OrderBy(x => x.GeneralWeight).First();
+            iterations++;
+            PathCell currentPathCell = openList.OrderBy(x => x.GeneralWeight).First();
 
-            Vector2 worldPosition = q.Position * _levelManager.BlockGridSettings.BlocksSize + _levelManager.BlockGridSettings.PossitionBias;
+            Vector2 worldPosition = currentPathCell.Position * _levelManager.BlockGridSettings.BlocksSize 
+                + _levelManager.BlockGridSettings.PossitionBias;
 
-            openList.Remove(q);
+            openList.Remove(currentPathCell);
 
-            PathCell[] successors = GenerateSuccessors(q, _levelManager);
+            PathCell[] successors = GenerateSuccessors(currentPathCell, _levelManager);
 
             for (int i = 0; i < successors.Length; i++)
             {
@@ -46,7 +47,8 @@ public class SmartPath
                     break;
                 }
 
-                successors[i].DistanceFromStartWeight = q.DistanceFromStartWeight + ManhattanDistance(q.Position, successors[i].Position);
+                successors[i].DistanceFromStartWeight = currentPathCell.DistanceFromStartWeight 
+                    + ManhattanDistance(currentPathCell.Position, successors[i].Position);
                 successors[i].DistanceFromFinishWeight = ManhattanDistance(successors[i].Position, endPosition);
 
                 if (!(openList.Any(x => x.Position == successors[i].Position && x.GeneralWeight < successors[i].GeneralWeight) ||
@@ -60,7 +62,7 @@ public class SmartPath
                 }
             }
 
-            closedList.Add(q);
+            closedList.Add(currentPathCell);
         }
 
         if (goalFound)
@@ -72,35 +74,36 @@ public class SmartPath
         {
             return false;
         }
-    }
 
-    private List<Vector2Int> EvenUpParrents(PathCell endCell)
-    {
-        List<Vector2Int> path = new();
-        PathCell currentCell = endCell;
-        while (currentCell != null)
+
+        int ManhattanDistance(Vector2Int startPosition, Vector2Int endPosition)
         {
-            path.Add(currentCell.Position);
-            currentCell = currentCell.Parent;
+            return Mathf.Abs(startPosition.x - endPosition.x) + Mathf.Abs(startPosition.y - endPosition.y);
         }
-        return path;
-    }
 
-    private PathCell[] GenerateSuccessors(PathCell q, LevelManager levelManager)
-    {
-        PathCell[] successors = new PathCell[4];
-        successors[0] = new PathCell(q.Position + Vector2Int.up, q);
-        successors[1] = new PathCell(q.Position + Vector2Int.down, q);
-        successors[2] = new PathCell(q.Position + Vector2Int.left, q);
-        successors[3] = new PathCell(q.Position + Vector2Int.right, q);
+        List<Vector2Int> EvenUpParrents(PathCell endCell)
+        {
+            List<Vector2Int> path = new();
+            PathCell currentCell = endCell;
+            while (currentCell != null)
+            {
+                path.Add(currentCell.Position);
+                currentCell = currentCell.Parent;
+            }
+            return path;
+        }
 
-        return successors.Where(x => !levelManager.TryGetBlockInfoByPosition(x.Position, out var _) && x.Position != x.Parent.Position)
-            .OrderBy(x => UnityEngine.Random.value)
-            .ToArray();
-    }
+        PathCell[] GenerateSuccessors(PathCell q, LevelManager levelManager)
+        {
+            PathCell[] successors = new PathCell[4];
+            successors[0] = new PathCell(q.Position + Vector2Int.up, q);
+            successors[1] = new PathCell(q.Position + Vector2Int.down, q);
+            successors[2] = new PathCell(q.Position + Vector2Int.left, q);
+            successors[3] = new PathCell(q.Position + Vector2Int.right, q);
 
-    private int ManhattanDistance(Vector2Int startPosition, Vector2Int endPosition)
-    {
-        return Mathf.Abs(startPosition.x - endPosition.x) + Mathf.Abs(startPosition.y - endPosition.y);
+            return successors.Where(x => !levelManager.TryGetBlockInfoByPosition(x.Position, out var _) && x.Position != x.Parent.Position)
+                .OrderBy(x => UnityEngine.Random.value)
+                .ToArray();
+        }
     }
 }
