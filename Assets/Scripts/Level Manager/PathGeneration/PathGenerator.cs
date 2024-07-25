@@ -13,25 +13,30 @@ public class PathGenerator : MonoBehaviour
 
     public BlockGridSettings BlockGridSettings { get => _levelManager.BlockGridSettings; }
 
-    public void GeneratePaths(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
+    private void Initialize()
     {
-        Initialize();
-
+        _levelManager = GetComponent<LevelManager>();
         if (!_tripletGenerator.Initialized)
         {
             _tripletGenerator.Initialize(_levelManager);
         }
-        List<Triplet> instantiatedTriplets = _tripletGenerator.InstantiateTriplets(pathPlan, roomStructure);
-
-        RestraintBuilder restraintBuilder = new RestraintBuilder();
-        restraintBuilder.Initialize(_levelManager);
-        restraintBuilder.BuildRestraintsBetweenRooms(roomStructure);
-        restraintBuilder.SealTripletsEnterences(instantiatedTriplets);
-
-        BuildPathsBetweenConnectionPoints(instantiatedTriplets, pathPlan, instantiatedTriplets);
+        _restraintBuilder = new RestraintBuilder();
+        _restraintBuilder.Initialize(_levelManager);
     }
 
-    private void BuildPathsBetweenConnectionPoints(List<Triplet> triplets, HashSet<PathUnit> pathPlan, List<Triplet> instantiatedTriplets)
+    public void GeneratePaths(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
+    {
+        Initialize();
+        
+        List<Triplet> instantiatedTriplets = _tripletGenerator.InstantiateTriplets(pathPlan, roomStructure);
+
+        _restraintBuilder.BuildRestraintsBetweenRooms(roomStructure);
+        _restraintBuilder.SealTripletsEnterences(instantiatedTriplets);
+
+        BuildPathsBetweenConnectionPoints(instantiatedTriplets, pathPlan);
+    }
+
+    private void BuildPathsBetweenConnectionPoints(List<Triplet> triplets, HashSet<PathUnit> pathPlan)
     {
         foreach (Triplet currentTriplet in triplets)
         {
@@ -42,7 +47,7 @@ public class PathGenerator : MonoBehaviour
                     Connection currentConnection = tripletBlockStructure.EnteranceConnections[i];
                     PathUnit currentBackConnection = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[i]);
                     Vector2Int destinationPoint = currentBackConnection.ExtractConnectionPointPosition(BlockGridSettings
-                        , instantiatedTriplets);
+                        , triplets);
                     if (currentConnection.SealedZoneParametersInitialized)
                     {
                         _levelManager.DestroyBlocksInArea(currentConnection.SealedZoneStart, currentConnection.SealedZoneEnd);
@@ -106,10 +111,5 @@ public class PathGenerator : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void Initialize()
-    {
-        _levelManager = GetComponent<LevelManager>();
     }
 }
