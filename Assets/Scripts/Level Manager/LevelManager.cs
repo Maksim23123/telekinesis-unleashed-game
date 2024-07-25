@@ -49,26 +49,6 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void ExecuteForArea(Vector2Int startGridPosition, Vector2Int endGridPosition, Action<Vector2Int> action)
-    {
-        Vector2Int affectedAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
-        Vector2Int signs = new Vector2Int(affectedAreaSizes.x < 0 ? -1 : 1, affectedAreaSizes.y < 0 ? -1 : 1); // Extract vector direction. Values on both axis from 1 to -1
-        affectedAreaSizes += signs; // Corect each axis of vector by 1 or -1
-        for (int i = 0; i < Mathf.Abs(affectedAreaSizes.x); i++)
-        {
-            for (int j = 0; j < Mathf.Abs(affectedAreaSizes.y); j++)
-            {
-                Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
-                action(currentBlockPossition);
-            }
-        }
-    }
-
-    public void DestroyBlocksInArea(Vector2Int startGridPosition, Vector2Int endGridPosition)
-    {
-        ExecuteForArea(startGridPosition, endGridPosition, position => TryDestroyBlockByPosition(position));
-    }
-
     public void FillRect(Vector2Int startGridPosition, Vector2Int endGridPosition, BlockInfoHolder blockInfoHolder, bool force = false)
     {
         if (force)
@@ -182,6 +162,11 @@ public class LevelManager : MonoBehaviour
 
     //Destroying
 
+    public void DestroyBlocksInArea(Vector2Int startGridPosition, Vector2Int endGridPosition)
+    {
+        ExecuteForArea(startGridPosition, endGridPosition, position => TryDestroyBlockByPosition(position));
+    }
+
     public bool TryDestroyBlockByPosition(Vector2Int position)
     {
         if (TryGetBlockInfoByPosition(position, out BlockInfoHolder blockInfoHolder))
@@ -208,5 +193,22 @@ public class LevelManager : MonoBehaviour
             DestroyImmediate(levelElement);
         }
         _levelElements.Clear();
+    }
+
+    //General
+
+    public void ExecuteForArea(Vector2Int startGridPosition, Vector2Int endGridPosition, Action<Vector2Int> action)
+    {
+        Vector2Int affectedAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
+        Vector2Int signs = new Vector2Int(affectedAreaSizes.x < 0 ? -1 : 1, affectedAreaSizes.y < 0 ? -1 : 1); // Extract vector direction. Values on both axis from 1 to -1
+        affectedAreaSizes += signs; // Corect each axis of vector by 1 or -1
+        for (int i = 0; i < Mathf.Abs(affectedAreaSizes.x); i++)
+        {
+            for (int j = 0; j < Mathf.Abs(affectedAreaSizes.y); j++)
+            {
+                Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
+                action(currentBlockPossition);
+            }
+        }
     }
 }
