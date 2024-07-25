@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RestraintBuilder
 {
+    private const string RESTRAINT_BLOCK_TAG = "Restreint";
     private LevelManager _levelManager;
 
     public BlockGridSettings BlockGridSettings
@@ -37,7 +38,7 @@ public class RestraintBuilder
             foreach (Triplet triplet in triplets)
             {
                 if (triplet.GameObject.TryGetComponent(out BlockStructure tripletBlockStructure)
-                        && _levelManager.TryGetSuitableBlock(/* Make const of it -> */"Restreint", out BlockInfoHolder restreint))
+                        && _levelManager.TryGetSuitableBlock(RESTRAINT_BLOCK_TAG, out BlockInfoHolder restreint))
                 {
                     Connection firstConnection = tripletBlockStructure.EnteranceConnections[0];
                     firstConnection.InitSealedAreaParameters(BlockGridSettings, Placement.Bellow);
@@ -53,11 +54,14 @@ public class RestraintBuilder
 
     public void BuildRestraintsBetweenRooms(List<List<PathUnit>[]> roomStructure)
     {
-        List<List<PathUnit>> roomConnectionLayers = RoomGenerator.GetRoomConnectionLayers(roomStructure);
-        List<PathUnit[]> pairedRoomConnections = PairRoomConnections(roomConnectionLayers);
-        for (int i = 0; i < pairedRoomConnections.Count; i++)
+        if (Initialized)
         {
-            BuildRestraintsBetweenRoomConnectionPairs(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray());
+            List<List<PathUnit>> roomConnectionLayers = RoomGenerator.GetRoomConnectionLayers(roomStructure);
+            List<PathUnit[]> pairedRoomConnections = PairRoomConnections(roomConnectionLayers);
+            for (int i = 0; i < pairedRoomConnections.Count; i++)
+            {
+                BuildRestraintsBetweenRoomConnectionPairs(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray());
+            }
         }
     }
 
@@ -111,7 +115,7 @@ public class RestraintBuilder
     private void BuildRestraintsBetweenRoomConnectionPairs(PathEnd[] pathEndsPair)
     {
         if (pathEndsPair.Length == 2
-                && _levelManager.TryGetSuitableBlock("Restreint", out BlockInfoHolder restraint))
+                && _levelManager.TryGetSuitableBlock(RESTRAINT_BLOCK_TAG, out BlockInfoHolder restraint))
         {
             Vector2Int firstPoint = pathEndsPair[0].Connection.GetConnectionPoint(BlockGridSettings);
             Vector2Int secondPoint = pathEndsPair[1].Connection.GetConnectionPoint(BlockGridSettings);
