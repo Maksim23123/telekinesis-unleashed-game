@@ -57,8 +57,6 @@ public class BranchGenerator : MonoBehaviour
                     ReActivateGeneration();
                 }
             }
-
-            SealHolesInCorridors();
         }
     }
 
@@ -83,7 +81,7 @@ public class BranchGenerator : MonoBehaviour
         int laddersGap = 2;
 
         BlockInfoHolder[] ladderCandidats = LevelElements
-            .Where(g => CheckIfRightLeftCorridor(g)
+            .Where(g => g.IsRightLeftCoridor
                 && !g.IsLadderNeighbor && g.BlockPosstion.x < BlockGridSettings.MapDimensions.x
                 && g.BlockPosstion.x > 0 && g.BlockPosstion.x % (laddersGap + 1) == 0)
             .OrderBy(x => x.BlockPosstion.y)
@@ -100,12 +98,6 @@ public class BranchGenerator : MonoBehaviour
                 InstantiateBlock(ladderCandidat.BlockPosstion, rlBlockReference);
             }
         }
-    }
-
-    private bool CheckIfRightLeftCorridor(BlockInfoHolder blockInfoHolder)
-    {
-        return !blockInfoHolder.UpConnected && !blockInfoHolder.DownConnected
-            && blockInfoHolder.LeftConnected && blockInfoHolder.RightConnected && !blockInfoHolder.DeadEnd;
     }
 
     private void RemoveDeadEnds()
@@ -233,84 +225,5 @@ public class BranchGenerator : MonoBehaviour
             freeCells++;
         }
         return freeCells;
-    }
-
-    public void SealHolesInCorridors()
-    {
-        Vector2Int rightBias = new Vector2Int(1 * BlockGridSettings.HorizontalExpandDirectionFactor, 0);
-        Vector2Int leftBias = new Vector2Int(-1 * BlockGridSettings.HorizontalExpandDirectionFactor, 0);
-
-        Func<BlockInfoHolder, bool> checkRightNeighbor = x
-            => _levelManager.TryGetBlockInfoByPosition(x.BlockPosstion + rightBias, out var _);
-        Func<BlockInfoHolder, bool> checkLeftNeighbor = x
-            => _levelManager.TryGetBlockInfoByPosition(x.BlockPosstion + leftBias, out var _);
-
-        _levelManager.TryGetSuitableBlock(false, false, true, false, out BlockInfoHolder rightConnectedDeadEndPrefab, true);
-        _levelManager.TryGetSuitableBlock(false, false, false, true, out BlockInfoHolder leftConnectedDeadEndPrefab, true);
-
-        SealUnfinishedRLBlocks(checkRightNeighbor, checkLeftNeighbor, rightConnectedDeadEndPrefab, leftConnectedDeadEndPrefab);
-
-        SealGapsInLadders(rightBias, leftBias, checkRightNeighbor, checkLeftNeighbor, rightConnectedDeadEndPrefab, leftConnectedDeadEndPrefab);
-        TransformOneSidedDeadEndsIntoTwoSided(rightBias, leftBias);
-    }
-
-    private void SealUnfinishedRLBlocks(Func<BlockInfoHolder, bool> checkRightNeighbor, Func<BlockInfoHolder, bool> checkLeftNeighbor
-            , BlockInfoHolder rightConnectedDeadEndPrefab, BlockInfoHolder leftConnectedDeadEndPrefab)
-    {
-        BlockInfoHolder[] corridorsToSeal = LevelElements
-                    .GroupBy(x => x.Generation)
-                    .OrderBy(x => x.Key)
-                    .Where(x => x.Key == _currentGeneration)
-                    .SelectMany(x => x)
-                    .Where(x => CheckIfRightLeftCorridor(x) && (!checkRightNeighbor(x) ^ !checkLeftNeighbor(x)))
-                    .ToArray();
-
-        foreach (var corridor in corridorsToSeal)
-        {
-            _levelManager.DestroyBlock(corridor);
-            if (checkRightNeighbor(corridor))
-                InstantiateBlock(corridor.BlockPosstion, rightConnectedDeadEndPrefab);
-            else
-                InstantiateBlock(corridor.BlockPosstion, leftConnectedDeadEndPrefab);
-        }
-    }
-
-    private void SealGapsInLadders(Vector2Int rightBias, Vector2Int leftBias, Func<BlockInfoHolder, bool> checkRightNeighbor
-        , Func<BlockInfoHolder, bool> checkLeftNeighbor, BlockInfoHolder rightConnectedDeadEndPrefab, BlockInfoHolder leftConnectedDeadEndPrefab)
-    {
-        BlockInfoHolder[] laddersToCheck = LevelElements
-                    .Where(x => x.DownConnected || x.UpConnected)
-                    .ToArray();
-
-        foreach (BlockInfoHolder ladder in laddersToCheck)
-        {
-            if (!checkRightNeighbor(ladder))
-            {
-                InstantiateBlock(ladder.BlockPosstion + rightBias, leftConnectedDeadEndPrefab);
-            }
-
-            if (!checkLeftNeighbor(ladder))
-            {
-                InstantiateBlock(ladder.BlockPosstion + leftBias, rightConnectedDeadEndPrefab);
-            }
-        }
-    }
-
-    private void TransformOneSidedDeadEndsIntoTwoSided(Vector2Int rightBias, Vector2Int leftBias)
-    {
-        BlockInfoHolder[] deadEndsToBecomeRLConnected = LevelElements
-                    .Where(x => x.DeadEnd && (x.RightConnected ^ x.LeftConnected)) // Serch for regular dead ends
-                    .ToArray();
-
-        foreach (BlockInfoHolder regularDeadEnd in deadEndsToBecomeRLConnected)
-        {
-            if (_levelManager.TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder twoSidedDeadEndPrefab, true)
-                    && _levelManager.TryGetBlockInfoByPosition(regularDeadEnd.BlockPosstion + rightBias, out var rightNeighbor) && rightNeighbor.LeftConnected
-                    && _levelManager.TryGetBlockInfoByPosition(regularDeadEnd.BlockPosstion + leftBias, out var leftNeighbor) && leftNeighbor.RightConnected)
-            {
-                _levelManager.DestroyBlock(regularDeadEnd);
-                InstantiateBlock(regularDeadEnd.BlockPosstion, twoSidedDeadEndPrefab);
-            }
-        }
     }
 }

@@ -25,8 +25,15 @@ public class BlockInfoHolder
     public bool IsLadderNeighbor { get => _isLadderNeighbor; set => _isLadderNeighbor = value; }
     public int Generation { get => _generation; set => _generation = value; }
     public bool DeadEnd { get => _deadEnd; set => _deadEnd = value; }
-    public string Name { get => _name;}
+    public string Name { get => _name; }
     public List<string> Tags { get => _tags; set => _tags = value; }
+    public bool IsRightLeftCoridor
+    {
+        get
+        {
+            return !UpConnected && !DownConnected && LeftConnected && RightConnected && !DeadEnd;
+        }
+    }
 
     public BlockInfoHolder(GameObject block, Vector2Int blockPosstion)
     {
