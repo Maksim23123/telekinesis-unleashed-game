@@ -29,7 +29,7 @@ public class SmartPath
         while (openList.Count > 0 && !goalFound && itters < 10000)
         {
             itters++;
-            PathCell q = openList.OrderBy(x => x.F).First();
+            PathCell q = openList.OrderBy(x => x.GeneralWeight).First();
 
             Vector2 worldPosition = q.Position * _levelManager.BlockGridSettings.BlocksSize + _levelManager.BlockGridSettings.PossitionBias;
 
@@ -46,11 +46,11 @@ public class SmartPath
                     break;
                 }
 
-                successors[i].G = q.G + ManhattanDistance(q.Position, successors[i].Position);
-                successors[i].H = ManhattanDistance(successors[i].Position, endPosition);
+                successors[i].DistanceFromStartWeight = q.DistanceFromStartWeight + ManhattanDistance(q.Position, successors[i].Position);
+                successors[i].DistanceFromFinishWeight = ManhattanDistance(successors[i].Position, endPosition);
 
-                if (!(openList.Any(x => x.Position == successors[i].Position && x.F < successors[i].F) ||
-                        closedList.Any(x => x.Position == successors[i].Position && x.F < successors[i].F)))
+                if (!(openList.Any(x => x.Position == successors[i].Position && x.GeneralWeight < successors[i].GeneralWeight) ||
+                        closedList.Any(x => x.Position == successors[i].Position && x.GeneralWeight < successors[i].GeneralWeight)))
                 {
                     foreach (PathCell cellToRemove in openList.Where(x => x.Position == successors[i].Position).ToList())
                     {
