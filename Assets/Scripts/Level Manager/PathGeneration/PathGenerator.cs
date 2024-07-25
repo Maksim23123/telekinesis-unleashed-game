@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(LevelManager))]
 public class PathGenerator : MonoBehaviour
