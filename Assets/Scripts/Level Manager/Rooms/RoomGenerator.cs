@@ -32,6 +32,13 @@ public class RoomGenerator : MonoBehaviour
             verticalPosition += _roomLevels[i].CapturedVerticalPlace + _betweenRoomLevelSpaceSize;
         }
 
+        List<List<PathUnit>[]> roomStructure = OrganizeIntoRoomStructure();
+
+        return roomStructure;
+    }
+
+    private List<List<PathUnit>[]> OrganizeIntoRoomStructure()
+    {
         List<List<PathUnit>[]> roomStructure = new();
 
         List<PathEnd>[] currentConnectionLayer = CreateNewConnectionLayer();
@@ -53,7 +60,7 @@ public class RoomGenerator : MonoBehaviour
                     currentConnectionLayer = null;
                     nextConnectionLayer[1].Add(ExtractEnterance(currentRoomData));
                 }
-                else if (i == _roomLevels.Count - 1) 
+                else if (i == _roomLevels.Count - 1)
                 {
                     currentConnectionLayer[0].Add(ExtractExit(currentRoomData));
                 }
