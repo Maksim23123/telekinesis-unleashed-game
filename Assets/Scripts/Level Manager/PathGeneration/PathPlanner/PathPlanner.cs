@@ -61,14 +61,14 @@ public class PathPlanner : MonoBehaviour
             List<PathUnit> unionCandidatsCopy = unionCandidats.ToList();
             for (int i = 0; i < unionCandidatsCopy.Count; i += 2)
             {
-                PathUnit fCurrentPoint = unionCandidatsCopy[i];
-                PathUnit sCurrentPoint = null;
+                PathUnit firstCurrentPoint = unionCandidatsCopy[i];
+                PathUnit secondCurrentPoint = null;
                 if (i + 1 < unionCandidatsCopy.Count)
                 {
-                    sCurrentPoint = unionCandidatsCopy[i + 1];
+                    secondCurrentPoint = unionCandidatsCopy[i + 1];
                 }
 
-                if (sCurrentPoint != null)
+                if (secondCurrentPoint != null)
                 {
                     Triplet currentTriplet = new Triplet();
                     Orientation tripletOrientation;
@@ -85,25 +85,25 @@ public class PathPlanner : MonoBehaviour
                     if (currentTriplet.Orientation == Orientation.Right != (currentTriplet.placement == Placement.Bellow) 
                             && !isKnot)
                     {
-                        currentTriplet.BackConnections[0] = fCurrentPoint.Id;
-                        currentTriplet.BackConnections[1] = sCurrentPoint.Id;
+                        currentTriplet.BackConnections[0] = firstCurrentPoint.Id;
+                        currentTriplet.BackConnections[1] = secondCurrentPoint.Id;
                     }
                     else
                     {
-                        currentTriplet.BackConnections[0] = sCurrentPoint.Id;
-                        currentTriplet.BackConnections[1] = fCurrentPoint.Id;
+                        currentTriplet.BackConnections[0] = secondCurrentPoint.Id;
+                        currentTriplet.BackConnections[1] = firstCurrentPoint.Id;
                     }
                     currentTriplet = (Triplet)RegisterId(currentTriplet);
-                    unionCandidats.Remove(fCurrentPoint);
-                    unionCandidats.Remove(sCurrentPoint);
+                    unionCandidats.Remove(firstCurrentPoint);
+                    unionCandidats.Remove(secondCurrentPoint);
                     unionCandidats.Add(currentTriplet);
                     knotPoint = currentTriplet;
                 }
                 else
                 {
-                    unionCandidats.Remove(fCurrentPoint);
-                    unionCandidats.Add(fCurrentPoint);
-                    knotPoint = fCurrentPoint;
+                    unionCandidats.Remove(firstCurrentPoint);
+                    unionCandidats.Add(firstCurrentPoint);
+                    knotPoint = firstCurrentPoint;
                 }
             }
         } 
