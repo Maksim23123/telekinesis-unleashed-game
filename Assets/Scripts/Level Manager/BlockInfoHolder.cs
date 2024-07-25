@@ -5,36 +5,15 @@ using UnityEngine;
 [Serializable]
 public class BlockInfoHolder
 {
-    [SerializeField]
-    private string _name;
-    [SerializeField]
-    GameObject _block;
-    [SerializeField]
-    private bool _upConnected, _downConnected, _rightConnected, _leftConnected, _deadEnd;
-    [SerializeField]
-    private List<string> _tags;
+    [SerializeField] private string _name;
+    [SerializeField] GameObject _block;
+    [SerializeField] private bool _upConnected, _downConnected, _rightConnected, _leftConnected, _deadEnd;
+    [SerializeField] private List<string> _tags;
 
-    [HideInInspector]
-    [SerializeField]
-    Vector2Int _blockPosstion;
-
-    [HideInInspector]
-    [SerializeField]
-    bool _neighborshipResolved;
-
-    [HideInInspector]
-    [SerializeField]
-    bool _isLadderNeighbor = false;
-
-    [HideInInspector]
-    [SerializeField]
-    int _generation;
-
-    public BlockInfoHolder(GameObject block, Vector2Int blockPosstion)
-    {
-        _block = block;
-        _blockPosstion = blockPosstion;
-    }
+    [SerializeField][HideInInspector] Vector2Int _blockPosstion;
+    [SerializeField][HideInInspector] bool _neighborshipResolved;
+    [SerializeField][HideInInspector] bool _isLadderNeighbor = false;
+    [HideInInspector][SerializeField] int _generation;
 
     public bool UpConnected { get => _upConnected; }
     public bool DownConnected { get => _downConnected; }
@@ -48,6 +27,12 @@ public class BlockInfoHolder
     public bool DeadEnd { get => _deadEnd; set => _deadEnd = value; }
     public string Name { get => _name;}
     public List<string> Tags { get => _tags; set => _tags = value; }
+
+    public BlockInfoHolder(GameObject block, Vector2Int blockPosstion)
+    {
+        _block = block;
+        _blockPosstion = blockPosstion;
+    }
 
     /// <summary>
     /// Returns information about connections of a block in form of 
