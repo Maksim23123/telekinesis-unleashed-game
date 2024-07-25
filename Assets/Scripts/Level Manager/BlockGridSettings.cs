@@ -4,11 +4,8 @@ using UnityEngine;
 [Serializable]
 public class BlockGridSettings
 {
-    [SerializeField]
-    Vector2Int _mapDimensions, _blocksSize, _possitionBias;
+    [SerializeField] Vector2Int _mapDimensions, _blocksSize, _possitionBias;
 
-
-    // ATTENTION: DEBUG
     [Range(-1, 1)]
     [SerializeField]
     private int _horizontalExpandDirectionFactor;
