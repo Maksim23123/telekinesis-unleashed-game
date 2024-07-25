@@ -53,10 +53,9 @@ public class TripletGenerator
 
                 if (currentTriplet != null)
                 {
-                    FindPositionForTriplet(pathPlan, roomStructure, currentTriplet
-                        , out int horizontalPosition, out int verticalPosition);
+                    Vector2Int tripletPosition = FindPositionForTriplet(pathPlan, roomStructure, currentTriplet);
 
-                    InstantiateTriplet(ref currentTriplet, new Vector2Int(horizontalPosition, verticalPosition));
+                    InstantiateTriplet(ref currentTriplet, tripletPosition);
                 }
             }
             while (currentTriplet != null);
@@ -64,12 +63,14 @@ public class TripletGenerator
         return _instantiatedTriplets;
     }
 
-    private void FindPositionForTriplet(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure
-            , Triplet currentTriplet, out int horizontalPosition, out int verticalPosition)
+    private Vector2Int FindPositionForTriplet(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure
+            , Triplet currentTriplet)
     {
         Vector2Int[] backConnectionPositions = GetBackConnectionsPositions(pathPlan, currentTriplet);
 
-        horizontalPosition = (int)backConnectionPositions.Average(position => position.x);
+        int horizontalPosition = (int)backConnectionPositions.Average(position => position.x);
+        int verticalPosition = 0;
+
         bool currentTripletIsBackConnection = CheckIfTripletIsBackConnection(pathPlan, currentTriplet);
         bool currentTripletConnectsPathEnds = TryGetBasePositionFromRooms(pathPlan, roomStructure, currentTriplet
             , out int baseVerticalPositionAccordingRooms);
@@ -94,6 +95,8 @@ public class TripletGenerator
 
             verticalPosition = basePosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
         }
+
+        return new Vector2Int(horizontalPosition, verticalPosition);
     }
 
     private static bool CheckIfTripletIsBackConnection(HashSet<PathUnit> pathPlan, Triplet currentTriplet)
