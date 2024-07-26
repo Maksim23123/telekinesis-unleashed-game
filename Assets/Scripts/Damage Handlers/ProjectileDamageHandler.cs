@@ -10,7 +10,6 @@ using UnityEngine;
 /// It should be added to <c>GameObject intended to take damage<c/> in order to make 
 /// it process incoming damage from projectiles.
 /// </remarks>
-
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(EntityHealthManager))]
 public class ProjectileDamageHandler : DamageHandler

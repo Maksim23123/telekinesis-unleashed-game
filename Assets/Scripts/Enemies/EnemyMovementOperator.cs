@@ -1,16 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages the movement of an Enemy GameObject.
+/// </summary>
+[RequireComponent(typeof(CharacterControllerScript))]
 public class EnemyMovementOperator : MonoBehaviour
 {
-    [SerializeField] private float _relativeHorizontalRayPossition;
+    [SerializeField] private float _rorizontalRayGameObjectDistance;
     [SerializeField] private float _objectHeight; 
-    [SerializeField] private CharacterControllerScript _characterController;
     [SerializeField] private LayerMask _groundLayers;
     [SerializeField] private float _maxStairSize;
 
     private const float SAFE_NARROWNESS_OFFSET = 0.01f;
 
+    private CharacterControllerScript _characterController;
     private Vector2 _relativeRayPosition;
     float _finalVectorSize;
     private Dictionary<string, bool> _externalMovementPermissions = new Dictionary<string, bool>();
@@ -20,33 +24,50 @@ public class EnemyMovementOperator : MonoBehaviour
 
     public LayerMask GroundLayers { get => _groundLayers; set => _groundLayers = value; }
 
+    /// <summary>
+    /// Initializes necessary variables for the class.
+    /// </summary>
     private void Start()
     {
         _movementDirection = Random.value > 0.5 ? MovementDirection.Right : MovementDirection.Left;
-        Init();
+        _characterController = GetComponent<CharacterControllerScript>();
+        Initialize();
     }
-    
-    private void Init()
+
+    /// <summary>
+    /// Encapsulates complex initialization logic.
+    /// </summary>
+    private void Initialize()
     {
         InitRayParameters();
         InitDirectionalFactorDict();
     }
 
+    /// <summary>
+    /// Calculates and initializes ray parameters for path checking.
+    /// </summary>
     private void InitRayParameters()
     {
         float positionWithObstacleTolerance = _objectHeight / 2 + _maxStairSize;
         float finalHorizontalRayPosition = positionWithObstacleTolerance + SAFE_NARROWNESS_OFFSET;
-        _relativeRayPosition = new Vector2(_relativeHorizontalRayPossition, finalHorizontalRayPosition);
 
-        _finalVectorSize = _objectHeight + _maxStairSize * 2; // Add Obstacle tolerance and fall tolerance at the same time
+        _relativeRayPosition = new Vector2(_rorizontalRayGameObjectDistance, finalHorizontalRayPosition);
+        // \/ Add Obstacle tolerance and fall tolerance at the same time because those are equal values
+        _finalVectorSize = _objectHeight + _maxStairSize * 2; 
     }
 
+    /// <summary>
+    /// Initializes a dictionary with directional factors indicating movement direction.
+    /// </summary>
     private void InitDirectionalFactorDict()
     {
         _directionalFactor[MovementDirection.Right] = 1;
         _directionalFactor[MovementDirection.Left] = -1;
     }
 
+    /// <summary>
+    /// Validates the path and changes movement direction based on the outcome.
+    /// </summary>
     private void FixedUpdate()
     {
         CheckWay();
@@ -68,6 +89,12 @@ public class EnemyMovementOperator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Performs raycast to validate the path ahead of the GameObject.
+    /// </summary>
+    /// <remarks>
+    /// Front of the GameObject is based on the current movement direction.
+    /// </remarks>
     private void CheckWay()
     {
         Vector2 objectPossition = (Vector2)gameObject.transform.position;
@@ -95,11 +122,21 @@ public class EnemyMovementOperator : MonoBehaviour
             _wayIsFree = false;
     }
 
+    /// <summary>
+    /// Allows external logic to control GameObject movement.
+    /// </summary>
+    /// <param name="permissionName">Tag of permission.</param>
+    /// <param name="value">Indicates if permission allows movement.</param>
     public void SetExternalPermission(string permissionName, bool value)
     {
         _externalMovementPermissions[permissionName] = value;
     }
 
+    /// <summary>
+    /// Removes a movement permission with a specified tag.
+    /// </summary>
+    /// <param name="permissionName">Tag of permission.</param>
+    /// <returns>True if permission was removed; otherwise false.</returns>
     public bool RemoveExternalPermission(string permissionName)
     {
         if (_externalMovementPermissions.ContainsKey(permissionName))
@@ -111,14 +148,17 @@ public class EnemyMovementOperator : MonoBehaviour
             return false;
     }
 
+    /// <summary>
+    /// Debug feature to display vector representation in the Scene view.
+    /// </summary>
     public void ShowUpVectors()
     {
         Vector2 mirrorRayPosition = _relativeRayPosition * new Vector2(-1, 1);
         Vector2 objectPossition = (Vector2)gameObject.transform.position;
         Vector2 worldRayPosition = _relativeRayPosition + objectPossition;
-        Vector2 mirrorWorldRayPosition = mirrorRayPosition + objectPossition;
+        Vector2 mirroredWorldRayPosition = mirrorRayPosition + objectPossition;
 
         Debug.DrawLine(worldRayPosition, worldRayPosition + Vector2.down * _finalVectorSize, Color.blue, 10f);
-        Debug.DrawLine(mirrorWorldRayPosition, mirrorWorldRayPosition + Vector2.down * _finalVectorSize, Color.red, 10f);
+        Debug.DrawLine(mirroredWorldRayPosition, mirroredWorldRayPosition + Vector2.down * _finalVectorSize, Color.red, 10f);
     }
 }
