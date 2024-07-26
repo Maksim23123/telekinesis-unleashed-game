@@ -1,10 +1,16 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// This class responsible for horizontal movement of GameObject.
+/// Should be used as utilite for controling horizontal of each GameObject it attached to.
+/// </summary>
 public class CharacterControllerScript : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private LayerMask _groundLayers;
+    private const float GROUND_CHECK_RELATIVE_VERTICAL_POSITION = 0.555f;
+    private const float GROUND_CHECK_RADIUS = 0.475f;
 
     private float _directionalFactor;
     private float _maxSlopeAngle = 46;
@@ -44,6 +50,9 @@ public class CharacterControllerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Initializes variables necessary for the class.
+    /// </summary>
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -54,12 +63,20 @@ public class CharacterControllerScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Periodicaly invokes main class logic.
+    /// </summary>
     private void FixedUpdate()
     {
         CheckGround();
         MoveCharacter(DirectionalFactor);
     }
 
+
+    /// <summary>
+    /// Moves GameObject acording to directional factor
+    /// </summary>
+    /// <param name="directionalFactor"> indicates in which direction GameObject should move.</param>
     protected void MoveCharacter(float directionalFactor)
     {
         if (_gravityScaleRequestManager != null)
@@ -72,21 +89,25 @@ public class CharacterControllerScript : MonoBehaviour
                 _gravityScaleRequestManager.RequestIsActive = false;
         }
 
-        float movement = directionalFactor * _speed * Time.deltaTime;
+        float movementAmount = directionalFactor * _speed * Time.deltaTime;
 
-        Vector2 adaptedVector = Vector2.right;
+        Vector2 adaptedDirection = Vector2.right;
         if (Grounded && _onSlope)
-            adaptedVector = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
+            adaptedDirection = new Vector2(Mathf.Cos(Mathf.Deg2Rad * _groundAngle), Mathf.Sin(Mathf.Deg2Rad * _groundAngle));
 
         if (!BlockHorizontalMovement)
-            transform.Translate(movement * adaptedVector);
+            transform.Translate(movementAmount * adaptedDirection);
 
         _rigidbody.velocity = new Vector2(0, _rigidbody.velocity.y);
     }
-
+    
+    /// <summary>
+    /// Performs circle cast to check if there is any surface that can be considered ground underneath GameObject.
+    /// </summary>
     protected void CheckGround()
     {
-        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * 0.555f, 0.475f, Vector2.down, 0, _groundLayers);
+        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * GROUND_CHECK_RELATIVE_VERTICAL_POSITION
+            , GROUND_CHECK_RADIUS, Vector2.down, 0, _groundLayers);
 
         if (raycastHit.collider != null)
         {
