@@ -1,3 +1,9 @@
+/// <summary>
+/// A utility class for sending requests to <see cref="GravityScaleManager"/>.
+/// </summary>
+/// <remarks>
+/// Requests can be activated or deactivated by changing the <c>RequestIsActive</c> property.
+/// </remarks>
 public class GravityScaleRequestManager
 {
     private bool _requestIsActive;
@@ -12,9 +18,11 @@ public class GravityScaleRequestManager
     public bool RequestIsActive
     {
         get => _requestIsActive;
+
         set
         {
             if (_gravityScaleManager != null && _requestIsActive != value)
+            {
                 if (value)
                 {
                     _requestIsActive = true;
@@ -25,7 +33,7 @@ public class GravityScaleRequestManager
                     _requestIsActive = false;
                     _gravityScaleManager.RemoveGravityValue(_requestId);
                 }
-
+            }
         }
     }
 
