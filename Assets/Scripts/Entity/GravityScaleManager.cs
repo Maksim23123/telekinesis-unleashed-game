@@ -2,6 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manages the gravity scale of a GameObject. Requires a 
+/// <see cref="Rigidbody2D"/> component attached to the same GameObject.
+/// </summary>
+/// <remarks>
+/// This class is a utility for external logic intending to change the GameObject's gravity scale.
+/// The <see cref="GravityScaleRequestManager"/> class is designed to easily send and manage gravity value requests.
+/// If multiple values are sent, the one with the highest <c>priority</c> is chosen.
+/// </remarks>
 [RequireComponent(typeof(Rigidbody2D))] 
 public class GravityScaleManager : MonoBehaviour
 {
@@ -40,12 +49,22 @@ public class GravityScaleManager : MonoBehaviour
         _rigidbody.gravityScale = _currentValue;
     }
 
+    /// <summary>
+    /// Allows to apply value to gavity values list.
+    /// </summary>
+    /// <param name="value">Gravity scale value.</param>
+    /// <param name="slotId">ID under which value was added to list.</param>
+    /// <param name="priority">Priority of value.</param>
     public void AddGravityValue(float value, out int slotId, int priority = 0)
     {
         slotId = StaticTools.GetFreeId(_gravityValueSlots, x => x.SlotId);
         _gravityValueSlots.Add(new GravityValueSlot(slotId, priority, value));
     }
 
+    /// <summary>
+    /// Allows to remove value from gavity values list.
+    /// </summary>
+    /// <param name="slotId">ID under which value was sent to this class.</param>
     public void RemoveGravityValue(int slotId)
     {
         List<GravityValueSlot> slotsToRemove = _gravityValueSlots.Where(x => x.SlotId == slotId).ToList();
