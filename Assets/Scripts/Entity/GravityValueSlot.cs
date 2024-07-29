@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Represents a slot within the <see cref="GravityScaleManager"/>.
+/// Contains gravity scale value and properties to help <see cref="GravityScaleManager"/> validate slots.
+/// </summary>
 public class GravityValueSlot : IComparer<GravityValueSlot>
 {
     private int _slotId;
