@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -14,7 +15,23 @@ public abstract class DamageHandler : MonoBehaviour
 {
     private float _resistance;
 
-    public float Resistance { get => _resistance; set => _resistance = value; }
+    public float Resistance 
+    { 
+        
+        get => _resistance;
+
+        set
+        {
+            if (value >= 0)
+            {
+                _resistance = value;
+            }
+            else
+            {
+                throw new ArgumentException("Resistance can't be less then 0.");
+            }
+        } 
+    }
 
     /// <summary>
     /// Calculates a random resistance amount based on the current resistance value.
@@ -22,6 +39,6 @@ public abstract class DamageHandler : MonoBehaviour
     /// <returns>A random resistance amount.</returns>
     protected float GetCurrentResistanceAmount()
     {
-        return Random.value * Resistance;
+        return UnityEngine.Random.value * Resistance;
     }
 }
