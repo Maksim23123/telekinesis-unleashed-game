@@ -1,7 +1,8 @@
 {
-    "name": "SaveLoadManager",
+    "name": "Gameplay",
     "rootNamespace": "",
     "references": [
+        "GUID:5cf8576db22d5d943a981533098ccc89",
         "GUID:aadd12f7c5e42fd46888f29a15a16e4c"
     ],
     "includePlatforms": [],

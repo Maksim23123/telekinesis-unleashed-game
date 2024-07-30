@@ -5,6 +5,7 @@ using UnityEngine;
 /// This class responsible for horizontal movement of GameObject.
 /// Should be used as utilite for controling horizontal of each GameObject it attached to.
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class CharacterControllerScript : MonoBehaviour
 {
     [SerializeField] private float _speed;
