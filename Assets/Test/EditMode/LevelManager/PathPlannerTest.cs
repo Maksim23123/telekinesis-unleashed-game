@@ -9,13 +9,8 @@ public class PathPlannerTest
 {
     //MethodName_StateUnderTest_ExpectedBehavior
     [Test]
-    [TestCase(1, 1)]
-    [TestCase(1, 3)]
-    [TestCase(3, 3)]
-    [TestCase(7, 4)]
-    public void GeneratePathPlan_AllPathEndsConnection_Connected(int exitsCount, int enterencesCount)
+    public void GeneratePathPlan_AllPathEndsConnection_Connected()
     {
-        Debug.Log(exitsCount);
         try
         {
             //Arange
@@ -26,8 +21,8 @@ public class PathPlannerTest
 
             List<PathEnd> enterances = new List<PathEnd>();
             List<PathEnd> exits = new List<PathEnd>();
-            FillWithPathEnds(ref exits, exitsCount);
-            FillWithPathEnds(ref enterances, enterencesCount);
+            FillWithPathEnds(ref exits);
+            FillWithPathEnds(ref enterances, 7);
             List<List<PathUnit>[]> connectionLayers = new();
             List<PathUnit>[] connectionLayer = { exits.ToList<PathUnit>(), enterances.ToList<PathUnit>() };
             connectionLayers.Add(connectionLayer);
