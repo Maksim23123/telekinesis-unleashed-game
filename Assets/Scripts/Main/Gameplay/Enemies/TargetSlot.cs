@@ -11,7 +11,6 @@ public class TargetSlot
     public GameObject Target { get; set; }
     public bool TargetIsVisible { get; set; }
 
-
     public TargetSlot(int targetPriority, TargetType targetType, GameObject target)
     {
         TargetPriority = targetPriority;
