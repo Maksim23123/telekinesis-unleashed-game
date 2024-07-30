@@ -20,6 +20,10 @@ public class EmptyConditionalOneTimeItemEvent : ItemEvent
 
     public override bool CheckCondition()
     {
-        return PlayerController.Instance.gameObject.transform.position.y > height;
+        if (PlayerStatusInformer.PlayerGameObject != null)
+        {
+            return PlayerStatusInformer.PlayerGameObject.transform.position.y > height;
+        }
+        return false;
     }
 }

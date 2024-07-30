@@ -20,7 +20,7 @@ public class EmptyConditionalItemEvent : ItemEvent
 
     public override bool CheckCondition()
     {
-        if (PlayerStatusInformer.PlayerGameObject != null && !PlayerStatusInformer.PlayerGameObject.IsDestroyed())
+        if (PlayerStatusInformer.PlayerGameObject != null)
             return PlayerStatusInformer.PlayerGameObject.transform.position.y < height;
         else
             return false;
