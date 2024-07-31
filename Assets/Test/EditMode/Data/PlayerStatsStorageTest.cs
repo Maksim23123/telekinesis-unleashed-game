@@ -30,6 +30,23 @@ public class PlayerStatsStorageTest
         Assert.AreEqual(expectedResult, actualResult);
     }
 
+    [Test]
+    [TestCase(1, 2)]
+    [TestCase(5, 3)]
+    [TestCase(4, 4)]
+    [TestCase(9, 9)]
+    public void EqualityOperator_ComparesStatsValues(int firstStorageStatsValue, int secondStorageStatsValue)
+    {
+        PlayerStatsStorage firstStorage = GenerateStorage(firstStorageStatsValue);
+        PlayerStatsStorage secondStorage = GenerateStorage(secondStorageStatsValue);
+        bool expectedResult = firstStorageStatsValue == secondStorageStatsValue;
+
+
+        bool comparisonResult = firstStorage == secondStorage;
+
+        Assert.AreEqual(expectedResult, comparisonResult);
+    }
+
     private PlayerStatsStorage GenerateStorage(float statsValue)
     {
         PlayerStatsStorage newStorage = new PlayerStatsStorage();
