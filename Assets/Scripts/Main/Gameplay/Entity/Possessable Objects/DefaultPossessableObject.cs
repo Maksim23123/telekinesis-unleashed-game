@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// Class to be added as a componnent to PossessableObjects.
+/// Defines basic PossessableObject behaviour.
+/// Requires <see cref="Rigidbody2D"> to be attached to the same GameObject.
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class DefaultPossessableObject : PossessableObject
 {
@@ -10,6 +15,11 @@ public class DefaultPossessableObject : PossessableObject
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
+    /// <summary>
+    /// Gives an impuls to a PossessableObject in a certain direction.
+    /// </summary>
+    /// <param name="direction">The direction of the impuls.</param>
+    /// <param name="power">The power of the impuls.</param>
     public override void ProcessManipulation(Vector3 direction, float power)
     {
         if (TryGetComponent(out Rigidbody2D rigidbody))
@@ -19,6 +29,10 @@ public class DefaultPossessableObject : PossessableObject
         }
     }
 
+    /// <summary>
+    /// Calculates the damage of the current PossessableObject.
+    /// </summary>
+    /// <returns>The floating-point damage value.</returns>
     public override float GetContactDamage()
     {
         float aditionalMultiplier = 1;
