@@ -1,6 +1,10 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// This class stores all important player stats in one place.
+/// And also allows some manipulation on them.
+/// </summary>
 [Serializable] 
 public class PlayerStatsStorage : IRecordable
 {
@@ -26,6 +30,12 @@ public class PlayerStatsStorage : IRecordable
     public float Resistance { get => _resistance; set => _resistance = value; }
     public float Regeneration { get => _regeneration; set => _regeneration = value; }
 
+    /// <summary>
+    /// Combines two stat storages.
+    /// </summary>
+    /// <param name="s1">First stats storage</param>
+    /// <param name="s2">Second stats storage</param>
+    /// <returns>New stats storage with combined values.</returns>
     public static PlayerStatsStorage operator +(PlayerStatsStorage s1, PlayerStatsStorage s2)
     {
         PlayerStatsStorage newPlayerStatsStorage = new PlayerStatsStorage();
@@ -42,6 +52,12 @@ public class PlayerStatsStorage : IRecordable
         return newPlayerStatsStorage;
     }
 
+    /// <summary>
+    /// Multiplies all stats in stat storage by certain number.
+    /// </summary>
+    /// <param name="s1">Stats storage to perform manipulation on.</param>
+    /// <param name="number">Multiplier.</param>
+    /// <returns>New stats storage with modified values.</returns>
     public static PlayerStatsStorage operator *(PlayerStatsStorage s1, float number)
     {
         PlayerStatsStorage newPlayerStatsStorage = new PlayerStatsStorage();
@@ -58,16 +74,34 @@ public class PlayerStatsStorage : IRecordable
         return newPlayerStatsStorage;
     }
 
+    /// <summary>
+    /// Checks if two stat storages have the same stats values.
+    /// </summary>
+    /// <param name="s1">First stats storage.</param>
+    /// <param name="s2">Second stats storage.</param>
+    /// <returns>Comparison result.</returns>
     public static bool operator ==(PlayerStatsStorage s1, PlayerStatsStorage s2)
     {
         return s1.Equals(s2);
     }
 
+    /// <summary>
+    /// Checks if there are any difference between stats values of two stat storages.
+    /// </summary>
+    /// <param name="s1">First stats storage.</param>
+    /// <param name="s2">Second stats storage.</param>
+    /// <returns>Comparison result.</returns>
     public static bool operator !=(PlayerStatsStorage s1, PlayerStatsStorage s2)
     {
         return !(s1 == s2);
     }
 
+    /// <summary>
+    /// Checks if two stat storages have the same stats values.
+    /// </summary>
+    /// <param name="s1">First stats storage.</param>
+    /// <param name="s2">Second stats storage.</param>
+    /// <returns>Comparison result.</returns>
     public override bool Equals(object obj)
     {
         if (obj is PlayerStatsStorage other)
