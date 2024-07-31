@@ -5,7 +5,7 @@ public class PlayerStatsStorageTest
     [Test]
     [TestCase(1, 2)]
     [TestCase(5, 3)]
-    public void PlusOperator_AddsValuesOfBothStoragesTogether_True(int firstStorageStatsValue, int secondStorageStatsValue)
+    public void PlusOperator_AddsValuesOfBothStoragesTogether(int firstStorageStatsValue, int secondStorageStatsValue)
     {
         PlayerStatsStorage firstStorage = GenerateStorage(firstStorageStatsValue);
         PlayerStatsStorage secondStorage = GenerateStorage(secondStorageStatsValue);
@@ -20,7 +20,7 @@ public class PlayerStatsStorageTest
     [TestCase(1, 2)]
     [TestCase(5, 3)]
     [TestCase(5, 1.5f)]
-    public void MultiplierOperator_MultiplierValuesByCertainNumber_True(int storageStatsValue, float multiplier)
+    public void MultiplicationOperator_MultipliesValuesByCertainNumber(int storageStatsValue, float multiplier)
     {
         PlayerStatsStorage storage = GenerateStorage(storageStatsValue);
         PlayerStatsStorage expectedResult = GenerateStorage(storageStatsValue * multiplier);
