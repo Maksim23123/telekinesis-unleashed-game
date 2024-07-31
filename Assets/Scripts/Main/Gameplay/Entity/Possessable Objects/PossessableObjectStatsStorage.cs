@@ -1,3 +1,6 @@
+/// <summary>
+/// This class stores all the stats for a PossessableObject in one place.
+/// </summary>
 public class PossessableObjectStatsStorage
 {
     public float DamageMultiplier { get; set; }
