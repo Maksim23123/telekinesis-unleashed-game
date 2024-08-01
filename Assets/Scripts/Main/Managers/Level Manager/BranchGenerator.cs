@@ -38,15 +38,11 @@ public class BranchGenerator : MonoBehaviour
 
     public void Generate()
     {
-        Vector2Int startPosition = new Vector2Int((int)(BlockGridSettings.MapDimensions.x * _horizontalGenerationStartPosition - _horizontalGenerationStartPosition), 0);
 
-        if (_levelManager.TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder corridorPrefab))
+
+        if (LevelElements.Count > 0)
         {
             _currentGeneration = 0;
-            if (LevelElements.Count == 0)
-            {
-                _levelManager.InstantiateOrReplaceBlock(startPosition, corridorPrefab);
-            }
 
             for (int i = 0; (i < _minGenerationIterationsCount || _blocksCount < _minBlocksCount) && i < _maxGenerationIterationsCount; i++)
             {
@@ -57,6 +53,10 @@ public class BranchGenerator : MonoBehaviour
                     ReActivateGeneration();
                 }
             }
+        }
+        else
+        {
+            Debug.LogError("No base level elements to start brunch generation.");
         }
     }
 
