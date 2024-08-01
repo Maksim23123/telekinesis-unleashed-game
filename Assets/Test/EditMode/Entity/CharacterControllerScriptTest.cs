@@ -25,7 +25,8 @@ public class CharacterControllerScriptTest
     [TestCase(0)]
     [TestCase(5)]
     [TestCase(-10)]
-    public void DirectionalFactor_IsWithinRange_True(int initialDirectionalFactorValue)
+    [TestCase(0.5f)]
+    public void DirectionalFactor_IsWithinRange_True(float initialDirectionalFactorValue)
     {
         _characterControllerScript.DirectionalFactor = initialDirectionalFactorValue;
 
