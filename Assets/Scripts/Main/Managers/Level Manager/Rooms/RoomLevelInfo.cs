@@ -19,11 +19,16 @@ public class RoomLevelInfo
 
     private int _capturedVerticalPlace = 0;
 
+    public int ConnectionsDedicatedSpace { get; private set; }
+    public int CenterVerticalPosition { get; private set; }
+    public int MaxCapturedPlaceBelow { get; private set; }
+    public int MaxCapturedPlaceAbove { get; private set; }
     public int HorizontalPos { get => _horizontalPos; }
     public int CapturedVerticalPlace { get => _capturedVerticalPlace; }
     public RoomInfo[] LevelRoomsContainer { get => _levelRoomsContainer.ToArray(); }
 
-    public void GenerateRoomLevel(GameObject[] roomsPrefabs, int verticalPos, int oneConnectionLayerDedicatedSpace = 4)
+    public void GenerateRoomLevel(LevelManager levelManager, GameObject[] roomsPrefabs, int verticalPos
+        , int oneConnectionLayerDedicatedSpace = 4)
     {
         _levelRoomsContainer = new RoomInfo[_minRoomCount + (int)((_maxRoomCount - _minRoomCount + 1) * UnityEngine.Random.value)];
 
@@ -34,14 +39,14 @@ public class RoomLevelInfo
             connectionsDedicatedSpaceMultiplier++;
         }
 
-        int connectionsDedicatedSpace = oneConnectionLayerDedicatedSpace * connectionsDedicatedSpaceMultiplier;
+        ConnectionsDedicatedSpace = oneConnectionLayerDedicatedSpace * connectionsDedicatedSpaceMultiplier;
 
-        verticalPos += connectionsDedicatedSpace;
+        verticalPos += ConnectionsDedicatedSpace;
 
-        List<GameObject> roomObjects = FillRoomObjects(roomsPrefabs);
+        List<GameObject> roomObjects = FillRoomObjects(roomsPrefabs, levelManager);
         
-        int maxCapturedPlaceBelow = FindMaxCapturedVerticalPlaceBelow(roomObjects);
-        verticalPos = verticalPos + maxCapturedPlaceBelow;
+        MaxCapturedPlaceBelow = FindMaxCapturedVerticalPlaceBelow(roomObjects);
+        verticalPos = verticalPos + MaxCapturedPlaceBelow;
 
         _horizontalPos = 0;
 
@@ -55,7 +60,8 @@ public class RoomLevelInfo
                         ? roomData.CapturedZoneInBlockGridStart.x : roomData.CapturedZoneInBlockGridEnd.x);
                 _horizontalPos += bigestSpaceOnLeft + 1;
 
-                _levelRoomsContainer[i] = new RoomInfo(roomObjects[i], new Vector2Int(_horizontalPos, verticalPos));
+                CenterVerticalPosition = verticalPos;
+                _levelRoomsContainer[i] = new RoomInfo(roomObjects[i], new Vector2Int(_horizontalPos, CenterVerticalPosition));
                 _horizontalPos += bigestSpaceOnRight;
             }
             else
@@ -66,16 +72,21 @@ public class RoomLevelInfo
             _horizontalPos += _betweenRoomSpaceSize;
         }
 
-        _capturedVerticalPlace = FindMaxCapturedVerticalPlaceAbove(roomObjects) + maxCapturedPlaceBelow + CENTER_CAPTURED_SPACE_BIAS;
-        _capturedVerticalPlace += connectionsDedicatedSpace * 2;
+        MaxCapturedPlaceAbove = FindMaxCapturedVerticalPlaceAbove(roomObjects);
+        _capturedVerticalPlace = MaxCapturedPlaceAbove + MaxCapturedPlaceBelow + CENTER_CAPTURED_SPACE_BIAS;
     }
 
-    private List<GameObject> FillRoomObjects(GameObject[] roomsPrefabs)
+    private List<GameObject> FillRoomObjects(GameObject[] roomsPrefabs, LevelManager levelManager)
     {
         List<GameObject> roomObjects = new();
         for (int i = 0; i < _levelRoomsContainer.Length; i++)
         {
-            roomObjects.Add(roomsPrefabs[UnityEngine.Random.Range(0, roomsPrefabs.Length)]);
+            GameObject chosenRoomPrefab = roomsPrefabs[UnityEngine.Random.Range(0, roomsPrefabs.Length)];
+            if (chosenRoomPrefab.TryGetComponent(out BlockStructure blockStructure))
+            {
+                blockStructure.InitInGridParams(levelManager.BlockGridSettings);
+            }
+            roomObjects.Add(chosenRoomPrefab);
         }
         return roomObjects;
     }

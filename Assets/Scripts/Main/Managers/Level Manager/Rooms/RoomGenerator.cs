@@ -14,6 +14,8 @@ public class RoomGenerator : MonoBehaviour
     BlockGridSettings _blockGridSettings;
 
     public GameObject[] RoomPrefabs { get => _roomPrefabs.ToArray(); }
+    public List<GridArea> AreasToFinalize { get; private set; } = new();
+    public List<GridArea> AreasForBrunches { get; private set; } = new();
     public BlockGridSettings BlockGridSettings 
     { 
         get
@@ -26,15 +28,45 @@ public class RoomGenerator : MonoBehaviour
     {
         int verticalPosition = 0;
 
-        for (int i = _roomLevels.Count - 1; i >= 0; i--)
+        GridArea areaForBrunches = new();
+
+        int roomLevelsFirstIndex = _roomLevels.Count - 1;
+        for (int i = roomLevelsFirstIndex; i >= 0; i--)
         {
-            _roomLevels[i].GenerateRoomLevel(_roomPrefabs, verticalPosition);
-            verticalPosition += _roomLevels[i].CapturedVerticalPlace + _betweenRoomLevelSpaceSize;
+            _roomLevels[i].GenerateRoomLevel(_levelManager, _roomPrefabs, verticalPosition);
+            verticalPosition += _roomLevels[i].CapturedVerticalPlace + _betweenRoomLevelSpaceSize
+                + _roomLevels[i].ConnectionsDedicatedSpace * 2;
+            AppendAreasToFinalize(i);
+            AppendAreasForBrunches(ref areaForBrunches, roomLevelsFirstIndex, i);
         }
 
         List<List<PathUnit>[]> roomStructure = OrganizeIntoRoomStructure();
 
         return roomStructure;
+    }
+
+    private void AppendAreasForBrunches(ref GridArea areaForBrunches, int roomLevelsFirstIndex, int i)
+    {
+        areaForBrunches.AreaEnd = new Vector2Int(100
+                        , _roomLevels[i].CenterVerticalPosition - _roomLevels[i].MaxCapturedPlaceBelow - 1);
+
+        if (i != roomLevelsFirstIndex)
+        {
+            AreasForBrunches.Add(areaForBrunches);
+        }
+
+        areaForBrunches.AreaStart = new Vector2Int(0
+            , _roomLevels[i].CenterVerticalPosition + _roomLevels[i].MaxCapturedPlaceAbove + 1);
+    }
+
+    private void AppendAreasToFinalize(int index)
+    {
+        GridArea areaToFinalize = new();
+        areaToFinalize.AreaStart = new Vector2Int(0
+            , _roomLevels[index].CenterVerticalPosition + _roomLevels[index].MaxCapturedPlaceAbove);
+        areaToFinalize.AreaEnd = new Vector2Int(100
+            , _roomLevels[index].CenterVerticalPosition - _roomLevels[index].MaxCapturedPlaceBelow);
+        AreasToFinalize.Add(areaToFinalize);
     }
 
     private List<List<PathUnit>[]> OrganizeIntoRoomStructure()

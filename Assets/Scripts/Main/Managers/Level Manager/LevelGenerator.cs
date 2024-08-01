@@ -26,6 +26,10 @@ public class LevelGenerator : MonoBehaviour
 
         _levelManager.ClearLevel();
         List<List<PathUnit>[]> roomStructure = _roomGenerator.GenerateRooms();
+        foreach (GridArea gridArea in _roomGenerator.AreasForBrunches)
+        {
+            Debug.Log(gridArea.AreaEnd);
+        }
         HashSet<PathUnit> pathPlan = _pathPlanner.GeneratePathPlan(roomStructure);
         _pathGenerator.GeneratePaths(pathPlan, roomStructure);
     }
