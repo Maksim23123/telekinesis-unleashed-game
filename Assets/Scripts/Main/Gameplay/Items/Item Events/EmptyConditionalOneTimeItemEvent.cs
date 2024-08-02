@@ -10,13 +10,11 @@ public class EmptyConditionalOneTimeItemEvent : ItemEvent
     [SerializeField] private string output;
     [SerializeField] private float height = 10;
 
-
     public override void ExecuteItemEvent()
     {
         Debug.Log(output);
         EventExecuted = true;
     }
-
 
     public override bool Union(ItemEvent itemEvent)
     {
