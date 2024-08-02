@@ -11,7 +11,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
 {
     [SerializeField] private int _maxHealth;
     [SerializeField] private int _currentHealth;
-    [SerializeField] private bool _afterDamageImortalityFrames;
+    [SerializeField] private bool _afterDamageImortalityFrames = false;
     [SerializeField] private float _afterDamageImortalityTime = 0.5f;
     [Header("Save Load System related")]
     [SerializeField] private bool _triggerObjectDataUnpack = false;

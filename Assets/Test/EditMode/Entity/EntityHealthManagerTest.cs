@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class EntityHealthManagerTest
 {
+    const int MIN_CURRENT_HEALTH = 0;
+    const int MIN_MAX_HEALTH = 1;
+
     private GameObject _gameObject;
     private EntityHealthManager _entityHealthManager;
 
@@ -18,7 +21,6 @@ public class EntityHealthManagerTest
     {
         _entityHealthManager.CurrentHealth = -5;
 
-        const int MIN_CURRENT_HEALTH = 0;
         Assert.IsFalse(_entityHealthManager.CurrentHealth < MIN_CURRENT_HEALTH);
     }
 
@@ -27,7 +29,23 @@ public class EntityHealthManagerTest
     {
         _entityHealthManager.MaxHealth = -5;
 
-        const int MIN_MAX_HEALTH = 1;
         Assert.IsFalse(_entityHealthManager.MaxHealth < MIN_MAX_HEALTH);
+    }
+
+    [Test]
+    [TestCase(10, 5)]
+    [TestCase(7, 15)]
+    [TestCase(8, -2)]
+    public void ProcessDamage_DamageIsSubtractedFromCurrentHealth_True(int currentHealth, int damage)
+    {
+        _entityHealthManager.MaxHealth = currentHealth;
+        _entityHealthManager.CurrentHealth = currentHealth;
+
+        int damageForExpectedResult = Mathf.Clamp(damage, 0, int.MaxValue);
+        int expectedCurrentHealth = Mathf.Clamp(currentHealth - damageForExpectedResult, MIN_CURRENT_HEALTH, int.MaxValue);
+
+        _entityHealthManager.ProcessDamage(damage);
+
+        Assert.AreEqual(expectedCurrentHealth, _entityHealthManager.CurrentHealth);
     }
 }
