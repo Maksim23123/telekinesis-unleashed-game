@@ -1,6 +1,9 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// An example class for conditional item events,
+/// not intended for use in actual game logic.
+/// </summary>
 [CreateAssetMenu(menuName = "Item events/Empty conditional event")] 
 public class EmptyConditionalItemEvent : ItemEvent
 {
