@@ -50,7 +50,7 @@ public class RoomGenerator : MonoBehaviour
 
     private void AppendAreasForBrunches(ref GridArea areaForBrunches, int roomLevelsFirstIndex, int i)
     {
-        areaForBrunches.AreaEnd = new Vector2Int(50
+        areaForBrunches.AreaEnd = new Vector2Int(100
                         , _roomLevels[i].CenterVerticalPosition - _roomLevels[i].MaxCapturedPlaceBelow - 1);
 
         if (i != roomLevelsFirstIndex)
@@ -58,16 +58,16 @@ public class RoomGenerator : MonoBehaviour
             AreasForBrunches.Add(areaForBrunches);
         }
 
-        areaForBrunches.AreaStart = new Vector2Int(-50
+        areaForBrunches.AreaStart = new Vector2Int(-100
             , _roomLevels[i].CenterVerticalPosition + _roomLevels[i].MaxCapturedPlaceAbove + 1);
     }
 
     private void AppendAreasToFinalize(int index)
     {
         GridArea areaToFinalize = new();
-        areaToFinalize.AreaStart = new Vector2Int(-50
+        areaToFinalize.AreaStart = new Vector2Int(-100
             , _roomLevels[index].CenterVerticalPosition + _roomLevels[index].MaxCapturedPlaceAbove);
-        areaToFinalize.AreaEnd = new Vector2Int(50
+        areaToFinalize.AreaEnd = new Vector2Int(100
             , _roomLevels[index].CenterVerticalPosition - _roomLevels[index].MaxCapturedPlaceBelow);
         AreasToFinalize.Add(areaToFinalize);
     }

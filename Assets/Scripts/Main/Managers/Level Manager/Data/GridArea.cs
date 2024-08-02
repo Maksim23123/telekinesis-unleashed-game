@@ -44,7 +44,7 @@ public struct GridArea
         AreaEnd = areaEnd;
     }
 
-    public bool IsWithInArea(Vector2Int position)
+    public bool IsWithinArea(Vector2Int position)
     {
         if (position.x >= CornerWithLowestValues.x
                 && position.y >= CornerWithLowestValues.y
