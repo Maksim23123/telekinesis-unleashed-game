@@ -52,7 +52,8 @@ public class RestraintBuilder
         }
     }
 
-    public void BuildRestraintsBetweenRooms(List<List<PathUnit>[]> roomStructure)
+    public void ActWithRestraintsBetweenRooms(List<List<PathUnit>[]> roomStructure
+            , RestraintActionType restraintActionType = RestraintActionType.Build)
     {
         if (Initialized)
         {
@@ -60,7 +61,8 @@ public class RestraintBuilder
             List<PathUnit[]> pairedRoomConnections = PairRoomConnections(roomConnectionLayers);
             for (int i = 0; i < pairedRoomConnections.Count; i++)
             {
-                BuildRestraintsBetweenRoomConnectionPairs(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray());
+                ActWithRestraintsBetweenRoomConnectionPairs(pairedRoomConnections[i].Select(g => g as PathEnd).ToArray()
+                    , restraintActionType);
             }
         }
     }
@@ -112,7 +114,8 @@ public class RestraintBuilder
         return pairedRoomConnections;
     }
 
-    private void BuildRestraintsBetweenRoomConnectionPairs(PathEnd[] pathEndsPair)
+    private void ActWithRestraintsBetweenRoomConnectionPairs(PathEnd[] pathEndsPair
+            , RestraintActionType restraintActionType)
     {
         if (pathEndsPair.Length == 2
                 && _levelManager.TryGetSuitableBlock(RESTRAINT_BLOCK_TAG, out BlockInfoHolder restraint))
@@ -121,12 +124,13 @@ public class RestraintBuilder
             Vector2Int secondPoint = pathEndsPair[1].Connection.GetConnectionPoint(BlockGridSettings);
 
             int horizontalPosition = (firstPoint.x + secondPoint.x) / 2;
-            BuildVerticalRestreint(restraint, firstPoint, secondPoint, horizontalPosition);
-            BuildHorizontalRestreints(pathEndsPair, restraint, horizontalPosition);
+            ActWithVerticalRestreint(restraint, firstPoint, secondPoint, horizontalPosition, restraintActionType);
+            ActWithHorizontalRestreints(pathEndsPair, restraint, horizontalPosition, restraintActionType);
         }
     }
 
-    private void BuildHorizontalRestreints(PathEnd[] pathEndsPair, BlockInfoHolder restraint, int horizontalPosition)
+    private void ActWithHorizontalRestreints(PathEnd[] pathEndsPair, BlockInfoHolder restraint, int horizontalPosition
+            , RestraintActionType restraintActionType)
     {
         foreach (Connection connection in pathEndsPair.Select(g => g.Connection))
         {
@@ -144,13 +148,24 @@ public class RestraintBuilder
             int horizontalStartPosition = connectionPoint.x;
             int horizontalEndPosition = horizontalPosition;
 
-            _levelManager.FillRect(new Vector2Int(horizontalStartPosition, verticalPosition)
-                , new Vector2Int(horizontalEndPosition, verticalPosition), restraint);
+            Vector2Int actionAreaStart = new Vector2Int(horizontalStartPosition, verticalPosition);
+            Vector2Int actionAreaEnd = new Vector2Int(horizontalEndPosition, verticalPosition);
+            
+            if (restraintActionType == RestraintActionType.Build)
+            {
+                _levelManager.FillRect(actionAreaStart
+                    , actionAreaEnd, restraint);
+            }
+            else if (restraintActionType == RestraintActionType.Destroy)
+            {
+                _levelManager.DestroyBlocksInArea(actionAreaStart, actionAreaEnd);
+            }
         }
     }
 
-    private void BuildVerticalRestreint(BlockInfoHolder restraint, Vector2Int firstPoint
-            , Vector2Int secondPoint, int horizontalPosition)
+    private void ActWithVerticalRestreint(BlockInfoHolder restraint, Vector2Int firstPoint
+            , Vector2Int secondPoint, int horizontalPosition
+            , RestraintActionType restraintActionType = RestraintActionType.Build)
     {
         int[] verticalPositions = new int[]
             {
@@ -161,7 +176,17 @@ public class RestraintBuilder
         int startVerticalPosition = verticalPositions.Max();
         int endVerticalPosition = verticalPositions.Min();
 
-        _levelManager.FillRect(new Vector2Int(horizontalPosition, startVerticalPosition)
-            , new Vector2Int(horizontalPosition, endVerticalPosition), restraint);
+        Vector2Int actionAreaStart = new Vector2Int(horizontalPosition, startVerticalPosition);
+        Vector2Int actionAreaEnd = new Vector2Int(horizontalPosition, endVerticalPosition);
+
+        if (restraintActionType == RestraintActionType.Build)
+        {
+            _levelManager.FillRect(actionAreaStart
+                , actionAreaEnd, restraint);
+        }
+        else if (restraintActionType == RestraintActionType.Destroy)
+        {
+            _levelManager.DestroyBlocksInArea(actionAreaStart, actionAreaEnd);
+        }
     }
 }

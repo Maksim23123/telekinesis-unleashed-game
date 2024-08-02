@@ -214,7 +214,6 @@ public class LevelManager : MonoBehaviour
     }
 
     //General
-    //T: startGridPosition, endGridPosition - can be replaced with grid area
     public void ExecuteForArea(Vector2Int startGridPosition, Vector2Int endGridPosition, Action<Vector2Int> action)
     {
         Vector2Int affectedAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled

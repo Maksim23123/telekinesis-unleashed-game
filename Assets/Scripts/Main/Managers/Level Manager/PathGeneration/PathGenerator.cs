@@ -30,10 +30,12 @@ public class PathGenerator : MonoBehaviour
         
         List<Triplet> instantiatedTriplets = _tripletGenerator.InstantiateTriplets(pathPlan, roomStructure);
 
-        _restraintBuilder.BuildRestraintsBetweenRooms(roomStructure);
+        _restraintBuilder.ActWithRestraintsBetweenRooms(roomStructure);
         _restraintBuilder.SealTripletsEnterences(instantiatedTriplets);
 
         BuildPathsBetweenConnectionPoints(instantiatedTriplets, pathPlan);
+
+        _restraintBuilder.ActWithRestraintsBetweenRooms(roomStructure, RestraintActionType.Destroy);
     }
 
     private void BuildPathsBetweenConnectionPoints(List<Triplet> triplets, HashSet<PathUnit> pathPlan)
