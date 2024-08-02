@@ -102,6 +102,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
     {
         if (_currentHealth > 0 && !_damageTakingOnCooldown)
         {
+            damage = Mathf.Clamp(damage, 0, int.MaxValue);
             _currentHealth -= damage;
             if (_currentHealth < 1)
             {
