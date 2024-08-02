@@ -48,4 +48,22 @@ public class EntityHealthManagerTest
 
         Assert.AreEqual(expectedCurrentHealth, _entityHealthManager.CurrentHealth);
     }
+
+    [Test]
+    [TestCase(10, 5)]
+    [TestCase(7, 15)]
+    [TestCase(8, -2)]
+    public void ProcessHeal_IfHealPositiveItIsAddedToCurrentHealth_True(int currentHealth, int healAmount)
+    {
+        _entityHealthManager.MaxHealth = Mathf.Abs(currentHealth) * 2;
+        _entityHealthManager.CurrentHealth = currentHealth;
+
+        int healForExpectedResult = Mathf.Clamp(healAmount, 0, int.MaxValue);
+        int expectedCurrentHealth = Mathf.Clamp(currentHealth + healForExpectedResult, MIN_CURRENT_HEALTH
+            , _entityHealthManager.MaxHealth);
+
+        _entityHealthManager.ProcessHeal(healAmount);
+
+        Assert.AreEqual(expectedCurrentHealth, _entityHealthManager.CurrentHealth);
+    }
 }
