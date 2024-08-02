@@ -9,6 +9,8 @@ public class MapFinalizer : MonoBehaviour
 {
     private LevelManager _levelManager;
 
+    private GridArea _operationalArea;
+
     public BlockGridSettings BlockGridSettings { get => _levelManager.BlockGridSettings; }
 
     private Vector2Int RightBias {
@@ -34,8 +36,9 @@ public class MapFinalizer : MonoBehaviour
         }
     }
 
-    public void FinalizeMap()
+    public void FinalizeArea(GridArea areaToFinalize)
     {
+        _operationalArea = areaToFinalize;
         Initialize();
         SealHolesInCorridors();
     }
@@ -75,10 +78,8 @@ public class MapFinalizer : MonoBehaviour
     private void SealUnfinishedRLBlocks(BlockInfoHolder rightConnectedDeadEndPrefab, BlockInfoHolder leftConnectedDeadEndPrefab)
     {
         BlockInfoHolder[] corridorsToSeal = LevelElements
-                    .GroupBy(blockInfoHolder => blockInfoHolder.Generation)
-                    .OrderBy(generation => generation.Key)
-                    .First()
-                    .Where(blockInfoHolder => blockInfoHolder.IsRightLeftCoridor && (!CheckNeighbor(Orientation.Right
+                    .Where(blockInfoHolder => _levelManager.IsWithinArea(blockInfoHolder, _operationalArea) &&
+                        blockInfoHolder.IsRightLeftCoridor && (!CheckNeighbor(Orientation.Right
                         , blockInfoHolder) ^ !CheckNeighbor(Orientation.Right, blockInfoHolder)))
                     .ToArray();
 
@@ -95,7 +96,8 @@ public class MapFinalizer : MonoBehaviour
     private void SealGapsInLadders(BlockInfoHolder rightConnectedDeadEndPrefab, BlockInfoHolder leftConnectedDeadEndPrefab)
     {
         BlockInfoHolder[] laddersToCheck = LevelElements
-                    .Where(blockInfoHolder => blockInfoHolder.DownConnected || blockInfoHolder.UpConnected)
+                    .Where(blockInfoHolder => _levelManager.IsWithinArea(blockInfoHolder, _operationalArea) 
+                        && (blockInfoHolder.DownConnected || blockInfoHolder.UpConnected))
                     .ToArray();
 
         foreach (BlockInfoHolder ladder in laddersToCheck)
@@ -115,7 +117,8 @@ public class MapFinalizer : MonoBehaviour
     private void TransformOneSidedDeadEndsIntoTwoSided()
     {
         BlockInfoHolder[] deadEndsToBecomeRLConnected = LevelElements
-                    .Where(blockInfoHolder => blockInfoHolder.DeadEnd 
+                    .Where(blockInfoHolder => _levelManager.IsWithinArea(blockInfoHolder, _operationalArea) 
+                        && blockInfoHolder.DeadEnd 
                         && (blockInfoHolder.RightConnected ^ blockInfoHolder.LeftConnected)) // Serch for regular dead ends
                     .ToArray();
 

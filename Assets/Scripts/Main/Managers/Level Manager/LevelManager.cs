@@ -114,6 +114,24 @@ public class LevelManager : MonoBehaviour
     
     // Info and tests
 
+    public bool IsWithinArea(BlockInfoHolder blockInfoHolder, GridArea gridArea)
+    {
+        int[] xValues = new int[] { gridArea.AreaStart.x, gridArea.AreaEnd.x };
+        int[] yValues = new int[] { gridArea.AreaStart.y, gridArea.AreaEnd.y };
+
+        Vector2Int cornerWithLowestValues = new Vector2Int(xValues.Min(), yValues.Min());
+        Vector2Int cornerWithHighestValues = new Vector2Int(xValues.Max(), yValues.Max());
+
+        if (blockInfoHolder.BlockPosstion.x >= cornerWithLowestValues.x
+                && blockInfoHolder.BlockPosstion.y >= cornerWithLowestValues.y
+                && blockInfoHolder.BlockPosstion.x <= cornerWithHighestValues.x
+                && blockInfoHolder.BlockPosstion.y <= cornerWithHighestValues.y)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public bool TryGetSuitableBlock(bool up, bool down, bool right, bool left, out BlockInfoHolder blockInfoHolder, bool deadEnd = false)
     {
         blockInfoHolder = null;
@@ -196,7 +214,7 @@ public class LevelManager : MonoBehaviour
     }
 
     //General
-
+    //T: startGridPosition, endGridPosition - can be replaced with grid area
     public void ExecuteForArea(Vector2Int startGridPosition, Vector2Int endGridPosition, Action<Vector2Int> action)
     {
         Vector2Int affectedAreaSizes = endGridPosition - startGridPosition; // get sizes of area that will be filled
