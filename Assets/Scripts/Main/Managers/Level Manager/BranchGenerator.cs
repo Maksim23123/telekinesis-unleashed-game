@@ -219,10 +219,8 @@ public class BranchGenerator : MonoBehaviour
     {
         _levelManager.InstantiateBlock(position, blockInfo, ladderNeighbor, _currentGeneration);
 
-        BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(null, position);
-        newBlockInfoHolder.SetConnections(blockInfo.GetConnections());
-        newBlockInfoHolder.Tags = blockInfo.Tags;
-        newBlockInfoHolder.IsLadderNeighbor = ladderNeighbor;
+        BlockInfoHolder newBlockInfoHolder = blockInfo.HollowCopy();
+        newBlockInfoHolder.BlockPosstion = position;
         _levelElementsInOperationalArea.Add(newBlockInfoHolder);
 
         _blocksCount = LevelElements.Count;

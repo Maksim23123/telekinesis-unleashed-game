@@ -1,6 +1,8 @@
+using Codice.CM.Common;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class BlockInfoHolder
@@ -82,5 +84,16 @@ public class BlockInfoHolder
         _downConnected = (connections & (1 << 2)) != 0; 
         _upConnected = (connections & (1 << 3)) != 0; 
         _deadEnd = (connections & (1 << 4)) != 0;
+    }
+
+    public BlockInfoHolder HollowCopy()
+    {
+        BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(null, BlockPosstion);
+        newBlockInfoHolder.SetConnections(GetConnections());
+        newBlockInfoHolder.Tags = Tags;
+        newBlockInfoHolder.IsLadderNeighbor = IsLadderNeighbor;
+        newBlockInfoHolder.Generation = Generation;
+
+        return newBlockInfoHolder;
     }
 }

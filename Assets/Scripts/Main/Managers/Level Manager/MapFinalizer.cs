@@ -3,13 +3,14 @@ using System.Linq;
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Codice.CM.Common;
 
 [RequireComponent(typeof(LevelManager))]
 public class MapFinalizer : MonoBehaviour
 {
     private LevelManager _levelManager;
 
-    private GridArea _operationalArea;
+    private List<BlockInfoHolder> _levelElementsInOperationalArea;
 
     public BlockGridSettings BlockGridSettings { get => _levelManager.BlockGridSettings; }
 
@@ -38,8 +39,10 @@ public class MapFinalizer : MonoBehaviour
 
     public void FinalizeArea(GridArea areaToFinalize)
     {
-        _operationalArea = areaToFinalize;
         Initialize();
+        _levelElementsInOperationalArea = LevelElements
+            .Where(blockInfoHolder => areaToFinalize.IsWithinArea(blockInfoHolder.BlockPosstion))
+            .ToList();
         SealHolesInCorridors();
     }
 
@@ -77,48 +80,65 @@ public class MapFinalizer : MonoBehaviour
 
     private void SealUnfinishedRLBlocks(BlockInfoHolder rightConnectedDeadEndPrefab, BlockInfoHolder leftConnectedDeadEndPrefab)
     {
-        BlockInfoHolder[] corridorsToSeal = LevelElements
-                    .Where(blockInfoHolder => _operationalArea.IsWithinArea(blockInfoHolder.BlockPosstion) &&
+        BlockInfoHolder[] corridorsToSeal = _levelElementsInOperationalArea
+                    .Where(blockInfoHolder =>
                         blockInfoHolder.IsRightLeftCoridor && (!CheckNeighbor(Orientation.Right
                         , blockInfoHolder) ^ !CheckNeighbor(Orientation.Right, blockInfoHolder)))
                     .ToArray();
 
         foreach (var corridor in corridorsToSeal)
         {
-            _levelManager.DestroyBlock(corridor);
+            _levelManager.TryDestroyBlockByPosition(corridor.BlockPosstion);
+            _levelElementsInOperationalArea.Remove(corridor);
+            BlockInfoHolder newBlockInfoHolder = null;
             if (CheckNeighbor(Orientation.Right, corridor))
+            {
                 _levelManager.InstantiateBlock(corridor.BlockPosstion, rightConnectedDeadEndPrefab);
+                newBlockInfoHolder = rightConnectedDeadEndPrefab.HollowCopy();
+            }
             else if (CheckNeighbor(Orientation.Left, corridor))
+            {
                 _levelManager.InstantiateBlock(corridor.BlockPosstion, leftConnectedDeadEndPrefab);
+                newBlockInfoHolder = rightConnectedDeadEndPrefab.HollowCopy();
+                
+            }
+            newBlockInfoHolder.BlockPosstion = corridor.BlockPosstion;
+            _levelElementsInOperationalArea.Add(newBlockInfoHolder);
         }
     }
 
     private void SealGapsInLadders(BlockInfoHolder rightConnectedDeadEndPrefab, BlockInfoHolder leftConnectedDeadEndPrefab)
     {
-        BlockInfoHolder[] laddersToCheck = LevelElements
-                    .Where(blockInfoHolder => _operationalArea.IsWithinArea(blockInfoHolder.BlockPosstion)
-                        && (blockInfoHolder.DownConnected || blockInfoHolder.UpConnected))
+        BlockInfoHolder[] laddersToCheck = _levelElementsInOperationalArea
+                    .Where(blockInfoHolder => blockInfoHolder.DownConnected || blockInfoHolder.UpConnected)
                     .ToArray();
 
         foreach (BlockInfoHolder ladder in laddersToCheck)
         {
             if (!CheckNeighbor(Orientation.Right, ladder))
             {
-                _levelManager.InstantiateBlock(ladder.BlockPosstion + RightBias, leftConnectedDeadEndPrefab);
+                Vector2Int positionForSeal = ladder.BlockPosstion + RightBias;
+                _levelManager.InstantiateBlock(positionForSeal, leftConnectedDeadEndPrefab);
+                BlockInfoHolder newBlockInfoHolder = leftConnectedDeadEndPrefab.HollowCopy();
+                newBlockInfoHolder.BlockPosstion = positionForSeal;
+                _levelElementsInOperationalArea.Add(newBlockInfoHolder);
             }
 
             if (!CheckNeighbor(Orientation.Left, ladder))
             {
-                _levelManager.InstantiateBlock(ladder.BlockPosstion + LeftBias, rightConnectedDeadEndPrefab);
+                Vector2Int positionForSeal = ladder.BlockPosstion + LeftBias;
+                _levelManager.InstantiateBlock(positionForSeal, rightConnectedDeadEndPrefab);
+                BlockInfoHolder newBlockInfoHolder = rightConnectedDeadEndPrefab.HollowCopy();
+                newBlockInfoHolder.BlockPosstion = positionForSeal;
+                _levelElementsInOperationalArea.Add(newBlockInfoHolder);
             }
         }
     }
 
     private void TransformOneSidedDeadEndsIntoTwoSided()
     {
-        BlockInfoHolder[] deadEndsToBecomeRLConnected = LevelElements
-                    .Where(blockInfoHolder => _operationalArea.IsWithinArea(blockInfoHolder.BlockPosstion) 
-                        && blockInfoHolder.DeadEnd 
+        BlockInfoHolder[] deadEndsToBecomeRLConnected = _levelElementsInOperationalArea
+                    .Where(blockInfoHolder => blockInfoHolder.DeadEnd 
                         && (blockInfoHolder.RightConnected ^ blockInfoHolder.LeftConnected)) // Serch for regular dead ends
                     .ToArray();
 
@@ -130,8 +150,13 @@ public class MapFinalizer : MonoBehaviour
                     && _levelManager.TryGetBlockInfoByPosition(regularDeadEnd.BlockPosstion + LeftBias, out var leftNeighbor) 
                     && leftNeighbor.RightConnected)
             {
-                _levelManager.DestroyBlock(regularDeadEnd);
+                _levelManager.TryDestroyBlockByPosition(regularDeadEnd.BlockPosstion);
+                _levelElementsInOperationalArea.Remove(regularDeadEnd);
+
                 _levelManager.InstantiateBlock(regularDeadEnd.BlockPosstion, twoSidedDeadEndPrefab);
+                BlockInfoHolder newBlockInfoHolder = twoSidedDeadEndPrefab.HollowCopy();
+                newBlockInfoHolder.BlockPosstion = regularDeadEnd.BlockPosstion;
+                _levelElementsInOperationalArea.Add(newBlockInfoHolder);
             }
         }
     }

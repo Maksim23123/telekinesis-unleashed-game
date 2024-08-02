@@ -41,6 +41,7 @@ public class LevelGenerator : MonoBehaviour
         foreach (GridArea areaForBrunches in _roomGenerator.AreasForBrunches)
         {
             _branchGenerator.GenerateBranchesInArea(areaForBrunches);
+            _mapFinalizer.FinalizeArea(areaForBrunches);
         }
     }
 }
