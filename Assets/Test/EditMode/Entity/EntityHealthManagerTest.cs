@@ -36,7 +36,7 @@ public class EntityHealthManagerTest
     [TestCase(10, 5)]
     [TestCase(7, 15)]
     [TestCase(8, -2)]
-    public void ProcessDamage_DamageIsSubtractedFromCurrentHealth_True(int currentHealth, int damage)
+    public void ProcessDamage_IfDamagePositiveItIsSubtractedFromCurrentHealth_True(int currentHealth, int damage)
     {
         _entityHealthManager.MaxHealth = currentHealth;
         _entityHealthManager.CurrentHealth = currentHealth;
