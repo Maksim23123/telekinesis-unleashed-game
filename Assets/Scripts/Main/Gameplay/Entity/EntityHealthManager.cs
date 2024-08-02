@@ -126,6 +126,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
     /// <param name="damage">Positive health influence amount.</param>
     public void ProcessHeal(int amount)
     {
+        amount = Mathf.Clamp(amount, 0, int.MaxValue);
         _currentHealth = Mathf.Clamp(_currentHealth + amount, 0, _maxHealth);
         HealthChanged?.Invoke(_currentHealth);
     }
