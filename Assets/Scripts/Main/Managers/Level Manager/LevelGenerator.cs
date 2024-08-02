@@ -12,6 +12,7 @@ public class LevelGenerator : MonoBehaviour
     private PathPlanner _pathPlanner;
     private PathGenerator _pathGenerator;
     private MapFinalizer _mapFinalizer;
+    private BranchGenerator _branchGenerator;
 
     private void InitReferences()
     {
@@ -20,6 +21,7 @@ public class LevelGenerator : MonoBehaviour
         _pathPlanner = GetComponent<PathPlanner>();
         _pathGenerator = GetComponent<PathGenerator>();
         _mapFinalizer = GetComponent<MapFinalizer>();
+        _branchGenerator = GetComponent<BranchGenerator>();
     }
 
     public void ExecuteMapGenerationAlgorithm()
@@ -28,16 +30,17 @@ public class LevelGenerator : MonoBehaviour
 
         _levelManager.ClearLevel();
         List<List<PathUnit>[]> roomStructure = _roomGenerator.GenerateRooms();
-        foreach (GridArea gridArea in _roomGenerator.AreasToFinalize)
-        {
-            Debug.Log(gridArea.AreaStart.y + " " + gridArea.AreaEnd.y);
-        }
         HashSet<PathUnit> pathPlan = _pathPlanner.GeneratePathPlan(roomStructure);
         _pathGenerator.GeneratePaths(pathPlan, roomStructure);
 
         foreach (GridArea areaToFinalize in _roomGenerator.AreasToFinalize)
         {
             _mapFinalizer.FinalizeArea(areaToFinalize);
+        }
+
+        foreach (GridArea areaForBrunches in _roomGenerator.AreasForBrunches)
+        {
+            _branchGenerator.GenerateBranchesInArea(areaForBrunches);
         }
     }
 }

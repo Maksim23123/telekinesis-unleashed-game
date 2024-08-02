@@ -12,7 +12,7 @@ public class BranchGeneratorEditor : Editor
 
         if (GUILayout.Button("Generate Branches"))
         {
-            myScript.Generate();
+            Debug.LogError("Feature removed.");
         } 
     }
 }

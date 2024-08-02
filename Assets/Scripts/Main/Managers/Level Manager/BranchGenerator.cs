@@ -19,6 +19,7 @@ public class BranchGenerator : MonoBehaviour
     [ReadOnly][SerializeField] private int _blocksGenerationSize;
 
     private int _currentGeneration;
+    private GridArea _operationalArea;
 
     private BlockGridSettings BlockGridSettings
     {
@@ -36,10 +37,9 @@ public class BranchGenerator : MonoBehaviour
         }
     }
 
-    public void Generate()
+    public void GenerateBranchesInArea(GridArea gridArea)
     {
-
-
+        _operationalArea = gridArea;
         if (LevelElements.Count > 0)
         {
             _currentGeneration = 0;
@@ -63,7 +63,8 @@ public class BranchGenerator : MonoBehaviour
     public void PerformGenrationIteration()
     {
         _blocksGenerationSize = 0;
-        foreach (var block in LevelElements.Where(x => !x.NeighborshipResolved).ToList())
+        foreach (var block in LevelElements.Where(blockInfoHolder => _operationalArea.IsWithInArea(blockInfoHolder.BlockPosstion) 
+                && !blockInfoHolder.NeighborshipResolved).ToList())
         {
             ResolveNeighborship(block.BlockPosstion);
         }
@@ -81,9 +82,10 @@ public class BranchGenerator : MonoBehaviour
         int laddersGap = 2;
 
         BlockInfoHolder[] ladderCandidats = LevelElements
-            .Where(g => g.IsRightLeftCoridor
-                && !g.IsLadderNeighbor && g.BlockPosstion.x < BlockGridSettings.MapDimensions.x
-                && g.BlockPosstion.x > 0 && g.BlockPosstion.x % (laddersGap + 1) == 0)
+            .Where(blockInfoHolder => blockInfoHolder.IsRightLeftCoridor
+                && !blockInfoHolder.IsLadderNeighbor && blockInfoHolder.BlockPosstion.x < _operationalArea.XValues.Max()
+                && blockInfoHolder.BlockPosstion.x > _operationalArea.XValues.Min() 
+                && blockInfoHolder.BlockPosstion.x % (laddersGap + 1) == 0)
             .OrderBy(x => x.BlockPosstion.y)
             .Reverse()
             .Take(maxCandidatsCount)
@@ -92,6 +94,7 @@ public class BranchGenerator : MonoBehaviour
         foreach (var ladderCandidat in ladderCandidats)
         {
             _levelManager.DestroyBlock(ladderCandidat);
+            Func<Vector2Int, bool> validation = position => _operationalArea.IsWithInArea(position);
             if (!TryBuildLadder(ladderCandidat.BlockPosstion, GenerateLadderHeight()) 
                     && _levelManager.TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder rlBlockReference))
             {
@@ -103,7 +106,9 @@ public class BranchGenerator : MonoBehaviour
     private void RemoveDeadEnds()
     {
         BlockInfoHolder[] deadEnds = LevelElements
-            .Where(x => (x.RightConnected && !x.LeftConnected) || (!x.RightConnected && x.LeftConnected))
+            .Where(blockInfoHolder => _operationalArea.IsWithInArea(blockInfoHolder.BlockPosstion) 
+            && ((blockInfoHolder.RightConnected && !blockInfoHolder.LeftConnected) 
+            || (!blockInfoHolder.RightConnected && blockInfoHolder.LeftConnected)))
             .ToArray();
 
         foreach (BlockInfoHolder block in deadEnds)
@@ -132,7 +137,7 @@ public class BranchGenerator : MonoBehaviour
             if (currentBlockInfo.RightConnected)
             {
                 neighborPosition = position + rightBias;
-                if (_levelManager.CheckPosition(neighborPosition) && !_levelManager.TryGetBlockInfoByPosition(neighborPosition, out BlockInfoHolder neighbor))
+                if (_operationalArea.IsWithInArea(neighborPosition) && !_levelManager.TryGetBlockInfoByPosition(neighborPosition, out BlockInfoHolder neighbor))
                 {
                     GenerateBlock(neighborPosition, false, true, ladderNeighbor);
                 }
@@ -141,7 +146,7 @@ public class BranchGenerator : MonoBehaviour
             if (currentBlockInfo.LeftConnected)
             {
                 neighborPosition = position + leftBias;
-                if (_levelManager.CheckPosition(neighborPosition) && !_levelManager.TryGetBlockInfoByPosition(neighborPosition, out BlockInfoHolder neighbor))
+                if (_operationalArea.IsWithInArea(neighborPosition) && !_levelManager.TryGetBlockInfoByPosition(neighborPosition, out BlockInfoHolder neighbor))
                 {
                     GenerateBlock(neighborPosition, true, false, ladderNeighbor);
                 }
@@ -179,9 +184,15 @@ public class BranchGenerator : MonoBehaviour
         }
     }
 
-    private bool TryBuildLadder(Vector2Int position, int ladderHeight, bool forceMod = false)
+    private bool TryBuildLadder(Vector2Int position, int ladderHeight, bool forceMod = false
+            , Func<Vector2Int, bool> validation = null)
     {
-        int possibleLadderHeight =  CheckIfLadderPossible(position, ladderHeight);
+        if (validation == null)
+        {
+            validation = position => true;
+        }
+
+        int possibleLadderHeight =  CheckIfLadderPossible(position, ladderHeight, validation);
         possibleLadderHeight = forceMod ? Mathf.Clamp(ladderHeight, _minLadderHeight, _maxLadderHeight) : possibleLadderHeight;
         if (possibleLadderHeight >= 2)
         {
@@ -214,13 +225,14 @@ public class BranchGenerator : MonoBehaviour
         _blocksGenerationSize++;
     }
 
-    private int CheckIfLadderPossible(Vector2Int position, int ladderHeight)
+    private int CheckIfLadderPossible(Vector2Int position, int ladderHeight, Func<Vector2Int, bool> validation)
     {
         int freeCells = 0;
         for (int i = 0; i < ladderHeight; i++)
         {
             Vector2Int currentCellPosition = position + new Vector2Int(0, i);
-            if (_levelManager.TryGetBlockInfoByPosition(currentCellPosition, out BlockInfoHolder blockInfoHolder))
+            if (!validation(currentCellPosition) 
+                    && _levelManager.TryGetBlockInfoByPosition(currentCellPosition, out BlockInfoHolder blockInfoHolder))
                 break;
             freeCells++;
         }
