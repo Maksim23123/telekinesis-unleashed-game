@@ -1,18 +1,18 @@
 /// <summary>
-/// This enum shows how ItemEvent should be executed by ItemIventExecutor.
+/// Specifies how an ItemEvent should be executed by ItemEventExecutor.
 /// </summary>
 public enum ItemEventType
 {
     /// <summary>
-    /// Type of ItemEvent that suposed to be executed only one time.
+    /// ItemEvent that is executed only once.
     /// </summary>
     OneTime,
     /// <summary>
-    /// Type of ItemEvent that supposed to be executed continuously under certain conditions.
+    /// ItemEvent that is executed continuously under certain conditions.
     /// </summary>
     Conditional,
     /// <summary>
-    /// Type of ItemEvent that supposed to be executed only one time under certain conditions.
+    /// ItemEvent that is executed only once under certain conditions.
     /// </summary>
     ConditionalOneTime
 }
