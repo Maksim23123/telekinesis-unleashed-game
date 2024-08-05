@@ -39,6 +39,7 @@ public class EntityHealthManager : MonoBehaviour, IRecordable
         set
         {
             _maxHealth = Mathf.Clamp(value, 1, int.MaxValue);
+            _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
             HealthChanged?.Invoke(_currentHealth);
         }
     }
