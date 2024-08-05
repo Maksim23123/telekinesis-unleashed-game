@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Class that receives an ItemEvent instances and executes their actions.
+/// This class is singleton so it's supossed to be attached to only one object on the scene.
+/// </summary>
 public class ItemEventsExecutor : MonoBehaviour, IRecordable
 {
     private List<ItemEventSlot> _itemEventSlots = new List<ItemEventSlot>();
@@ -10,6 +14,9 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
     
     public int Priority => 0;
 
+    /// <summary>
+    /// Provides acess to single instance of this class.
+    /// </summary>
     public static ItemEventsExecutor Instance
     {
         get
@@ -45,6 +52,11 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
         }
     }
 
+    /// <summary>
+    /// Allows to send ItemEvent instance to this class.
+    /// </summary>
+    /// <param name="itemEvent">ItemEvent instance.</param>
+    /// <returns>Id under which received ItemEvent instance was registered.</returns>
     public int AddItemEvent(ItemEvent itemEvent)
     {
         if (itemEvent.UnionPermission)
@@ -66,6 +78,12 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
         return newSlotId;
     }
 
+    /// <summary>
+    /// Allows remove one or more ItemEvent instances with the same id.
+    /// </summary>
+    /// <param name="itemId">ItemEvent instance.</param>
+    /// <param name="count">Count of ItemIvent instances with the same id to remove.</param>
+    /// <exception cref="NotImplementedException">Comming soon.</exception>
     public void RemoveItemEvent(int itemId, int count = 1)
     {
         throw new NotImplementedException();
@@ -83,7 +101,7 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
 
     public void SetObjectData(ObjectData objectData)
     {
-        _itemEventSlots.Clear(); // ATTENTION: Here additional actions may be needed in the future
+        _itemEventSlots.Clear();
         int index = 0;
         while (objectData.ObjectDataUnits.TryGetValue(nameof(_itemEventSlots) + index, out ObjectData slotData))
         {
