@@ -1,3 +1,7 @@
+/// <summary>
+/// This class stores references in the form of IDs to item influences, such as ItemEvent and StatsModifier.
+/// Designed to allow item management from a single class.
+/// </summary>
 public class ItemInfluenceReferenceSlot : IRecordable
 {
     private int _slotId;
@@ -36,6 +40,11 @@ public class ItemInfluenceReferenceSlot : IRecordable
         int.TryParse(objectData.VariableValues[nameof(_itemEventId)], out _itemEventId);
     }
 
+    /// <summary>
+    /// Creates a new ItemInfluenceReferenceSlot instance from data received from the SaveLoad system.
+    /// </summary>
+    /// <param name="objectData">Data from the SaveLoad system.</param>
+    /// <returns>A new ItemInfluenceReferenceSlot instance with the assigned data.</returns>
     public static ItemInfluenceReferenceSlot RemakeItemInfluenceReferenceSlot(ObjectData objectData)
     {
         ItemInfluenceReferenceSlot statsModifierSlot = new ItemInfluenceReferenceSlot(0, 0, 0, 0);
