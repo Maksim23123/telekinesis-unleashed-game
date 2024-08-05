@@ -36,7 +36,7 @@ public class EntityHealthManagerTest
     [TestCase(10, 5)]
     [TestCase(7, 15)]
     [TestCase(8, -2)]
-    public void ProcessDamage_IfDamagePositiveItIsSubtractedFromCurrentHealth_True(int currentHealth, int damage)
+    public void ProcessDamage_IfDamagePositiveItSubtractedFromCurrentHealth_True(int currentHealth, int damage)
     {
         _entityHealthManager.MaxHealth = currentHealth;
         _entityHealthManager.CurrentHealth = currentHealth;
@@ -53,7 +53,7 @@ public class EntityHealthManagerTest
     [TestCase(10, 5)]
     [TestCase(7, 15)]
     [TestCase(8, -2)]
-    public void ProcessHeal_IfHealPositiveItIsAddedToCurrentHealth_True(int currentHealth, int healAmount)
+    public void ProcessHeal_IfHealPositiveItAddedToCurrentHealth_True(int currentHealth, int healAmount)
     {
         _entityHealthManager.MaxHealth = Mathf.Abs(currentHealth) * 2;
         _entityHealthManager.CurrentHealth = currentHealth;
@@ -65,5 +65,19 @@ public class EntityHealthManagerTest
         _entityHealthManager.ProcessHeal(healAmount);
 
         Assert.AreEqual(expectedCurrentHealth, _entityHealthManager.CurrentHealth);
+    }
+
+    [Test]
+    public void CurrentHealt_IfMaxHealthBecomeLessThenCurrentHealthThenCurrentHealthWontBeAffected_False()
+    {
+        const int CURRENT_HEALTH = 10;
+        const int MAX_HEALTH = 6;
+        const int EXPECTED_CURRENT_HEALTH = MAX_HEALTH;
+        _entityHealthManager.MaxHealth = CURRENT_HEALTH;
+        _entityHealthManager.CurrentHealth = CURRENT_HEALTH;
+        _entityHealthManager.MaxHealth = MAX_HEALTH;
+
+
+        Assert.AreEqual(EXPECTED_CURRENT_HEALTH, _entityHealthManager.CurrentHealth);
     }
 }
