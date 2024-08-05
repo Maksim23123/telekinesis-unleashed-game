@@ -4,8 +4,8 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Class that receives an ItemEvent instances and executes their actions.
-/// This class is singleton so it's supossed to be attached to only one object on the scene.
+/// Class that receives ItemEvent instances and executes their actions.
+/// This class is a singleton, so it should be attached to only one object in the scene.
 /// </summary>
 public class ItemEventsExecutor : MonoBehaviour, IRecordable
 {
@@ -15,7 +15,7 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
     public int Priority => 0;
 
     /// <summary>
-    /// Provides acess to single instance of this class.
+    /// Provides access to the single instance of this class.
     /// </summary>
     public static ItemEventsExecutor Instance
     {
@@ -53,10 +53,10 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
     }
 
     /// <summary>
-    /// Allows to send ItemEvent instance to this class.
+    /// Registers an ItemEvent instance with this class.
     /// </summary>
-    /// <param name="itemEvent">ItemEvent instance.</param>
-    /// <returns>Id under which received ItemEvent instance was registered.</returns>
+    /// <param name="itemEvent">The ItemEvent instance to register.</param>
+    /// <returns>The ID under which the ItemEvent instance was registered.</returns>
     public int AddItemEvent(ItemEvent itemEvent)
     {
         if (itemEvent.UnionPermission)
@@ -79,11 +79,11 @@ public class ItemEventsExecutor : MonoBehaviour, IRecordable
     }
 
     /// <summary>
-    /// Allows remove one or more ItemEvent instances with the same id.
+    /// Removes one or more ItemEvent instances with the specified ID.
     /// </summary>
-    /// <param name="itemId">ItemEvent instance.</param>
-    /// <param name="count">Count of ItemIvent instances with the same id to remove.</param>
-    /// <exception cref="NotImplementedException">Comming soon.</exception>
+    /// <param name="itemId">The ID of the ItemEvent instance to remove.</param>
+    /// <param name="count">The number of ItemEvent instances with the same ID to remove. Default is 1.</param>
+    /// <exception cref="NotImplementedException">Coming soon.</exception>
     public void RemoveItemEvent(int itemId, int count = 1)
     {
         throw new NotImplementedException();
