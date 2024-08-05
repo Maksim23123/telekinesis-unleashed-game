@@ -71,7 +71,7 @@ public class EntityHealthManagerTest
     [TestCase(6, 10)]
     [TestCase(10, 6)]
     public void CurrentHealt_IfMaxHealthBecomeLessThenCurrentHealthThenCurrentHealthWontBeAffected_False(int currentHealth
-        , int maxHealth)
+            , int maxHealth)
     {
         _entityHealthManager.MaxHealth = currentHealth;
         _entityHealthManager.CurrentHealth = currentHealth;
@@ -80,5 +80,18 @@ public class EntityHealthManagerTest
         int expectedCurrentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         Assert.AreEqual(expectedCurrentHealth, _entityHealthManager.CurrentHealth);
+    }
+
+    [Test]
+    public void ProcessFullHeal()
+    {
+        const int MAX_HEALTH = 100;
+        const int CURRENT_HEALTH = 34;
+        _entityHealthManager.MaxHealth = MAX_HEALTH;
+        _entityHealthManager.CurrentHealth = CURRENT_HEALTH;
+
+        _entityHealthManager.ProcessFullHeal();
+
+        Assert.AreEqual(_entityHealthManager.MaxHealth, _entityHealthManager.CurrentHealth);
     }
 }
