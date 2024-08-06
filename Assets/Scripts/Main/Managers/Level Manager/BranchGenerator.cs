@@ -40,6 +40,7 @@ public class BranchGenerator : MonoBehaviour
 
     public void GenerateBranchesInArea(GridArea gridArea)
     {
+        _blocksCount = 0;
         _operationalArea = gridArea;
         _levelElementsInOperationalArea = LevelElements
             .Where(blockInfoHolder => _operationalArea.IsWithinArea(blockInfoHolder.BlockPosstion))
@@ -48,8 +49,7 @@ public class BranchGenerator : MonoBehaviour
         {
             _currentGeneration = 0;
 
-            for (int i = 0; (i < _minGenerationIterationsCount || _blocksCount < _minBlocksCount) 
-                    && i < _maxGenerationIterationsCount; i++)
+            for (int i = 0; i < _minGenerationIterationsCount || _blocksCount < _minBlocksCount; i++)
             {
                 _currentGeneration++;
                 PerformGenrationIteration();
