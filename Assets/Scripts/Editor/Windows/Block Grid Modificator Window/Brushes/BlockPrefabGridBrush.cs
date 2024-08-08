@@ -7,13 +7,14 @@ using UnityEngine;
 
 public class BlockPrefabGridBrush : BlockGridBrush
 {
-    private LevelManager _levelManager;
     private int _selectedBlockIndex = -1;
 
     private bool _replaceOldBlocksMod = false;
 
     private GUIStyle normalButtonStyle;
     private GUIStyle selectedButtonStyle;
+
+    private string _mousePositionInGrid = string.Empty;
 
     public override string PreatyName => "Block Prefab Brush";
 
@@ -42,6 +43,9 @@ public class BlockPrefabGridBrush : BlockGridBrush
             DrawHorizontalLine();
 
             _replaceOldBlocksMod = EditorGUILayout.ToggleLeft("Replace old blocks", _replaceOldBlocksMod);
+
+            DrawHorizontalLine();
+
         }
         else
         {
@@ -88,6 +92,6 @@ public class BlockPrefabGridBrush : BlockGridBrush
 
     public override void Erase()
     {
-        DefaultErase(_levelManager);
+        DefaultErase();
     }
 }

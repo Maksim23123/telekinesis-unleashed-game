@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9151267242463511865}
   - component: {fileID: 513674158479900945}
   - component: {fileID: 8262149326308741992}
+  - component: {fileID: 7642644783089002642}
   - component: {fileID: 1946206431371242632}
   - component: {fileID: 2561752048487676448}
   - component: {fileID: 6716240437269107925}
@@ -25,7 +26,6 @@ GameObject:
   - component: {fileID: 431554469635580352}
   - component: {fileID: 4252224711977311324}
   - component: {fileID: 5340918677032172511}
-  - component: {fileID: 7642644783089002642}
   - component: {fileID: 3181815775131573327}
   - component: {fileID: 148396899152517466}
   m_Layer: 9
@@ -166,6 +166,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &7642644783089002642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4153444728527318417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee7454fad99e11e4c99967b8bf2c6e8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1946206431371242632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,18 +385,6 @@ MonoBehaviour:
   _gameObjectPrefabPath: Assets/Resources/Prefabs/Player/Player.prefab
   _onLoadDataDestributionType: 0
   _staticAddress: 
---- !u!114 &7642644783089002642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4153444728527318417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee7454fad99e11e4c99967b8bf2c6e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3181815775131573327
 MonoBehaviour:
   m_ObjectHideFlags: 0

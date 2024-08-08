@@ -1,0 +1,16 @@
+{
+    "name": "Managers",
+    "rootNamespace": "",
+    "references": [
+        "GUID:aadd12f7c5e42fd46888f29a15a16e4c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

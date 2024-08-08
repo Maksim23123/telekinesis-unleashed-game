@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2171180664024501519}
-  - component: {fileID: 3286619630299174784}
+  - component: {fileID: 3044577949109860626}
   m_Layer: 0
   m_Name: Room1
   m_TagString: Untagged
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 7448808275392801}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -170, y: -29, z: 0}
+  m_LocalPosition: {x: -170, y: -31, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -36,7 +36,7 @@ Transform:
   - {fileID: 7445129800695735982}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3286619630299174784
+--- !u!114 &3044577949109860626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,16 +45,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 7448808275392801}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80957875e47546049b92705838abe744, type: 3}
+  m_Script: {fileID: 11500000, guid: a71bf4bd20a7bef4199cf1311871bd46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startRoomPointer: {fileID: 8574846463356658882}
-  _endRoomPointer: {fileID: 5535940418199516127}
-  _enterencePointer: {fileID: 4426914715880212066}
+  _startStructurePointer: {fileID: 8574846463356658882}
+  _endStructurePointer: {fileID: 5535940418199516127}
+  _enterencePointers:
+  - {fileID: 4426914715880212066}
   _exitPointer: {fileID: 8352537083332113788}
-  _relativeRoomStartPosition: {x: -15.970001, y: 15.950001}
-  _relativeRoomEndPosition: {x: 15.9900055, y: -16.02}
-  _relativeEnterancePosition: {x: 17, y: 0}
+  _relativeStructureStartPosition: {x: -15.970001, y: 15.950001}
+  _relativeStructureEndPosition: {x: 15.9900055, y: -16.02}
+  _relativeEnterancePositions:
+  - {x: 17, y: 0}
   _relativeExitPosition: {x: -17, y: 0}
 --- !u!1 &773534194187549731
 GameObject:

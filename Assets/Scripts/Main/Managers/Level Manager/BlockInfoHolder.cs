@@ -1,0 +1,99 @@
+using Codice.CM.Common;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[Serializable]
+public class BlockInfoHolder
+{
+    [SerializeField] private string _name;
+    [SerializeField] GameObject _block;
+    [SerializeField] private bool _upConnected, _downConnected, _rightConnected, _leftConnected, _deadEnd;
+    [SerializeField] private List<string> _tags;
+
+    [SerializeField][HideInInspector] Vector2Int _blockPosstion;
+    [SerializeField][HideInInspector] bool _neighborshipResolved;
+    [SerializeField][HideInInspector] bool _isLadderNeighbor = false;
+    [HideInInspector][SerializeField] int _generation;
+
+    public bool UpConnected { get => _upConnected; }
+    public bool DownConnected { get => _downConnected; }
+    public bool RightConnected { get => _rightConnected; }
+    public bool LeftConnected { get => _leftConnected; }
+    public GameObject Block { get => _block; }
+    public Vector2Int BlockPosstion { get => _blockPosstion; set => _blockPosstion = value; }
+    public bool NeighborshipResolved { get => _neighborshipResolved; set => _neighborshipResolved = value; }
+    public bool IsLadderNeighbor { get => _isLadderNeighbor; set => _isLadderNeighbor = value; }
+    public int Generation { get => _generation; set => _generation = value; }
+    public bool DeadEnd { get => _deadEnd; set => _deadEnd = value; }
+    public string Name { get => _name; }
+    public List<string> Tags { get => _tags; set => _tags = value; }
+    public bool IsRightLeftCoridor
+    {
+        get
+        {
+            return !UpConnected && !DownConnected && LeftConnected && RightConnected && !DeadEnd;
+        }
+    }
+
+    public BlockInfoHolder(GameObject block, Vector2Int blockPosstion)
+    {
+        _block = block;
+        _blockPosstion = blockPosstion;
+    }
+
+    /// <summary>
+    /// Returns information about connections of a block in form of 
+    /// bitmask in that order: UP DOWN RIGHT LEFT IS_DEAD_END
+    /// </summary>
+    /// <returns></returns>
+    public int GetConnections()
+    {
+        int connections = 0;
+
+        if (LeftConnected)
+            connections |= 1 << 0;
+
+        if (RightConnected)
+            connections |= 1 << 1;
+
+        if (DownConnected)
+            connections |= 1 << 2;
+
+        if (UpConnected)
+            connections |= 1 << 3;
+
+        if (DeadEnd)
+            connections |= 1 << 4;
+
+        string binaryRepresentation = Convert.ToString(connections, 2).PadLeft(8, '0');
+
+        return connections;
+    }
+
+    /// <summary>
+    /// Applys information about connections of a block in form of 
+    /// bitmask in that order: UP DOWN RIGHT LEFT IS_DEAD_END
+    /// </summary>
+    /// <param name="connections"></param>
+    public void SetConnections(int connections)
+    {
+        _leftConnected = (connections & (1 << 0)) != 0; 
+        _rightConnected = (connections & (1 << 1)) != 0; 
+        _downConnected = (connections & (1 << 2)) != 0; 
+        _upConnected = (connections & (1 << 3)) != 0; 
+        _deadEnd = (connections & (1 << 4)) != 0;
+    }
+
+    public BlockInfoHolder HollowCopy()
+    {
+        BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(null, BlockPosstion);
+        newBlockInfoHolder.SetConnections(GetConnections());
+        newBlockInfoHolder.Tags = Tags;
+        newBlockInfoHolder.IsLadderNeighbor = IsLadderNeighbor;
+        newBlockInfoHolder.Generation = Generation;
+
+        return newBlockInfoHolder;
+    }
+}

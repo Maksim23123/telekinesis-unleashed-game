@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class RoomPrefabGridBrush : BlockGridBrush
 {
-    private LevelManager _levelManager;
     private RoomGenerator _roomGenerator;
     private GameObject[] _roomPrefabs;
     private int _selectedRoomIndex = -1;
@@ -83,6 +82,6 @@ public class RoomPrefabGridBrush : BlockGridBrush
 
     public override void Erase()
     {
-        DefaultErase(_levelManager);
+        DefaultErase();
     }
 }
