@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     {
         UpdateMinorTarget();
 
-        if (_mainObject != null && !_mainObject.IsDestroyed())
+        if (_mainObject != null)
         {
             Vector2 targetPossition = _mainObject.transform.position;
             if (_minorObject != null)
@@ -52,8 +52,7 @@ public class CameraController : MonoBehaviour
 
     private void UpdateMinorTarget()
     {
-        if (PlayerPossessableObjectManager.Instance != null && !PlayerPossessableObjectManager.Instance.IsDestroyed()
-                && PlayerPossessableObjectManager.Instance.CapturedObject != null)
+        if (PlayerPossessableObjectManager.Instance != null && PlayerPossessableObjectManager.Instance.CapturedObject != null)
         {
             _minorObject = PlayerPossessableObjectManager.Instance.CapturedObject.transform;
         }
