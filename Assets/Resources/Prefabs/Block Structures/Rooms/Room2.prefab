@@ -4372,6 +4372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4309565664125441602}
   - component: {fileID: 4068265078464529817}
+  - component: {fileID: 107058146403274188}
   m_Layer: 0
   m_Name: Room2
   m_TagString: Untagged
@@ -4420,3 +4421,34 @@ MonoBehaviour:
   _relativeEnterancePositions:
   - {x: 29.699997, y: 0}
   _relativeExitPosition: {x: -32.130005, y: 0}
+--- !u!114 &107058146403274188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6589387390434085158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0e55d238ed561b4a8cd49868693e1bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _defaultPointerPrefab: {fileID: 4886843975452961955, guid: ff2ff6253c045984f974a6f2ef1df98d, type: 3}
+  _playerDistanceActivationPosition: 0
+  contentPointers:
+  - rid: 8639230270955847680
+  - rid: 8639230270955847681
+  contentPointerGameObjects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 8639230270955847680
+      type: {class: EnemySpawnPointer, ns: , asm: Managers}
+      data:
+        _relativePosition: {x: 17.638092, y: 17.872831}
+        _enemyPrefab: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
+    - rid: 8639230270955847681
+      type: {class: EnemySpawnPointer, ns: , asm: Managers}
+      data:
+        _relativePosition: {x: -16.425797, y: 17.816448}
+        _enemyPrefab: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}

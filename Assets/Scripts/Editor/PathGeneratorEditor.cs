@@ -10,7 +10,7 @@ public class PathGeneratorEditor : Editor
 
         PathGenerator myScript = (PathGenerator)target;
 
-        if (GUILayout.Button("Build Path"))
+        if (GUILayout.Button("Convert GameObjects To Pointers"))
         {
             Debug.LogError("Removed feature use request");
         }
