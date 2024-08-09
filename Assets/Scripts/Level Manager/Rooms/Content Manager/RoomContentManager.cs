@@ -18,11 +18,22 @@ public class RoomContentManager : MonoBehaviour
 
     private bool _isActive = false;
 
+    private void Start()
+    {
+        foreach (ContentPointer pointer in _contentPointers)
+        {
+            pointer.InitWorldPosition(transform.position);
+            if (pointer.PointerType == PointerType.EnemySpawn)
+            {
+                EnemySpawnManager.Instance.AddEnemySpawnPoint(this, pointer);
+            }
+        }
+    }
+
     private void Update()
     {
         if (PlayerStatusInformer.PlayerGameObject != null)
         {
-
             Vector2 playerPosition = PlayerStatusInformer.PlayerGameObject.transform.position;
             Vector2 gameObjectPosition = gameObject.transform.position;
             bool playerWithinActivationRange = Vector2.Distance(playerPosition, gameObjectPosition) < _playerDistanceActivationPosition;
@@ -30,17 +41,12 @@ public class RoomContentManager : MonoBehaviour
                     !_isActive)
             {
                 _isActive = true;
-                foreach (ContentPointer contentPointer in _contentPointers)
-                {
-                    contentPointer.ActivatePointerAction(gameObjectPosition);
-                }
+                
+                EnemySpawnManager.Instance.ActivateEnemies(this);
             }
             else if (!playerWithinActivationRange && _isActive)
             {
-                foreach (ContentPointer contentPointer in _contentPointers)
-                {
-                    contentPointer.PerformPointerActionCleanUp();
-                }
+                EnemySpawnManager.Instance.DeactivateEnemies(this);
                 _isActive = false;
             }
         }

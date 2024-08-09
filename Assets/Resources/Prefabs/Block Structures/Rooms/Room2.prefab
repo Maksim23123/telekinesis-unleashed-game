@@ -4437,27 +4437,31 @@ MonoBehaviour:
   _pointerContainer: {fileID: 1036175732546161705}
   _playerDistanceActivationPosition: 50
   _contentPointers:
-  - rid: 8639230312003928072
-  - rid: 8639230312003928073
-  - rid: 8639230312003928074
-  - rid: 8639230312003928075
+  - rid: 8639230312003928076
+  - rid: 8639230312003928077
+  - rid: 8639230312003928078
+  - rid: 8639230312003928079
   _contentPointerGameObjects: []
   references:
     version: 2
     RefIds:
-    - rid: 8639230312003928072
-      type: {class: EnemySpawnPointer, ns: , asm: Core}
+    - rid: 8639230312003928076
+      type: {class: ContentPointer, ns: , asm: Core}
       data:
-        _relativePosition: {x: 17.619995, y: 17.74}
-    - rid: 8639230312003928073
-      type: {class: EnemySpawnPointer, ns: , asm: Core}
+        _relativePosition: {x: 17.43869, y: 17.904434}
+        _pointerType: 0
+    - rid: 8639230312003928077
+      type: {class: ContentPointer, ns: , asm: Core}
       data:
-        _relativePosition: {x: -16.466248, y: 18.677265}
-    - rid: 8639230312003928074
-      type: {class: EnemySpawnPointer, ns: , asm: Core}
+        _relativePosition: {x: -16.190002, y: 18.11}
+        _pointerType: 0
+    - rid: 8639230312003928078
+      type: {class: ContentPointer, ns: , asm: Core}
       data:
-        _relativePosition: {x: -16.389374, y: -27.753315}
-    - rid: 8639230312003928075
-      type: {class: EnemySpawnPointer, ns: , asm: Core}
+        _relativePosition: {x: 17.841385, y: -27.384804}
+        _pointerType: 0
+    - rid: 8639230312003928079
+      type: {class: ContentPointer, ns: , asm: Core}
       data:
-        _relativePosition: {x: 17.615631, y: -27.833134}
+        _relativePosition: {x: -16.37259, y: -27.626083}
+        _pointerType: 0
