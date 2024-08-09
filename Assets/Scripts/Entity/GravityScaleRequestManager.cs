@@ -1,10 +1,13 @@
+using System;
+using UnityEngine;
+
 /// <summary>
 /// A utility class for sending requests to <see cref="GravityScaleManager"/>.
 /// </summary>
 /// <remarks>
 /// Requests can be activated or deactivated by changing the <c>RequestIsActive</c> property.
 /// </remarks>
-public class GravityScaleRequestManager
+public class GravityScaleRequestManager : IDisposable
 {
     private bool _requestIsActive;
     private int _requestId;
@@ -42,5 +45,17 @@ public class GravityScaleRequestManager
         _gravityScaleManager = gravityScaleManager;
         Value = value;
         Priority = priority;
+    }
+
+    public void Dispose()
+    {
+        RequestIsActive = false;
+        Debug.Log("GravityScaleRequestManager resources have been cleaned up.");
+        GC.SuppressFinalize(this);
+    }
+
+    ~GravityScaleRequestManager()
+    {
+        Dispose();
     }
 }
