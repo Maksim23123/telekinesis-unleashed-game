@@ -4434,7 +4434,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _defaultPointerPrefab: {fileID: 4886843975452961955, guid: ff2ff6253c045984f974a6f2ef1df98d, type: 3}
-  _playerDistanceActivationPosition: 0
+  _playerDistanceActivationPosition: 50
   contentPointers:
   - rid: 8639230282643800066
   - rid: 8639230282643800067

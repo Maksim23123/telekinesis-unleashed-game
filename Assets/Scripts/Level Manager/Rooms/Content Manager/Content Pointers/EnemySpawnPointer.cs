@@ -18,7 +18,6 @@ public class EnemySpawnPointer : ContentPointer
 
     public override void ActivatePointerAction(Vector2 centerPosition)
     {
-        RealType = typeof(EnemySpawnPointer);
         if (!IsUsed)
         {
             GameObject.Instantiate(_enemyPrefab, centerPosition + RelativePosition, Quaternion.identity);

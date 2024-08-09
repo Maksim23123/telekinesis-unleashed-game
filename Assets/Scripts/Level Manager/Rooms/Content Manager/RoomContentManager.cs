@@ -14,11 +14,19 @@ public class RoomContentManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> contentPointerGameObjects = new();
 
-    private void Start()
+    private void Update()
     {
-        foreach (ContentPointer contentPointer in contentPointers)
+        if (PlayerStatusInformer.PlayerGameObject != null)
         {
-            contentPointer.ActivatePointerAction(gameObject.transform.position);
+            Vector2 playerPosition = PlayerStatusInformer.PlayerGameObject.transform.position;
+            Vector2 gameObjectPosition = gameObject.transform.position;
+            if (Vector2.Distance(playerPosition, gameObjectPosition) < _playerDistanceActivationPosition)
+            {
+                foreach (ContentPointer contentPointer in contentPointers)
+                {
+                    contentPointer.ActivatePointerAction(gameObjectPosition);
+                }
+            }
         }
     }
 
