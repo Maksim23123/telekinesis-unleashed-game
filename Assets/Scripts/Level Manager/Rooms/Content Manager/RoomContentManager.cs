@@ -16,20 +16,35 @@ public class RoomContentManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> _contentPointerGameObjects = new();
 
+    private bool _isActive = false;
+
     private void Update()
     {
         if (PlayerStatusInformer.PlayerGameObject != null)
         {
+
             Vector2 playerPosition = PlayerStatusInformer.PlayerGameObject.transform.position;
             Vector2 gameObjectPosition = gameObject.transform.position;
-            if (Vector2.Distance(playerPosition, gameObjectPosition) < _playerDistanceActivationPosition)
+            bool playerWithinActivationRange = Vector2.Distance(playerPosition, gameObjectPosition) < _playerDistanceActivationPosition;
+            if (playerWithinActivationRange &&
+                    !_isActive)
             {
+                _isActive = true;
                 foreach (ContentPointer contentPointer in _contentPointers)
                 {
                     contentPointer.ActivatePointerAction(gameObjectPosition);
                 }
             }
+            else if (!playerWithinActivationRange && _isActive)
+            {
+                foreach (ContentPointer contentPointer in _contentPointers)
+                {
+                    contentPointer.PerformPointerActionCleanUp();
+                }
+                _isActive = false;
+            }
         }
+        
     }
 
     public void GameObjectsToPointers()

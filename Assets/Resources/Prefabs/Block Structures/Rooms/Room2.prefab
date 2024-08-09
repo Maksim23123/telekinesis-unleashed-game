@@ -4437,31 +4437,27 @@ MonoBehaviour:
   _pointerContainer: {fileID: 1036175732546161705}
   _playerDistanceActivationPosition: 50
   _contentPointers:
-  - rid: 8639230304246038535
-  - rid: 8639230304246038536
-  - rid: 8639230304246038537
-  - rid: 8639230304246038538
+  - rid: 8639230312003928072
+  - rid: 8639230312003928073
+  - rid: 8639230312003928074
+  - rid: 8639230312003928075
   _contentPointerGameObjects: []
   references:
     version: 2
     RefIds:
-    - rid: 8639230304246038535
+    - rid: 8639230312003928072
       type: {class: EnemySpawnPointer, ns: , asm: Core}
       data:
-        _relativePosition: {x: 8.539993, y: -5.029999}
-        _enemyPrefab: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
-    - rid: 8639230304246038536
+        _relativePosition: {x: 17.619995, y: 17.74}
+    - rid: 8639230312003928073
       type: {class: EnemySpawnPointer, ns: , asm: Core}
       data:
         _relativePosition: {x: -16.466248, y: 18.677265}
-        _enemyPrefab: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
-    - rid: 8639230304246038537
+    - rid: 8639230312003928074
       type: {class: EnemySpawnPointer, ns: , asm: Core}
       data:
         _relativePosition: {x: -16.389374, y: -27.753315}
-        _enemyPrefab: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}
-    - rid: 8639230304246038538
+    - rid: 8639230312003928075
       type: {class: EnemySpawnPointer, ns: , asm: Core}
       data:
         _relativePosition: {x: 17.615631, y: -27.833134}
-        _enemyPrefab: {fileID: 4260962628893031756, guid: 336304d485d4dfd428a00c39c6168cec, type: 3}

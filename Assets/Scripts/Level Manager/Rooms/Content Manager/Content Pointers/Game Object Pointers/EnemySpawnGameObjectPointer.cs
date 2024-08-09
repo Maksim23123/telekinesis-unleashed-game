@@ -4,19 +4,9 @@ using UnityEngine;
 
 public class EnemySpawnGameObjectPointer : GameObjectPointer
 {
-    [SerializeField] GameObject _enemyPrefab;
-
-    public override void SetValuesFromPointer(ContentPointer contentPointer)
-    {
-        if (contentPointer is EnemySpawnPointer enemySpawnPointer)
-        {
-            _enemyPrefab = enemySpawnPointer.EnemyPrefab;
-        }
-    }
-
     public override ContentPointer ToRegularPointer(Vector2 centerPosition)
     {
-        EnemySpawnPointer pointer = new EnemySpawnPointer(_enemyPrefab);
+        EnemySpawnPointer pointer = new EnemySpawnPointer();
         pointer.RelativePosition = (Vector2)gameObject.transform.position - centerPosition;
         return pointer;
     }

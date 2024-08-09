@@ -14,4 +14,6 @@ public abstract class ContentPointer
     public abstract GameObject ToGameObject(Vector2 centerPosition, GameObject _defaultPointer, Transform pointerContainer);
 
     public abstract void ActivatePointerAction(Vector2 centerPosition);
+
+    public abstract void PerformPointerActionCleanUp();
 }
