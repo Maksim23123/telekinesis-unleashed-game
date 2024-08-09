@@ -50,7 +50,6 @@ public class GravityScaleRequestManager : IDisposable
     public void Dispose()
     {
         RequestIsActive = false;
-        Debug.Log("GravityScaleRequestManager resources have been cleaned up.");
         GC.SuppressFinalize(this);
     }
 
