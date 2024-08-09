@@ -16,5 +16,10 @@ public class RoomContentManagerEditor : Editor
         {
             instance.GameObjectsToPointers();
         }
+
+        if (GUILayout.Button("Convert Pointers To GameObjects"))
+        {
+            instance.PointersToGameObjects();
+        }
     }
 }

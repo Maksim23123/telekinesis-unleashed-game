@@ -11,7 +11,7 @@ public abstract class ContentPointer
     public Vector2 RelativePosition { get => _relativePosition; set => _relativePosition = value; }
     public bool IsUsed { get; protected set; } = false;
 
-    public abstract GameObject ToGameObject(Vector2 centerPosition);
+    public abstract GameObject ToGameObject(Vector2 centerPosition, GameObject _defaultPointer, Transform pointerContainer);
 
     public abstract void ActivatePointerAction(Vector2 centerPosition);
 }

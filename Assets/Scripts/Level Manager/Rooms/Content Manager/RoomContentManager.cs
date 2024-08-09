@@ -8,11 +8,13 @@ public class RoomContentManager : MonoBehaviour
 {
     [SerializeField] private GameObject _defaultPointerPrefab;
 
+    [SerializeField] private Transform _pointerContainer;
+
     [SerializeField] private float _playerDistanceActivationPosition;
 
-    [SerializeReference] private List<ContentPointer> contentPointers = new();
+    [SerializeReference] private List<ContentPointer> _contentPointers = new();
 
-    [SerializeField] private List<GameObject> contentPointerGameObjects = new();
+    [SerializeField] private List<GameObject> _contentPointerGameObjects = new();
 
     private void Update()
     {
@@ -22,7 +24,7 @@ public class RoomContentManager : MonoBehaviour
             Vector2 gameObjectPosition = gameObject.transform.position;
             if (Vector2.Distance(playerPosition, gameObjectPosition) < _playerDistanceActivationPosition)
             {
-                foreach (ContentPointer contentPointer in contentPointers)
+                foreach (ContentPointer contentPointer in _contentPointers)
                 {
                     contentPointer.ActivatePointerAction(gameObjectPosition);
                 }
@@ -32,16 +34,14 @@ public class RoomContentManager : MonoBehaviour
 
     public void GameObjectsToPointers()
     {
-        foreach (GameObject pointerGameObject in contentPointerGameObjects.ToList())
+        foreach (GameObject pointerGameObject in _contentPointerGameObjects.ToList())
         {
             if (pointerGameObject.TryGetComponent(out GameObjectPointer gameObjectPointer))
             {
                 ContentPointer currentContentPointer = gameObjectPointer.ToRegularPointer(gameObject.transform.position);
-                contentPointers.Add(currentContentPointer); // point 1
+                _contentPointers.Add(currentContentPointer);
 
-                
-
-                contentPointerGameObjects.Remove(pointerGameObject);
+                _contentPointerGameObjects.Remove(pointerGameObject);
                 DestroyImmediate(pointerGameObject);
             }
             else
@@ -50,30 +50,21 @@ public class RoomContentManager : MonoBehaviour
             }
         }
 #if UNITY_EDITOR
-        // Optionally, if you want to apply changes to the prefab asset itself
         UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
 #endif
     }
 
     public void PointersToGameObjects()
     {
-        foreach (GameObject pointerGameObject in contentPointerGameObjects.ToList())
+        foreach (ContentPointer contentPointer in _contentPointers.ToList())
         {
-            if (pointerGameObject.TryGetComponent(out GameObjectPointer gameObjectPointer))
-            {
-                ContentPointer currentContentPointer = gameObjectPointer.ToRegularPointer(gameObject.transform.position);
-                contentPointers.Add(currentContentPointer);
-
-                contentPointerGameObjects.Remove(pointerGameObject);
-                DestroyImmediate(pointerGameObject);
-            }
-            else
-            {
-                Debug.Log("GameObjecPointer script not found.");
-            }
+            GameObject pointerGameObject = contentPointer.ToGameObject(gameObject.transform.position, _defaultPointerPrefab
+                , _pointerContainer);
+            _contentPointerGameObjects.Add(pointerGameObject);
+            _contentPointers.Remove(contentPointer);
         }
+
 #if UNITY_EDITOR
-        // Optionally, if you want to apply changes to the prefab asset itself
         UnityEditor.PrefabUtility.RecordPrefabInstancePropertyModifications(this);
 #endif
     }
