@@ -47,7 +47,7 @@ public class PlayerStatsStorageTest
         Assert.AreEqual(expectedResult, comparisonResult);
     }
 
-    private PlayerStatsStorage GenerateStorage(float statsValue)
+    public static PlayerStatsStorage GenerateStorage(float statsValue)
     {
         PlayerStatsStorage newStorage = new PlayerStatsStorage();
         newStorage.DamageMultiplier = statsValue;
