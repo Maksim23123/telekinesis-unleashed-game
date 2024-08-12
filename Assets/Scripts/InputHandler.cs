@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
@@ -13,6 +14,22 @@ public class InputHandler : MonoBehaviour
     private bool _pickUpItemPressed;
     private bool _jumpPressed;
     private static InputHandler _instance;
+
+    private CharacterControllerScript _characterControllerScript;
+    private PlayerLadderHandler _playerLadderHandler;
+    private PlayerJumpHandler _playerJumpHandler;
+    private PlayerPossessableObjectManager _playerPossessableObjectManager;
+    private PlayerObjectManipulation _playerObjectManipulation;
+    private OneWayPlatformHandler _oneWayPlatformHandler;
+    private PlayerItemsManager _playerItemsManager;
+
+    private bool InputReceiverExists
+    {
+        get
+        {
+            return PlayerStatusInformer.PlayerGameObject != null;
+        }
+    }
 
     public static InputHandler Instance
     {
@@ -31,54 +48,83 @@ public class InputHandler : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        PlayerStatusInformer.NewPlayerAssigned += OnNewPlayerAssigned;
+    }
+
+    private void Start()
+    {
+        InitReferences();
+    }
+
+    private void InitReferences()
+    {
+        GameObject playerGameObject = PlayerStatusInformer.PlayerGameObject;
+
+        if (playerGameObject != null)
+        {
+            _characterControllerScript = playerGameObject.GetComponent<CharacterControllerScript>();
+            _playerLadderHandler = playerGameObject.GetComponent<PlayerLadderHandler>();
+            _playerJumpHandler = playerGameObject.GetComponent<PlayerJumpHandler>();
+            _playerPossessableObjectManager = playerGameObject.GetComponent<PlayerPossessableObjectManager>();
+            _playerObjectManipulation = playerGameObject.GetComponent<PlayerObjectManipulation>();
+            _oneWayPlatformHandler = playerGameObject.GetComponent<OneWayPlatformHandler>();
+            _playerItemsManager = playerGameObject.GetComponent<PlayerItemsManager>();
+        }
     }
 
     private void FixedUpdate()
     {
-        ProcessInput();
+        if (InputReceiverExists)
+        {
+            ProcessInput();
+        }
+    }
+
+    private void OnNewPlayerAssigned(GameObject playerGameObject)
+    {
+        InitReferences();
     }
 
     private void ProcessInput()
     {
-        PlayerController.Instance
-            .CharacterControllerScript.DirectionalFactor = Input.GetAxis("Horizontal");
-        PlayerLadderHandler.Instance.VerticalFactor = Input.GetAxis("Vertical");
+        _characterControllerScript.DirectionalFactor = Input.GetAxis("Horizontal");
+        _playerLadderHandler.VerticalFactor = Input.GetAxis("Vertical");
 
         bool currentJumpValue = Input.GetButton("Jump");
         if (Input.GetButton("Jump"))
         {
             _jumpPressed = true;
-            PlayerJumpHandler.Instance.RequestJump();
-            PlayerLadderHandler.Instance.ExitLadderRequest();
+            _playerJumpHandler.RequestJump();
+            _playerLadderHandler.ExitLadderRequest();
         }
         else if (!currentJumpValue && _jumpPressed)
         {
             _jumpPressed = false;
-            PlayerJumpHandler.Instance.RequestJumpCanceling();
+            _playerJumpHandler.RequestJumpCanceling();
         }
 
         bool currentCaptureObjectButtonValue = Input.GetKey(_captureObjectButton);
         if (currentCaptureObjectButtonValue && !_captureObjectButtonPressed)
         {
-            PlayerPossessableObjectManager.Instance.RequestCapturing();
+            _playerPossessableObjectManager.RequestCapturing();
             _captureObjectButtonPressed = true;
         }
         else if (!currentCaptureObjectButtonValue)
             _captureObjectButtonPressed = false;
 
         if (Input.GetKey(_quitCapturingButton))
-            PlayerPossessableObjectManager.Instance.RequestQuitCapturing();
+            _playerPossessableObjectManager.RequestQuitCapturing();
         if (Input.GetKey(_performManipulationButton))
-            PlayerObjectManipulation.Instance.RequestManipulation();
+            _playerObjectManipulation.RequestManipulation();
         if (Input.GetKey(_fallThroughOneWayPlatform))
-            OneWayPlatformHandler.Instance.FallThroughCurrentPlatforms();
+            _oneWayPlatformHandler.FallThroughCurrentPlatforms();
         if (Input.GetKey(_stepOnLadder))
-            PlayerLadderHandler.Instance.PostStepOnLadderRequest();
+            _playerLadderHandler.PostStepOnLadderRequest();
 
         bool currentPickupItemValue = Input.GetKey(_pickUpItem);
         if (currentPickupItemValue && !_pickUpItemPressed)
         {
-            PlayerItemsManager.Instance.RequestPickUp();
+            _playerItemsManager.RequestPickUp();
             _pickUpItemPressed = true;
         }
         else if (!currentPickupItemValue)

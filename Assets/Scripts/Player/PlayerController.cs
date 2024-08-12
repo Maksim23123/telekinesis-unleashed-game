@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// This class is a singleton that provides access to the player's CharacterControllerScript.
+/// It ensures that there is only one instance of PlayerController in the scene.
+/// </summary>
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private CharacterControllerScript _characterControllerScript;

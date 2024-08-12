@@ -10,6 +10,7 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
     private List<StatsModifierSlot> _statsModifierSlots = new List<StatsModifierSlot>();
     private EntityHealthManager _healthManager;
     private DamageHandler _damageHandler;
+    private CharacterControllerScript _characterControllerScript;
 
     public int Priority { get => 1; }
 
@@ -35,6 +36,7 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
     {
         TryGetComponent(out _healthManager);
         TryGetComponent(out _damageHandler);
+        TryGetComponent(out _characterControllerScript);
     }
 
     private void ApplyStats()
@@ -47,7 +49,7 @@ public class PlayerStatsHandler : MonoBehaviour, IRecordable
 
         PlayerPossessableObjectManager.Instance.CaptureZoneRadius = _modifiedStats.CaptureZoneRadius;
         PlayerObjectManipulation.Instance.ManipulationCooldown = _modifiedStats.ObjectManipulationCooldown;
-        PlayerController.Instance.CharacterControllerScript.Speed = _modifiedStats.MovementSpeed;
+        _characterControllerScript.Speed = _modifiedStats.MovementSpeed;
         PlayerJumpHandler.Instance.JumpStrength = _modifiedStats.JumpStrength;
 
         _damageHandler.Resistance = _modifiedStats.Resistance;

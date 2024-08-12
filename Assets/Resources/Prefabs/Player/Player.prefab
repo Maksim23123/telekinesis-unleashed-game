@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 8262149326308741992}
   - component: {fileID: 7642644783089002642}
   - component: {fileID: 1946206431371242632}
-  - component: {fileID: 2561752048487676448}
   - component: {fileID: 6716240437269107925}
   - component: {fileID: 4256644320906339213}
   - component: {fileID: 8072710691435678194}
@@ -192,19 +191,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _savePossition: 1
   _saveRotation: 0
---- !u!114 &2561752048487676448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4153444728527318417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a21cd33efe505b41aa41e164366bc7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _characterControllerScript: {fileID: 9197056033599084494}
 --- !u!114 &6716240437269107925
 MonoBehaviour:
   m_ObjectHideFlags: 0
