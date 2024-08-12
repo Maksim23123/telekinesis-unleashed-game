@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -107,13 +108,23 @@ public class CharacterControllerScript : MonoBehaviour
     /// </summary>
     protected void CheckGround()
     {
-        RaycastHit2D raycastHit = Physics2D.CircleCast(transform.position + Vector3.down * GROUND_CHECK_RELATIVE_VERTICAL_POSITION
+        RaycastHit2D[] raycastHits = Physics2D.CircleCastAll(transform.position + Vector3.down * GROUND_CHECK_RELATIVE_VERTICAL_POSITION
             , GROUND_CHECK_RADIUS, Vector2.down, 0, _groundLayers);
 
-        if (raycastHit.collider != null)
+        RaycastHit2D currentRaycastHit;
+        raycastHits = raycastHits.OrderBy(raycastHit => raycastHit.point.x).ToArray();
+        if (DirectionalFactor > 0)
+        {
+            raycastHits = raycastHits.Reverse().ToArray();
+        }
+        currentRaycastHit = raycastHits.FirstOrDefault();
+
+
+        if (currentRaycastHit.collider != null)
         {
             Grounded = true;
-            _groundAngle = Vector3.Angle(Vector3.up, raycastHit.transform.rotation * Vector3.up) * (raycastHit.transform.rotation.eulerAngles.z < 180 ? 1 : -1);
+            _groundAngle = Vector3.Angle(Vector3.up, currentRaycastHit.transform.rotation * Vector3.up) 
+                * (currentRaycastHit.transform.rotation.eulerAngles.z < 180 ? 1 : -1);
             float angleSize = Mathf.Abs(_groundAngle);
             if (angleSize > 0 && angleSize <= _maxSlopeAngle)
             {
