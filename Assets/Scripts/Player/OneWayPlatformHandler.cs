@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(GravityScaleManager))]
 public class OneWayPlatformHandler : MonoBehaviour
@@ -9,7 +11,7 @@ public class OneWayPlatformHandler : MonoBehaviour
     [SerializeField] private float _fallThroughGravityScale;
 
     private GravityScaleRequestManager _gravityScaleRequestManager;
-    private GameObject _currentOneWayPlatform;
+    private List<GameObject> _oneWayPlatformsInContact = new();
     private bool _fallThroughOnCooldown;
     private static OneWayPlatformHandler _instance;
 
@@ -35,16 +37,16 @@ public class OneWayPlatformHandler : MonoBehaviour
     {
         if (_oneWayPlatformLayer.Contains(collision.gameObject.layer))
         {
-            _currentOneWayPlatform = collision.gameObject;
+            _oneWayPlatformsInContact.Add(collision.gameObject);
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-
-        if (_oneWayPlatformLayer.Contains(collision.gameObject.layer))
+        if (_oneWayPlatformLayer.Contains(collision.gameObject.layer) &&
+                _oneWayPlatformsInContact.Contains(collision.gameObject))
         {
-            _currentOneWayPlatform = null;
+            _oneWayPlatformsInContact.Remove(collision.gameObject);
         }
     }
 
@@ -56,21 +58,43 @@ public class OneWayPlatformHandler : MonoBehaviour
 
     private IEnumerator DisableCollision()
     {
-        BoxCollider2D platformCollider = _currentOneWayPlatform.GetComponent<BoxCollider2D>();
+        List<BoxCollider2D> platformColliders = new();
+        foreach (GameObject oneWayPlatformObject in _oneWayPlatformsInContact)
+        {
+            BoxCollider2D platformCollider = oneWayPlatformObject.GetComponent<BoxCollider2D>();
 
-        Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), platformCollider);
+            platformColliders.Add(platformCollider);
+            Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), platformCollider);
+        }
+        
         yield return new WaitForSeconds(_fallThroughTime);
-        Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), platformCollider, false);
+
+        foreach (BoxCollider2D platformCollider in platformColliders)
+        {
+            Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), platformCollider, false);
+        }
     }
 
     public void FallThroughCurrentPlatform()
     {
-        if (!_fallThroughOnCooldown && _currentOneWayPlatform != null)
+        if (!_fallThroughOnCooldown && _oneWayPlatformsInContact.Count > 0)
         {
+            ClearNullContactObjects();
             StartCoroutine(DisableCollision());
             _fallThroughOnCooldown = true;
             _gravityScaleRequestManager.RequestIsActive = true;
             Invoke(nameof(ResetFallThrough), _fallThroughTime);
+        }
+    }
+
+    private void ClearNullContactObjects()
+    {
+        foreach (GameObject oneWayPlatform in _oneWayPlatformsInContact.ToList())
+        {
+            if (oneWayPlatform == null)
+            {
+                _oneWayPlatformsInContact.Remove(oneWayPlatform);
+            }
         }
     }
 }
