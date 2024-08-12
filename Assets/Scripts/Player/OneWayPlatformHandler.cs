@@ -3,6 +3,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// This class allows a GameObject to temporarily disable collision with one-way platforms it is currently colliding with.
+/// A <see cref="GravityScaleManager"/> component must be attached to the same GameObject.
+/// </summary>
 [RequireComponent(typeof(GravityScaleManager))]
 public class OneWayPlatformHandler : MonoBehaviour
 {
@@ -29,7 +33,8 @@ public class OneWayPlatformHandler : MonoBehaviour
 
         if (TryGetComponent(out GravityScaleManager gravityScaleManager))
         {
-            _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, _fallThroughGravityScale, 1);
+            const int Priority = 1;
+            _gravityScaleRequestManager = new GravityScaleRequestManager(gravityScaleManager, _fallThroughGravityScale, Priority);
         }
     }
 
@@ -75,7 +80,11 @@ public class OneWayPlatformHandler : MonoBehaviour
         }
     }
 
-    public void FallThroughCurrentPlatform()
+    /// <summary>
+    /// Temporarily disables collision with one-way platforms that are currently
+    /// colliding with the GameObject.
+    /// </summary>
+    public void FallThroughCurrentPlatforms()
     {
         if (!_fallThroughOnCooldown && _oneWayPlatformsInContact.Count > 0)
         {
@@ -89,11 +98,11 @@ public class OneWayPlatformHandler : MonoBehaviour
 
     private void ClearNullContactObjects()
     {
-        foreach (GameObject oneWayPlatform in _oneWayPlatformsInContact.ToList())
+        for (int i = _oneWayPlatformsInContact.Count - 1; i >= 0; i--)
         {
-            if (oneWayPlatform == null)
+            if (_oneWayPlatformsInContact[i] == null)
             {
-                _oneWayPlatformsInContact.Remove(oneWayPlatform);
+                _oneWayPlatformsInContact.Remove(_oneWayPlatformsInContact[i]);
             }
         }
     }

@@ -71,7 +71,7 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKey(_performManipulationButton))
             PlayerObjectManipulation.Instance.RequestManipulation();
         if (Input.GetKey(_fallThroughOneWayPlatform))
-            OneWayPlatformHandler.Instance.FallThroughCurrentPlatform();
+            OneWayPlatformHandler.Instance.FallThroughCurrentPlatforms();
         if (Input.GetKey(_stepOnLadder))
             PlayerLadderHandler.Instance.PostStepOnLadderRequest();
 
