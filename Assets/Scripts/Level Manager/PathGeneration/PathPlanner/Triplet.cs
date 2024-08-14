@@ -6,11 +6,12 @@ public class Triplet : PathUnit
     public int[] BackConnections { get; set; } = new int[2];
     public Orientation Orientation { get; set; }
     public Placement placement { get; set; }
-    public GameObject GameObject { get; set; }
+    public BlockStructureData BlockStructureData { get; set; }
+    public Vector2Int Position { get; set; }
 
-    public override Vector2Int ExtractConnectionPointPosition(BlockGridSettings blockGridSettings, List<Triplet> instantiatedTriplets)
+    public override Vector2Int ExtractConnectionPointPosition(BlockGridSettings blockGridSettings
+        , List<Triplet> instantiatedTriplets)
     {
-        BlockStructure blockStructure = GameObject.GetComponent<BlockStructure>();
-        return blockStructure.ExitConnection.GetConnectionPoint(blockGridSettings);
+        return BlockStructureData.ExitConnection.GetConnectionPoint(blockGridSettings);
     }
 }

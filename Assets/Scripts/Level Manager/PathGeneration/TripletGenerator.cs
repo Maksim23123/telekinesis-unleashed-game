@@ -55,11 +55,15 @@ public class TripletGenerator
                 {
                     Vector2Int tripletPosition = FindPositionForTriplet(pathPlan, roomStructure, currentTriplet);
 
+                    string text = string.Empty;
+                    text += tripletPosition;
+
                     InstantiateTriplet(ref currentTriplet, tripletPosition);
                 }
             }
             while (currentTriplet != null);
         }
+        ShowTripletsResume(pathPlan);
         return _instantiatedTriplets;
     }
 
@@ -96,6 +100,8 @@ public class TripletGenerator
             verticalPosition = basePosition - VERTICAL_POSITION_BELOW_OFFSET - VERTICAL_POSITION_OFFSET;
         }
 
+        Vector2Int finalPosition = new Vector2Int(horizontalPosition, verticalPosition);
+
         return new Vector2Int(horizontalPosition, verticalPosition);
     }
 
@@ -124,7 +130,7 @@ public class TripletGenerator
     {
         return pathPlan.Where(pathUnit =>
                 CheckIfTripletHasAllBackConnectionsInstantiated(pathPlan, pathUnit) && !_instantiatedTriplets
-                    .Any(g => g.Id == pathUnit.Id))
+                    .Any(triplet => triplet.Id == pathUnit.Id))
             .Select(x => (Triplet)x)
             .FirstOrDefault();
     }
@@ -141,6 +147,8 @@ public class TripletGenerator
 
     private void InstantiateTriplet(ref Triplet triplet, Vector2Int position)
     {
+        triplet.Position = position;
+
         GameObject tripletPrefab = null;
         if (triplet.Orientation == Orientation.Right)
         {
@@ -153,8 +161,8 @@ public class TripletGenerator
 
         if (tripletPrefab != null)
         {
-            GameObject tripletInstance = BlockStructure.InstantiateStructure(tripletPrefab, position, _levelManager);
-            triplet.GameObject = tripletInstance;
+            BlockStructureData tripletData = BlockStructure.GetBlockStructureData(tripletPrefab, position, _levelManager);
+            triplet.BlockStructureData = tripletData;
             _instantiatedTriplets.Add(triplet);
         }
     }
@@ -188,8 +196,7 @@ public class TripletGenerator
                 string resume = string.Empty;
 
                 resume += "ID: " + currentTriplet.Id + " | ";
-                resume += "Position: " + _levelManager.BlockGridSettings
-                    .WorldToGridPosition(currentTriplet.GameObject.transform.position) + " | ";
+                resume += "Position: " + currentTriplet.Position + " | ";
 
                 PathUnit firstBackConnectionUnit = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[0]);
                 resume += "First connection point: " + firstBackConnectionUnit.ExtractConnectionPointPosition(BlockGridSettings
@@ -201,7 +208,6 @@ public class TripletGenerator
                 Debug.Log(resume);
             }
         }
-        
     }
 
     private bool TryGetBasePositionFromRooms(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure
@@ -224,17 +230,17 @@ public class TripletGenerator
 
             if (currentConnectionLayer != null)
             {
-                int roomLayerCenter = currentConnectionLayer.First().Connection.AttachedStructure.StructureCenterGridPosition.y;
+                int roomLayerCenter = currentConnectionLayer.First().Connection.AttachedStructureData.GridPosition.y;
                 if (currentTriplet.placement == Placement.Above)
                 {
                     int offsetFromRoomLayerCenter = currentConnectionLayer
-                        .Max(x => x.Connection.AttachedStructure.CapturedPlaceAboveCenter);
+                        .Max(x => x.Connection.AttachedStructureData.BlockStructure.CapturedPlaceAboveCenter);
                     baseVerticalPosition = roomLayerCenter + offsetFromRoomLayerCenter;
                 }
                 else if (currentTriplet.placement == Placement.Bellow)
                 {
                     int offsetFromRoomLayerCenter = currentConnectionLayer
-                        .Max(x => x.Connection.AttachedStructure.CapturedPlaceBelowCenter);
+                        .Max(x => x.Connection.AttachedStructureData.BlockStructure.CapturedPlaceBelowCenter);
                     baseVerticalPosition = roomLayerCenter - offsetFromRoomLayerCenter;
                 }
                 extractionSuccesful = true;

@@ -14,5 +14,15 @@ public class LevelManagerEditor : Editor
         {
             myScript.ClearLevel();
         }
+
+        if (GUILayout.Button("Show block markers"))
+        {
+            myScript.ShowBlocks();
+        }
+
+        if (GUILayout.Button("Remove block markers"))
+        {
+            myScript.RemoveBlockMarkers();
+        }
     }
 }

@@ -83,8 +83,9 @@ public class RoomGenerator : MonoBehaviour
         {
             foreach (RoomInfo roomInfo in _roomLevels[i].LevelRoomsContainer)
             {
-                BlockStructure currentRoomData = CreateRoom(roomInfo.PositionInGrid - new Vector2Int(_roomLevels[i].HorizontalPos / 2, 0)
-                    + new Vector2Int(_horizontalOffset, 0), roomInfo.RoomObjectPrefab);
+                BlockStructureData currentRoomData = CreateRoom(roomInfo.PositionInGrid 
+                    - new Vector2Int(_roomLevels[i].HorizontalPos / 2, 0) + new Vector2Int(_horizontalOffset, 0)
+                    , roomInfo.RoomObjectPrefab);
                 if (i > 0 && i < _roomLevels.Count - 1)
                 {
                     currentConnectionLayer[0].Add(ExtractExit(currentRoomData));
@@ -152,23 +153,22 @@ public class RoomGenerator : MonoBehaviour
         return newConnectionLayer;
     }
 
-    private static PathEnd ExtractExit(BlockStructure currentRoomData)
+    private static PathEnd ExtractExit(BlockStructureData blockStructureData)
     {
         PathEnd exit = new PathEnd();
-        exit.Connection = currentRoomData.ExitConnection;
+        exit.Connection = blockStructureData.ExitConnection;
         return exit;
     }
 
-    private static PathEnd ExtractEnterance(BlockStructure currentRoomData)
+    private static PathEnd ExtractEnterance(BlockStructureData blockStructureData)
     {
         PathEnd enterance = new PathEnd();
-        enterance.Connection = currentRoomData.EnteranceConnections[0];
+        enterance.Connection = blockStructureData.EnteranceConnections[0];
         return enterance;
     }
 
-    public BlockStructure CreateRoom(Vector2Int roomCenterGridPosition, GameObject currentRoom)
+    public BlockStructureData CreateRoom(Vector2Int roomCenterGridPosition, GameObject currentRoom)
     {
-        GameObject roomInstance = BlockStructure.InstantiateStructure(currentRoom, roomCenterGridPosition, _levelManager);
-        return roomInstance.GetComponent<BlockStructure>();
+        return BlockStructure.GetBlockStructureData(currentRoom, roomCenterGridPosition, _levelManager);
     }
 }

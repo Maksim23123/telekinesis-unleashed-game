@@ -42,20 +42,17 @@ public class PathGenerator : MonoBehaviour
     {
         foreach (Triplet currentTriplet in triplets)
         {
-            if (currentTriplet.GameObject.TryGetComponent(out BlockStructure tripletBlockStructure))
+            for (int i = 0; i < 2; i++)
             {
-                for (int i = 0; i < 2; i++)
+                Connection currentConnection = currentTriplet.BlockStructureData.EnteranceConnections[i];
+                PathUnit currentBackConnection = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[i]);
+                Vector2Int destinationPoint = currentBackConnection.ExtractConnectionPointPosition(BlockGridSettings
+                    , triplets);
+                if (currentConnection.SealedZoneParametersInitialized)
                 {
-                    Connection currentConnection = tripletBlockStructure.EnteranceConnections[i];
-                    PathUnit currentBackConnection = PathUnit.GetById(pathPlan, currentTriplet.BackConnections[i]);
-                    Vector2Int destinationPoint = currentBackConnection.ExtractConnectionPointPosition(BlockGridSettings
-                        , triplets);
-                    if (currentConnection.SealedZoneParametersInitialized)
-                    {
-                        _levelManager.DestroyBlocksInArea(currentConnection.SealedZoneStart, currentConnection.SealedZoneEnd);
-                    }
-                    GenerateSmartWay(currentConnection.GetConnectionPoint(BlockGridSettings), destinationPoint);
+                    _levelManager.DestroyBlocksInArea(currentConnection.SealedZoneStart, currentConnection.SealedZoneEnd);
                 }
+                GenerateSmartWay(currentConnection.GetConnectionPoint(BlockGridSettings), destinationPoint);
             }
         }
     }

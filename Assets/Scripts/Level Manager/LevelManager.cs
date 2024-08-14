@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LevelManager : MonoBehaviour
 {
@@ -82,11 +83,8 @@ public class LevelManager : MonoBehaviour
     {
         if (!TryGetBlockInfoByPosition(position, out var _))
         {
-            GameObject currentBlock = Instantiate(blockInfo.Block, _grid.transform);
-            currentBlock.transform.position = new Vector2(_blockGridSettings.HorizontalExpandDirectionFactor * _blockGridSettings.BlocksSize.x 
-                * position.x + _blockGridSettings.PossitionBias.x, _blockGridSettings.BlocksSize.y * position.y + _blockGridSettings.PossitionBias.y);
-
-            BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(currentBlock, position);
+            
+            BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(blockInfo.Block, position);
             newBlockInfoHolder.SetConnections(blockInfo.GetConnections());
             newBlockInfoHolder.Tags = blockInfo.Tags;
             newBlockInfoHolder.IsLadderNeighbor = ladderNeighbor;
@@ -94,7 +92,7 @@ public class LevelManager : MonoBehaviour
             newBlockInfoHolder.Generation = generation;
 
             _levelElements.Add(newBlockInfoHolder);
-            return currentBlock;
+            return null;
         }
         else
         {
@@ -180,7 +178,7 @@ public class LevelManager : MonoBehaviour
     {
         if (_levelElements.Contains(block))
         {
-            DestroyImmediate(block.Block);
+            //DestroyImmediate(block.Block);
             _levelElements.Remove(block);
         }
     }
@@ -189,7 +187,7 @@ public class LevelManager : MonoBehaviour
     {
         foreach (GameObject levelElement in _levelElements.Select(x => x.Block))
         {
-            DestroyImmediate(levelElement);
+            //T: Fix gameObject destruction
         }
         _levelElements.Clear();
     }
@@ -207,6 +205,35 @@ public class LevelManager : MonoBehaviour
                 Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
                 action(currentBlockPossition);
             }
+        }
+    }
+
+    //T: Debug field
+    [SerializeField][HideInInspector] List<GameObject> _markers = new();
+
+    //T: Debug
+    public void ShowBlocks()
+    {
+        if (TryGetSuitableBlock(false, false, false, false, out BlockInfoHolder placeholder))
+        {
+            foreach (BlockInfoHolder block in _levelElements)
+            {
+                Vector2Int position = block.BlockPosstion;
+                GameObject currentGameObject = Instantiate(placeholder.Block, _grid.transform);
+                currentGameObject.transform.position = new Vector2(_blockGridSettings.HorizontalExpandDirectionFactor * _blockGridSettings.BlocksSize.x
+                    * position.x + _blockGridSettings.PossitionBias.x, _blockGridSettings.BlocksSize.y * position.y + _blockGridSettings.PossitionBias.y);
+
+                _markers.Add(currentGameObject);
+            }
+        }
+    }
+
+    public void RemoveBlockMarkers()
+    {
+        for (int i = _markers.Count - 1; i >= 0; i--)
+        {
+            DestroyImmediate(_markers[i]);
+            _markers.RemoveAt(i);
         }
     }
 }

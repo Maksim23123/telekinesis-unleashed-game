@@ -37,14 +37,13 @@ public class RestraintBuilder
         {
             foreach (Triplet triplet in triplets)
             {
-                if (triplet.GameObject.TryGetComponent(out BlockStructure tripletBlockStructure)
-                        && _levelManager.TryGetSuitableBlock(RESTRAINT_BLOCK_TAG, out BlockInfoHolder restreint))
+                if (_levelManager.TryGetSuitableBlock(RESTRAINT_BLOCK_TAG, out BlockInfoHolder restreint))
                 {
-                    Connection firstConnection = tripletBlockStructure.EnteranceConnections[0];
+                    Connection firstConnection = triplet.BlockStructureData.EnteranceConnections[0];
                     firstConnection.InitSealedAreaParameters(BlockGridSettings, Placement.Bellow);
                     _levelManager.FillRect(firstConnection.SealedZoneStart, firstConnection.SealedZoneEnd, restreint);
 
-                    Connection secondConnection = tripletBlockStructure.EnteranceConnections[1];
+                    Connection secondConnection = triplet.BlockStructureData.EnteranceConnections[1];
                     secondConnection.InitSealedAreaParameters(BlockGridSettings, Placement.Above);
                     _levelManager.FillRect(secondConnection.SealedZoneStart, secondConnection.SealedZoneEnd, restreint);
                 }

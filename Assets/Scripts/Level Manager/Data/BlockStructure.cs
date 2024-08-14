@@ -21,8 +21,6 @@ public class BlockStructure : MonoBehaviour
     public Vector2Int CapturedZoneInBlockGridStart { get; private set; }
     public Vector2Int CapturedZoneInBlockGridEnd { get; private set; }
     public Vector2Int StructureCenterGridPosition { get; private set; }
-    public Connection ExitConnection { get; private set; }
-    public List<Connection> EnteranceConnections { get; private set; } = new();
 
     public int CapturedPlaceBelowCenter 
     { 
@@ -85,7 +83,6 @@ public class BlockStructure : MonoBehaviour
     {
         CapturedZoneInBlockGridStart = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeStructureStartPosition);
         CapturedZoneInBlockGridEnd = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeStructureEndPosition);
-        InitStructureConnections(blockGridSettings);
     }
 
     private Vector2Int ConvertWorldSizeIntoBlockGridSize(BlockGridSettings blockGridSettings, Vector2 worldSize)
@@ -104,9 +101,9 @@ public class BlockStructure : MonoBehaviour
     }
 
 
-    private void InitStructureConnections(BlockGridSettings blockGridSettings)
+    private void InitStructureConnections(ref BlockStructureData blockStructureData, BlockGridSettings blockGridSettings)
     {
-        EnteranceConnections.Clear();
+        blockStructureData.EnteranceConnections.Clear();
 
         foreach (Vector2 currentRelativeEnterancePosition in _relativeEnterancePositions)
         {
@@ -122,60 +119,67 @@ public class BlockStructure : MonoBehaviour
             {
                 currentEnteranceConnection.Orientation = Orientation.Left;
             }
-            currentEnteranceConnection.AttachedStructure = this;
+            currentEnteranceConnection.AttachedStructureData = blockStructureData;
             currentEnteranceConnection.ConnectionType = ConnectionType.Enterance;
-            EnteranceConnections.Add(currentEnteranceConnection);
+            blockStructureData.EnteranceConnections.Add(currentEnteranceConnection);
         }
-        
-        ExitConnection = new Connection();
-        ExitConnection.RelativePositionInBlockGrid
+
+        blockStructureData.ExitConnection = new Connection();
+        blockStructureData.ExitConnection.RelativePositionInBlockGrid
             = ConvertWorldSizeIntoBlockGridSize(blockGridSettings, _relativeExitPosition);
-        if (ExitConnection.RelativePositionInBlockGrid.x > 0)
+        if (blockStructureData.ExitConnection.RelativePositionInBlockGrid.x > 0)
         {
-            ExitConnection.Orientation = Orientation.Right;
+            blockStructureData.ExitConnection.Orientation = Orientation.Right;
         }
         else
         {
-            ExitConnection.Orientation = Orientation.Left;
+            blockStructureData.ExitConnection.Orientation = Orientation.Left;
         }
-        ExitConnection.AttachedStructure = this;
-        ExitConnection.ConnectionType = ConnectionType.Exit;
+        blockStructureData.ExitConnection.AttachedStructureData = blockStructureData;
+        blockStructureData.ExitConnection.ConnectionType = ConnectionType.Exit;
     }
 
     private void InstantiateConnetion(ref Connection connection, Vector2Int centerPosition, LevelManager levelManager)
     {
         levelManager.TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder connectionBase);
 
-        connection.GameObject = levelManager.InstantiateBlock(centerPosition
-            + connection.RelativePositionInBlockGrid, connectionBase);
+        connection.PositionInGrid = centerPosition
+            + connection.RelativePositionInBlockGrid;
+
+        levelManager.InstantiateBlock(connection.PositionInGrid, connectionBase);
     }
 
-    public static GameObject InstantiateStructure(GameObject structurePrefab, Vector2Int structureCenterGridPosition
+    public static BlockStructureData GetBlockStructureData(GameObject structurePrefab, Vector2Int structureCenterGridPosition
             , LevelManager levelManager)
     {
         BlockInfoHolder structureBlock = new BlockInfoHolder(structurePrefab, Vector2Int.zero);
 
         GameObject structureGameObjectInstance = levelManager.InstantiateCustomBlock(structureBlock, structureCenterGridPosition);
 
-        if (structureGameObjectInstance.TryGetComponent(out BlockStructure blockStructure))
+        if (structurePrefab.TryGetComponent(out BlockStructure blockStructure))
         {
+
             blockStructure.InitInGridParams(levelManager.BlockGridSettings);
 
             levelManager.FillRectWithPlaceholders(structureCenterGridPosition + blockStructure.CapturedZoneInBlockGridStart
                 , structureCenterGridPosition + blockStructure.CapturedZoneInBlockGridEnd);
 
-            blockStructure.InitStructureConnections(levelManager.BlockGridSettings);
+            BlockStructureData blockStructureData = new BlockStructureData();
+            blockStructureData.GridPosition = structureCenterGridPosition;
+            blockStructureData.StructurePrefab = structurePrefab;
+            blockStructureData.BlockStructure = blockStructure;
+            blockStructure.InitStructureConnections(ref blockStructureData, levelManager.BlockGridSettings);
 
-            for (int i = 0; i < blockStructure.EnteranceConnections.Count; i++)
+            for (int i = 0; i < blockStructureData.EnteranceConnections.Count; i++)
             {
-                Connection currentEnteranceConnection = blockStructure.EnteranceConnections[i];
+                Connection currentEnteranceConnection = blockStructureData.EnteranceConnections[i];
                 blockStructure.InstantiateConnetion(ref currentEnteranceConnection, structureCenterGridPosition, levelManager);
             }
 
-            Connection currentExitConnection = blockStructure.ExitConnection;
+            Connection currentExitConnection = blockStructureData.ExitConnection;
             blockStructure.InstantiateConnetion(ref currentExitConnection, structureCenterGridPosition, levelManager);
             blockStructure.StructureCenterGridPosition = structureCenterGridPosition;
-            return structureGameObjectInstance;
+            return blockStructureData;
         }
         Debug.Log("Unexpected Structure prefab was given");
         DestroyImmediate(structureGameObjectInstance);
