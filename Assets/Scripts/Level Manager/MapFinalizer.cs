@@ -93,12 +93,12 @@ public class MapFinalizer : MonoBehaviour
             BlockInfoHolder newBlockInfoHolder = null;
             if (CheckNeighbor(Orientation.Right, corridor))
             {
-                _levelManager.InstantiateBlock(corridor.BlockPosstion, rightConnectedDeadEndPrefab);
+                _levelManager.AddBlock(corridor.BlockPosstion, rightConnectedDeadEndPrefab);
                 newBlockInfoHolder = rightConnectedDeadEndPrefab.HollowCopy();
             }
             else if (CheckNeighbor(Orientation.Left, corridor))
             {
-                _levelManager.InstantiateBlock(corridor.BlockPosstion, leftConnectedDeadEndPrefab);
+                _levelManager.AddBlock(corridor.BlockPosstion, leftConnectedDeadEndPrefab);
                 newBlockInfoHolder = rightConnectedDeadEndPrefab.HollowCopy();
                 
             }
@@ -118,7 +118,7 @@ public class MapFinalizer : MonoBehaviour
             if (!CheckNeighbor(Orientation.Right, ladder))
             {
                 Vector2Int positionForSeal = ladder.BlockPosstion + RightBias;
-                _levelManager.InstantiateBlock(positionForSeal, leftConnectedDeadEndPrefab);
+                _levelManager.AddBlock(positionForSeal, leftConnectedDeadEndPrefab);
                 BlockInfoHolder newBlockInfoHolder = leftConnectedDeadEndPrefab.HollowCopy();
                 newBlockInfoHolder.BlockPosstion = positionForSeal;
                 _levelElementsInOperationalArea.Add(newBlockInfoHolder);
@@ -127,7 +127,7 @@ public class MapFinalizer : MonoBehaviour
             if (!CheckNeighbor(Orientation.Left, ladder))
             {
                 Vector2Int positionForSeal = ladder.BlockPosstion + LeftBias;
-                _levelManager.InstantiateBlock(positionForSeal, rightConnectedDeadEndPrefab);
+                _levelManager.AddBlock(positionForSeal, rightConnectedDeadEndPrefab);
                 BlockInfoHolder newBlockInfoHolder = rightConnectedDeadEndPrefab.HollowCopy();
                 newBlockInfoHolder.BlockPosstion = positionForSeal;
                 _levelElementsInOperationalArea.Add(newBlockInfoHolder);
@@ -153,7 +153,7 @@ public class MapFinalizer : MonoBehaviour
                 _levelManager.TryDestroyBlockByPosition(regularDeadEnd.BlockPosstion);
                 _levelElementsInOperationalArea.Remove(regularDeadEnd);
 
-                _levelManager.InstantiateBlock(regularDeadEnd.BlockPosstion, twoSidedDeadEndPrefab);
+                _levelManager.AddBlock(regularDeadEnd.BlockPosstion, twoSidedDeadEndPrefab);
                 BlockInfoHolder newBlockInfoHolder = twoSidedDeadEndPrefab.HollowCopy();
                 newBlockInfoHolder.BlockPosstion = regularDeadEnd.BlockPosstion;
                 _levelElementsInOperationalArea.Add(newBlockInfoHolder);

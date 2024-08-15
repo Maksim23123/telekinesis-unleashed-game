@@ -169,6 +169,6 @@ public class RoomGenerator : MonoBehaviour
 
     public BlockStructureData CreateRoom(Vector2Int roomCenterGridPosition, GameObject currentRoom)
     {
-        return BlockStructure.GetBlockStructureData(currentRoom, roomCenterGridPosition, _levelManager);
+        return BlockStructure.CreateBlockStructureData(currentRoom, roomCenterGridPosition, _levelManager);
     }
 }

@@ -40,7 +40,7 @@ public class TripletGenerator
         }
     } 
 
-    public List<Triplet> InstantiateTriplets(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
+    public List<Triplet> AddTriplets(HashSet<PathUnit> pathPlan, List<List<PathUnit>[]> roomStructure)
     {
         _instantiatedTriplets.Clear();
         if (CheckIfTripletPrefabsAssigned())
@@ -58,12 +58,11 @@ public class TripletGenerator
                     string text = string.Empty;
                     text += tripletPosition;
 
-                    InstantiateTriplet(ref currentTriplet, tripletPosition);
+                    AddTriplet(ref currentTriplet, tripletPosition);
                 }
             }
             while (currentTriplet != null);
         }
-        ShowTripletsResume(pathPlan);
         return _instantiatedTriplets;
     }
 
@@ -145,7 +144,7 @@ public class TripletGenerator
         return true;
     }
 
-    private void InstantiateTriplet(ref Triplet triplet, Vector2Int position)
+    private void AddTriplet(ref Triplet triplet, Vector2Int position)
     {
         triplet.Position = position;
 
@@ -161,7 +160,7 @@ public class TripletGenerator
 
         if (tripletPrefab != null)
         {
-            BlockStructureData tripletData = BlockStructure.GetBlockStructureData(tripletPrefab, position, _levelManager);
+            BlockStructureData tripletData = BlockStructure.CreateBlockStructureData(tripletPrefab, position, _levelManager);
             triplet.BlockStructureData = tripletData;
             _instantiatedTriplets.Add(triplet);
         }

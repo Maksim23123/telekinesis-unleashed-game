@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] List<BlockInfoHolder> _blocksInfo = new List<BlockInfoHolder>();
-    [SerializeField] GameObject _grid;
     [SerializeField] BlockGridSettings _blockGridSettings;
     [HideInInspector][SerializeField] List<BlockInfoHolder> _levelElements;
 
@@ -17,7 +15,7 @@ public class LevelManager : MonoBehaviour
 
     // Build and generate
 
-    public void BuildPathPart(Vector2Int position, Vector2Int[] neighborsRepresentativePositions)
+    public void AddPathPart(Vector2Int position, Vector2Int[] neighborsRepresentativePositions)
     {
         bool upperConnection = false;
         bool lowerConnection = false;
@@ -34,19 +32,19 @@ public class LevelManager : MonoBehaviour
 
         if (TryGetSuitableBlock(upperConnection, lowerConnection, true, true, out BlockInfoHolder suitableBlockPrefab))
         {
-            InstantiateBlock(position, suitableBlockPrefab);
+            AddBlock(position, suitableBlockPrefab);
         }
     }
 
-    public GameObject InstantiateCustomBlock(BlockInfoHolder blockInfoHolder, Vector2Int position, bool force = false)
+    public GameObject AddCustomBlock(BlockInfoHolder blockInfoHolder, Vector2Int position, bool force = false)
     {
         if (force)
         {
-            return InstantiateOrReplaceBlock(position, blockInfoHolder);
+            return AddOrReplaceBlock(position, blockInfoHolder);
         }
         else
         {
-            return InstantiateBlock(position, blockInfoHolder);
+            return AddBlock(position, blockInfoHolder);
         }
     }
 
@@ -54,7 +52,7 @@ public class LevelManager : MonoBehaviour
     {
         if (force)
         {
-            ExecuteForArea(startGridPosition, endGridPosition, position => InstantiateOrReplaceBlock(position, blockInfoHolder));
+            ExecuteForArea(startGridPosition, endGridPosition, position => AddOrReplaceBlock(position, blockInfoHolder));
         }
         else
         {
@@ -62,7 +60,7 @@ public class LevelManager : MonoBehaviour
             {
                 if (!TryGetBlockInfoByPosition(position, out var _))
                 {
-                    InstantiateBlock(position, blockInfoHolder);
+                    AddBlock(position, blockInfoHolder);
                 }
             });
         }
@@ -79,12 +77,12 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public GameObject InstantiateBlock(Vector2Int position, BlockInfoHolder blockInfo, bool ladderNeighbor = false, int generation = 0)
+    public GameObject AddBlock(Vector2Int position, BlockInfoHolder blockInfo, bool ladderNeighbor = false, int generation = 0)
     {
         if (!TryGetBlockInfoByPosition(position, out var _))
         {
             
-            BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(blockInfo.Block, position);
+            BlockInfoHolder newBlockInfoHolder = new BlockInfoHolder(blockInfo.BlockPrefab, position);
             newBlockInfoHolder.SetConnections(blockInfo.GetConnections());
             newBlockInfoHolder.Tags = blockInfo.Tags;
             newBlockInfoHolder.IsLadderNeighbor = ladderNeighbor;
@@ -101,13 +99,13 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public GameObject InstantiateOrReplaceBlock(Vector2Int position, BlockInfoHolder newBlockPrefab)
+    public GameObject AddOrReplaceBlock(Vector2Int position, BlockInfoHolder newBlockPrefab)
     {
         if (TryGetBlockInfoByPosition(position, out BlockInfoHolder blockToReplace))
         {
             DestroyBlock(blockToReplace);
         }
-        return InstantiateBlock(position, newBlockPrefab);
+        return AddBlock(position, newBlockPrefab);
     }
     
     // Info and tests
@@ -178,16 +176,23 @@ public class LevelManager : MonoBehaviour
     {
         if (_levelElements.Contains(block))
         {
-            //DestroyImmediate(block.Block);
+            if (block.Instantiated)
+            {
+                block.Destroy();
+            }
+            
             _levelElements.Remove(block);
         }
     }
 
     public void ClearLevel()
     {
-        foreach (GameObject levelElement in _levelElements.Select(x => x.Block))
+        foreach (BlockInfoHolder levelElement in _levelElements)
         {
-            //T: Fix gameObject destruction
+            if (levelElement.Instantiated)
+            {
+                levelElement.Destroy();
+            }
         }
         _levelElements.Clear();
     }
@@ -205,35 +210,6 @@ public class LevelManager : MonoBehaviour
                 Vector2Int currentBlockPossition = startGridPosition + new Vector2Int(i, j) * signs; // find absolute position in grid than rotate it to primal direction 
                 action(currentBlockPossition);
             }
-        }
-    }
-
-    //T: Debug field
-    [SerializeField][HideInInspector] List<GameObject> _markers = new();
-
-    //T: Debug
-    public void ShowBlocks()
-    {
-        if (TryGetSuitableBlock(false, false, false, false, out BlockInfoHolder placeholder))
-        {
-            foreach (BlockInfoHolder block in _levelElements)
-            {
-                Vector2Int position = block.BlockPosstion;
-                GameObject currentGameObject = Instantiate(placeholder.Block, _grid.transform);
-                currentGameObject.transform.position = new Vector2(_blockGridSettings.HorizontalExpandDirectionFactor * _blockGridSettings.BlocksSize.x
-                    * position.x + _blockGridSettings.PossitionBias.x, _blockGridSettings.BlocksSize.y * position.y + _blockGridSettings.PossitionBias.y);
-
-                _markers.Add(currentGameObject);
-            }
-        }
-    }
-
-    public void RemoveBlockMarkers()
-    {
-        for (int i = _markers.Count - 1; i >= 0; i--)
-        {
-            DestroyImmediate(_markers[i]);
-            _markers.RemoveAt(i);
         }
     }
 }

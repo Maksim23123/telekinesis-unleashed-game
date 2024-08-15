@@ -1,27 +1,28 @@
-using Codice.CM.Common;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [Serializable]
 public class BlockInfoHolder
 {
     [SerializeField] private string _name;
-    [SerializeField] GameObject _block;
+    [SerializeField] private GameObject _blockPrefab;
     [SerializeField] private bool _upConnected, _downConnected, _rightConnected, _leftConnected, _deadEnd;
     [SerializeField] private List<string> _tags;
 
-    [SerializeField][HideInInspector] Vector2Int _blockPosstion;
-    [SerializeField][HideInInspector] bool _neighborshipResolved;
-    [SerializeField][HideInInspector] bool _isLadderNeighbor = false;
-    [HideInInspector][SerializeField] int _generation;
+    // These fields are serialized but hidden in the inspector so that
+    // the information won't be lost after restarting Unity.
+    [SerializeField][HideInInspector] private Vector2Int _blockPosstion;
+    [SerializeField][HideInInspector] private bool _neighborshipResolved;
+    [SerializeField][HideInInspector] private bool _isLadderNeighbor = false;
+    [SerializeField][HideInInspector] private int _generation;
+    [SerializeField][HideInInspector] private GameObject _instanceInScene;
 
     public bool UpConnected { get => _upConnected; }
     public bool DownConnected { get => _downConnected; }
     public bool RightConnected { get => _rightConnected; }
     public bool LeftConnected { get => _leftConnected; }
-    public GameObject Block { get => _block; }
+    public GameObject BlockPrefab { get => _blockPrefab; }
     public Vector2Int BlockPosstion { get => _blockPosstion; set => _blockPosstion = value; }
     public bool NeighborshipResolved { get => _neighborshipResolved; set => _neighborshipResolved = value; }
     public bool IsLadderNeighbor { get => _isLadderNeighbor; set => _isLadderNeighbor = value; }
@@ -36,11 +37,74 @@ public class BlockInfoHolder
             return !UpConnected && !DownConnected && LeftConnected && RightConnected && !DeadEnd;
         }
     }
-
-    public BlockInfoHolder(GameObject block, Vector2Int blockPosstion)
+    public bool Instantiated
     {
-        _block = block;
+        get => _instanceInScene != null;
+    }
+    public bool IsActive
+    {
+        get
+        {
+            if (_instanceInScene != null)
+            {
+                return _instanceInScene.activeInHierarchy;
+            }
+            return false;
+        }
+
+        set
+        {
+            if (_instanceInScene != null)
+            {
+                _instanceInScene.SetActive(value);
+            }
+            else
+            {
+                Debug.LogError("Trying to activate BlockInfoHolder without instance.");
+            }
+        }
+    }
+
+    public BlockInfoHolder(GameObject blockPrefab, Vector2Int blockPosstion)
+    {
+        _blockPrefab = blockPrefab;
         _blockPosstion = blockPosstion;
+    }
+
+    public void InstantiatePrefab(BlockGridSettings blockGridSettings, Transform blockContainer = null, bool active = false)
+    {
+        if (_instanceInScene == null)
+        {
+            if (blockContainer != null)
+            {
+                _instanceInScene = GameObject.Instantiate(_blockPrefab, blockContainer);
+            }
+            else
+            {
+                _instanceInScene = GameObject.Instantiate(_blockPrefab);
+            }
+            
+            _instanceInScene.transform.position = new Vector2(blockGridSettings.HorizontalExpandDirectionFactor 
+                * blockGridSettings.BlocksSize.x * BlockPosstion.x + blockGridSettings.PossitionBias.x
+                , blockGridSettings.BlocksSize.y * BlockPosstion.y + blockGridSettings.PossitionBias.y);
+            _instanceInScene.SetActive(active);
+        }
+        else
+        {
+            Debug.LogError("Trying to instantiate block prefab second time.");
+        }
+    }
+
+    public void Destroy()
+    {
+        if (Instantiated)
+        {
+            GameObject.DestroyImmediate(_instanceInScene);
+        }
+        else
+        {
+            Debug.LogError("Trying to destroy unexisting instance.");
+        }
     }
 
     /// <summary>

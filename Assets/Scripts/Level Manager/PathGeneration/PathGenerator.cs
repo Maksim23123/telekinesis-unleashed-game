@@ -28,7 +28,7 @@ public class PathGenerator : MonoBehaviour
     {
         Initialize();
         
-        List<Triplet> instantiatedTriplets = _tripletGenerator.InstantiateTriplets(pathPlan, roomStructure);
+        List<Triplet> instantiatedTriplets = _tripletGenerator.AddTriplets(pathPlan, roomStructure);
 
         _restraintBuilder.ActWithRestraintsBetweenRooms(roomStructure);
         _restraintBuilder.SealTripletsEnterences(instantiatedTriplets);
@@ -86,7 +86,7 @@ public class PathGenerator : MonoBehaviour
                     path[i - 1],
                     path[i + 1]
                     };
-                    _levelManager.BuildPathPart(path[i], currentCellNeighbors);
+                    _levelManager.AddPathPart(path[i], currentCellNeighbors);
                 }
                 else if (onStart && !onEnd)
                 {
@@ -94,7 +94,7 @@ public class PathGenerator : MonoBehaviour
                     {
                     path[i + 1]
                     };
-                    _levelManager.BuildPathPart(path[i], currentCellNeighbors);
+                    _levelManager.AddPathPart(path[i], currentCellNeighbors);
                 }
                 else if (!onStart && onEnd)
                 {
@@ -102,11 +102,11 @@ public class PathGenerator : MonoBehaviour
                     {
                     path[i - 1]
                     };
-                    _levelManager.BuildPathPart(path[i], currentCellNeighbors);
+                    _levelManager.AddPathPart(path[i], currentCellNeighbors);
                 }
                 else
                 {
-                    _levelManager.BuildPathPart(path[i], new Vector2Int[0]);
+                    _levelManager.AddPathPart(path[i], new Vector2Int[0]);
                 }
             }
         }

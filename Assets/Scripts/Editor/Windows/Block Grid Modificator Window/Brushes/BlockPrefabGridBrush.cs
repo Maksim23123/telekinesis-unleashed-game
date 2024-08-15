@@ -81,7 +81,7 @@ public class BlockPrefabGridBrush : BlockGridBrush
         if (_selectedBlockIndex < 0) return;
 
         Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-        _levelManager.InstantiateCustomBlock(_levelManager.BlocksInfo[_selectedBlockIndex]
+        _levelManager.AddCustomBlock(_levelManager.BlocksInfo[_selectedBlockIndex]
             , _levelManager.BlockGridSettings.WorldToGridPosition(ray.GetPoint(0)), _replaceOldBlocksMod);
     }
 

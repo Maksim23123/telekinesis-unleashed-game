@@ -139,25 +139,24 @@ public class BlockStructure : MonoBehaviour
         blockStructureData.ExitConnection.ConnectionType = ConnectionType.Exit;
     }
 
-    private void InstantiateConnetion(ref Connection connection, Vector2Int centerPosition, LevelManager levelManager)
+    private void CreateConnetion(ref Connection connection, Vector2Int centerPosition, LevelManager levelManager)
     {
         levelManager.TryGetSuitableBlock(false, false, true, true, out BlockInfoHolder connectionBase);
 
         connection.PositionInGrid = centerPosition
             + connection.RelativePositionInBlockGrid;
 
-        levelManager.InstantiateBlock(connection.PositionInGrid, connectionBase);
+        levelManager.AddBlock(connection.PositionInGrid, connectionBase);
     }
 
-    public static BlockStructureData GetBlockStructureData(GameObject structurePrefab, Vector2Int structureCenterGridPosition
+    public static BlockStructureData CreateBlockStructureData(GameObject structurePrefab, Vector2Int structureCenterGridPosition
             , LevelManager levelManager)
     {
         BlockInfoHolder structureBlock = new BlockInfoHolder(structurePrefab, Vector2Int.zero);
 
-        GameObject structureGameObjectInstance = levelManager.InstantiateCustomBlock(structureBlock, structureCenterGridPosition);
-
         if (structurePrefab.TryGetComponent(out BlockStructure blockStructure))
         {
+            levelManager.AddCustomBlock(structureBlock, structureCenterGridPosition);
 
             blockStructure.InitInGridParams(levelManager.BlockGridSettings);
 
@@ -173,16 +172,15 @@ public class BlockStructure : MonoBehaviour
             for (int i = 0; i < blockStructureData.EnteranceConnections.Count; i++)
             {
                 Connection currentEnteranceConnection = blockStructureData.EnteranceConnections[i];
-                blockStructure.InstantiateConnetion(ref currentEnteranceConnection, structureCenterGridPosition, levelManager);
+                blockStructure.CreateConnetion(ref currentEnteranceConnection, structureCenterGridPosition, levelManager);
             }
 
             Connection currentExitConnection = blockStructureData.ExitConnection;
-            blockStructure.InstantiateConnetion(ref currentExitConnection, structureCenterGridPosition, levelManager);
+            blockStructure.CreateConnetion(ref currentExitConnection, structureCenterGridPosition, levelManager);
             blockStructure.StructureCenterGridPosition = structureCenterGridPosition;
             return blockStructureData;
         }
-        Debug.Log("Unexpected Structure prefab was given");
-        DestroyImmediate(structureGameObjectInstance);
+        Debug.Log("Unexpected Structure prefab was given.");
         return null;
     }
 }

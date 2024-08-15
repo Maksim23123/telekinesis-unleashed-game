@@ -197,12 +197,12 @@ public class BranchGenerator : MonoBehaviour
             _levelManager.TryGetSuitableBlock(true, true, true, true, out BlockInfoHolder ladderMidwayBlockInfo);
             _levelManager.TryGetSuitableBlock(false, true, true, true, out BlockInfoHolder ladderTopBlockInfo);
 
-            _levelManager.InstantiateOrReplaceBlock(position, ladderBottomBlockInfo);
-            _levelManager.InstantiateOrReplaceBlock(position + new Vector2Int(0, possibleLadderHeight - 1), ladderTopBlockInfo);
+            _levelManager.AddOrReplaceBlock(position, ladderBottomBlockInfo);
+            _levelManager.AddOrReplaceBlock(position + new Vector2Int(0, possibleLadderHeight - 1), ladderTopBlockInfo);
 
             for (int i = 1; i < possibleLadderHeight - 1; i++)
             {
-                _levelManager.InstantiateOrReplaceBlock(position + new Vector2Int(0, i), ladderMidwayBlockInfo);
+                _levelManager.AddOrReplaceBlock(position + new Vector2Int(0, i), ladderMidwayBlockInfo);
             }
             return true;
         }
@@ -217,7 +217,7 @@ public class BranchGenerator : MonoBehaviour
 
     public void InstantiateBlock(Vector2Int position, BlockInfoHolder blockInfo, bool ladderNeighbor = false)
     {
-        _levelManager.InstantiateBlock(position, blockInfo, ladderNeighbor, _currentGeneration);
+        _levelManager.AddBlock(position, blockInfo, ladderNeighbor, _currentGeneration);
 
         BlockInfoHolder newBlockInfoHolder = blockInfo.HollowCopy();
         newBlockInfoHolder.BlockPosstion = position;
