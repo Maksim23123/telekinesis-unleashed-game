@@ -8,7 +8,7 @@ public class InputHandler : MonoBehaviour
     [SerializeField] private KeyCode _performManipulationButton;
     [SerializeField] private KeyCode _fallThroughOneWayPlatform;
     [SerializeField] private KeyCode _stepOnLadder;
-    [SerializeField] private KeyCode _pickUpItem;
+    [SerializeField] private KeyCode _interact;
 
     private bool _captureObjectButtonPressed;
     private bool _pickUpItemPressed;
@@ -22,6 +22,7 @@ public class InputHandler : MonoBehaviour
     private PlayerObjectManipulation _playerObjectManipulation;
     private OneWayPlatformHandler _oneWayPlatformHandler;
     private PlayerItemsManager _playerItemsManager;
+    private PlayerInteractableObjectManager _playerInteractableObjectManager;
 
     private bool InputReceiverExists
     {
@@ -69,6 +70,7 @@ public class InputHandler : MonoBehaviour
             _playerObjectManipulation = playerGameObject.GetComponent<PlayerObjectManipulation>();
             _oneWayPlatformHandler = playerGameObject.GetComponent<OneWayPlatformHandler>();
             _playerItemsManager = playerGameObject.GetComponent<PlayerItemsManager>();
+            _playerInteractableObjectManager = playerGameObject.GetComponent<PlayerInteractableObjectManager>();
         }
     }
 
@@ -121,10 +123,11 @@ public class InputHandler : MonoBehaviour
         if (Input.GetKey(_stepOnLadder))
             _playerLadderHandler.PostStepOnLadderRequest();
 
-        bool currentPickupItemValue = Input.GetKey(_pickUpItem);
+        bool currentPickupItemValue = Input.GetKey(_interact);
         if (currentPickupItemValue && !_pickUpItemPressed)
         {
             _playerItemsManager.RequestPickUp();
+            _playerInteractableObjectManager.RequestInteraction();
             _pickUpItemPressed = true;
         }
         else if (!currentPickupItemValue)

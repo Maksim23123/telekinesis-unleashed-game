@@ -31,13 +31,15 @@ public class PlayerInteractionManager : MonoBehaviour
             return false;
     }
 
-    public bool TryGetAvailableInteractableObject(out GameObject firstAvailable, LayerMask interactableObjectsLayerMask, float interactionZoneRadius)
+    public bool TryGetAvailableInteractableObject(out GameObject firstAvailable, LayerMask interactableObjectsLayerMask
+            , float interactionZoneRadius)
     {
         firstAvailable = null;
 
         Vector3 mousePos = StaticTools.GetMousePositionInWorld();
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, interactionZoneRadius, Vector2.down, 0, interactableObjectsLayerMask);
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, interactionZoneRadius, Vector2.down, 0
+            , interactableObjectsLayerMask);
 
         GameObject[] reachableObjects = hits.Select(x => x.transform.gameObject).ToArray();
 

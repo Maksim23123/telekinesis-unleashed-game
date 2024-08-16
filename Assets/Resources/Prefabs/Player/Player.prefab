@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 5340918677032172511}
   - component: {fileID: 3181815775131573327}
   - component: {fileID: 148396899152517466}
+  - component: {fileID: 9004848146179191900}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -355,7 +356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _raycastTestLayers:
     serializedVersion: 2
-    m_Bits: 8449
+    m_Bits: 24833
 --- !u!114 &5340918677032172511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,6 +400,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _jumpStrength: 6
   _ungroundedJumpPermDuration: 0.04
+--- !u!114 &9004848146179191900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4153444728527318417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 601cf7172c3f97e41b4b276d2a592a36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactableObjectsLayers:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &6325206934996797934
 GameObject:
   m_ObjectHideFlags: 0
