@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages the player's interactions with objects of type <see cref="InteractableObject"/>.
+/// </summary>
 public class PlayerInteractableObjectManager : MonoBehaviour
 {
     [SerializeField] private LayerMask _interactableObjectsLayers;
@@ -28,6 +31,9 @@ public class PlayerInteractableObjectManager : MonoBehaviour
         _interactionAllowed = true;
     }
 
+    /// <summary>
+    /// Requests an interaction with the object the player is pointing at, if interaction is allowed.
+    /// </summary>
     public void RequestInteraction()
     {
         if (_interactionAllowed)
